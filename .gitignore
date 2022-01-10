@@ -134,7 +134,6 @@ dmypy.json
 # Miscellaneous
 *.class
 *.lock
-*.log
 *.pyc
 *.swp
 .DS_Store
@@ -179,14 +178,12 @@ analysis_benchmark.json
 
 # Flutter/Dart/Pub related
 **/doc/api/
-.dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 **/generated_plugin_registrant.dart
 .packages
 .pub-cache/
 .pub/
-build/
 flutter_*.png
 linked_*.ds
 unlinked.ds
