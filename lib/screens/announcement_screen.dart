@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
-import 'package:bcsv_flutter_project/components/advanced_tile.dart';
+import 'package:bcsv_flutter_project/components/list_tile.dart';
 import 'package:bcsv_flutter_project/services/api_get_google_doc_contents.dart';
 import 'package:bcsv_flutter_project/data_models/endpoint_model.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:url_launcher/link.dart';
 
 class AnnouncementPage extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     getAnnouncementFromGoogleSheet();
   }
 
-  var announcementTiles = <AdvancedTile>[];
+  var announcementTiles = <AnnounceListTile>[];
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                 width: 200,
                 child: SpinKitFadingCube(
                   itemBuilder: (BuildContext context, int index) {
-                    return DecoratedBox(
+                    return const DecoratedBox(
                       decoration: BoxDecoration(
                         color: Colors.white,
                       ),
@@ -49,28 +50,8 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
               ),
             )
           : SingleChildScrollView(
-              child: ExpansionPanelList.radio(
-                children: announcementTiles
-                    .map(
-                      (tile) => ExpansionPanelRadio(
-                        value: tile.title,
-                        canTapOnHeader: true,
-                        headerBuilder: (context, isExpanded) => buildTile(tile),
-                        body: Column(
-                          children: tile.tiles.map(buildTile).toList(),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
+              child: _buildListPanel(),
             ),
-    );
-  }
-
-  Widget buildTile(AdvancedTile tile) {
-    return ListTile(
-      leading: tile.icon != null ? Icon(tile.icon) : null,
-      title: tile.title,
     );
   }
 
@@ -79,7 +60,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     isLoading = true;
 
     ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
-        api_endpoint: ApiEndpoint.apiMap['ANNOUNCEMENT2'],
+        api_endpoint: ApiEndpoint.apiMap['ANNOUNCEMENT'],
         tag: 'announcements');
 
     List<dynamic> announcementList = await myGoogleDocContent.getContent();
@@ -91,21 +72,26 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
             continue;
           }
           announcementTiles.add(
-            AdvancedTile(
-              icon: Icons.book,
-              title: Text(content.date, style: kBodyTextStyle),
-              tiles: [
-                AdvancedTile(
-                    title:
-                        Text('설교 ${content.preacher}', style: kBodyTextStyle),
-                    icon: Icons.mic),
-                AdvancedTile(
-                    title: Text('기도 ${content.prayer}', style: kBodyTextStyle),
-                    icon: FontAwesomeIcons.pray),
-                AdvancedTile(
-                    title: Text('광고내용\n${content.announcement}',
-                        style: kBodyTextStyle),
-                    icon: Icons.note),
+            AnnounceListTile(
+              icon: Icons.calendar_today_outlined,
+              headerText: '주일: ${content.date}',
+              contents: [
+                Text('설교 ${content.preacher}', style: kBodyTextStyle),
+                Text('기도 ${content.prayer}', style: kBodyTextStyle),
+                SelectableText('광고내용\n${content.announcement}',
+                    style: kBodyTextStyle),
+                Center(
+                  child: Link(
+                    target: LinkTarget.blank,
+                    uri: Uri.parse(content.File_url),
+                    builder: (context, followLink) => ElevatedButton(
+                      child: content.File_url.toString().isEmpty
+                          ? const Text('PDF not available')
+                          : const Text('Open PDF'),
+                      onPressed: followLink,
+                    ),
+                  ),
+                ),
               ],
             ),
           );
@@ -114,6 +100,35 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
         //Hide loading spinner
         isLoading = false;
       },
+    );
+  }
+
+  Widget _buildListPanel() {
+    return ExpansionPanelList.radio(
+      children: announcementTiles
+          .map(
+            (tile) => ExpansionPanelRadio(
+              value: tile.headerText,
+              canTapOnHeader: true,
+              headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
+              body: Column(
+                children: tile.contents.map(buildContentTile).toList(),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget buildHeaderTile(AnnounceListTile tile) {
+    return ListTile(
+        leading: tile.icon != null ? Icon(tile.icon) : null,
+        title: Text(tile.headerText));
+  }
+
+  Widget buildContentTile(Widget content) {
+    return ListTile(
+      title: content,
     );
   }
 }
