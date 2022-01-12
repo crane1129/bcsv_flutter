@@ -2,6 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+const String kAnnouncementData = 'announcement.json';
+const String kBibleTextData = 'bible_text.json';
+const String kServingTurnData = 'serving_turn.json';
+const String kDailyBibleData = 'daily_bible.json';
+const String kBibleReviewData = 'bible_review.json';
+
 const String kBaseUrl = "https://bcsv.org";
 const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";

@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/components/list_tile.dart';
-import 'package:bcsv_flutter_project/services/api_get_google_doc_contents.dart';
+import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
 import 'package:bcsv_flutter_project/data_models/endpoint_model.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
@@ -61,7 +61,8 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
 
     ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
         api_endpoint: ApiEndpoint.apiMap['ANNOUNCEMENT'],
-        tag: 'announcements');
+        tag: 'announcements',
+        cacheFileName: kAnnouncementData);
 
     List<dynamic> announcementList = await myGoogleDocContent.getContent();
 
@@ -74,7 +75,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
           announcementTiles.add(
             AnnounceListTile(
               icon: Icons.calendar_today_outlined,
-              headerText: '주일: ${content.date}',
+              headerText: content.date,
               contents: [
                 Text('설교 ${content.preacher}', style: kBodyTextStyle),
                 Text('기도 ${content.prayer}', style: kBodyTextStyle),

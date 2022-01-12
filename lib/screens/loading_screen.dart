@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -64,15 +66,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  void loadSettings() {
+  void loadSettings() async {
     //언어옵션 Default: Korean
     String languageOption = UserSharedPreferences.getLanguageOption() ?? 'ko';
-    String announcement = UserSharedPreferences.getAnnouncementContent() ?? '';
-
     print('Language: $languageOption');
-    print('Announcement: $announcement');
 
     //Settings
-    UserSharedPreferences.setAnnouncementContent('');
+    UserSharedPreferences.setAnnouncementCache(false);
+    UserSharedPreferences.setBibleReviewCache(false);
+    UserSharedPreferences.setBibleTextCache(false);
+    UserSharedPreferences.setServingTurnCache(false);
+    UserSharedPreferences.setDailyBibleTextCache(false);
   }
 }
