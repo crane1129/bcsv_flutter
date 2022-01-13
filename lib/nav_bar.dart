@@ -16,7 +16,15 @@ import 'package:bcsv_flutter_project/screens/about_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 
-class NavBar extends StatelessWidget {
+
+class NavBar extends StatefulWidget {
+  const NavBar({Key? key}) : super(key: key);
+
+  @override
+  _NavBarState createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -120,7 +128,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.only(left: 30.0),
             leading:
-                Icon(FontAwesomeIcons.pen, color: kActiveIconColor, size: 20),
+            Icon(FontAwesomeIcons.pen, color: kActiveIconColor, size: 20),
             title: LocaleText('Sermon Review'),
             onTap: () {
               Navigator.push(context,
@@ -130,7 +138,7 @@ class NavBar extends StatelessWidget {
           const Divider(),
           ListTile(
             leading:
-                Icon(FontAwesomeIcons.calendarDay, color: kActiveIconColor),
+            Icon(FontAwesomeIcons.calendarDay, color: kActiveIconColor),
             title: LocaleText('Daily Bible'),
             onTap: () {
               Navigator.push(context,

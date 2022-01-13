@@ -117,11 +117,9 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
 
         for (BibleText content in bibleTextList.reversed) {
           if (content.title.isEmpty) {
-            //This is header title
             referenceText +=
                 "\n\n📚참고본문: ${content.bibleChapter}\n${content.bibleText}";
           } else {
-            //This is main text
             bibleTextTiles.add(
               ContentListTile(
                 icon: FontAwesomeIcons.bible,

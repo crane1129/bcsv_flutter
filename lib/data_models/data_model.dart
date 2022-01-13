@@ -101,3 +101,30 @@ class ServingTurn {
         babysitter: json['babysitter']);
   }
 }
+
+class SermonReview {
+  final String date;
+  final String title;
+  final String chapter;
+  final String review;
+  final String application;
+  final String in_depth;
+
+  SermonReview(
+      {required this.date,
+      required this.title,
+      required this.chapter,
+      required this.review,
+      required this.application,
+      required this.in_depth});
+
+  factory SermonReview.fromJson(dynamic json) {
+    return SermonReview(
+        date: json['date'],
+        title: json['title'],
+        chapter: json['chapter'],
+        review: json['review'],
+        application: json['application'],
+        in_depth: json['in_depth']);
+  }
+}

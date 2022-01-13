@@ -9,7 +9,6 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 
-
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
 
@@ -18,7 +17,6 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -45,7 +43,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
-                Text('Bridgeway', style: kTitleTextStyle),
+                  Text('Bridgeway', style: kTitleTextStyle),
                 ]),
             Text('Baptist Church', style: kSubTitleTextStyle),
             SizedBox(height: 50),
@@ -83,8 +81,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
             "$message connection. Please check the network connection.",
           ),
           leading: Icon(Icons.network_check),
-          background: Colors.red);
-    }else{
+          background: Colors.red,
+          elevation: 5);
+    } else {
       //bindEndpoints 작업을 마치면 bindEndpoints 안에서 메인페이지로 이동함.
       ApiEndpoint.bindEndpoints(context);
 
