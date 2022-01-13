@@ -39,7 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Column(
           children: <Widget>[
-            SizedBox(height: 100),
             Expanded(
               child: Row(
                 children: <Widget>[
@@ -148,7 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            SizedBox(height: 100),
           ],
         ));
   }

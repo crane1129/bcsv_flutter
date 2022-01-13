@@ -98,20 +98,42 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
       () {
         dailyBibleTiles.add(
           ListTile(
-              leading: Icon(FontAwesomeIcons.bible),
-              title: Text(
-                  "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}"),
-              subtitle: Text(jsonObj1['Base_de'])),
+            leading: Icon(FontAwesomeIcons.bible),
+            title: Text(
+                "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
+                style: kBodyTextStyle),
+            subtitle: Text(jsonObj1['Base_de']),
+          ),
         );
 
+        String bodyText = '';
+
         for (var word in jsonObj2) {
-          dailyBibleTiles.add(
-            ListTile(
-                leading: Text(word['Chapter'].toString(),),
-                title: SelectableText(word['Bible_Cn']),
-                subtitle: Text(word['Verse'].toString(),),),
-          );
+          bodyText += "${word['Verse'].toString()} ${word['Bible_Cn']}\n\n";
         }
+
+        dailyBibleTiles.add(
+          ListTile(
+            title: SelectableText(
+              bodyText,
+              style: kBodyTextStyle,
+            ),
+          ),
+        );
+
+        // for (var word in jsonObj2) {
+        //   dailyBibleTiles.add(
+        //     ListTile(
+        //       leading: Text(
+        //         word['Chapter'].toString(),
+        //       ),
+        //       title: SelectableText(
+        //         "${word['Verse'].toString()} ${word['Bible_Cn']}",
+        //         style: kBodyTextStyle,
+        //       ),
+        //     ),
+        //   );
+        // }
         //Hide loading spinner
         isLoading = false;
       },

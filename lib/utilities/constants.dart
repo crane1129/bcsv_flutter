@@ -17,7 +17,7 @@ const String kYoutubeLiveUrl =
 Color kActiveCardColor = Color(0xFF616161).withOpacity(0.3);
 const kActiveIconColor = Colors.indigo;
 const kInactiveIconColor = Colors.blueGrey;
-const kCardIconColor = Colors.white54;
+Color kCardIconColor = Colors.lightGreen;
 const kMainAppBarColor = Colors.white38;
 const kMainThemeColor = Color(0xFF303030);
 const kDrawerBackgroundColor = Color(0xFF212121);
@@ -32,10 +32,10 @@ const kAppBarTextStyleSmall = TextStyle(
     color: Colors.green);
 
 const kBodyTextStyle = TextStyle(
-    fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular');
+    fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
 
 const kLabelTextStyle = TextStyle(
-    fontSize: 18.0, color: Colors.white70, fontFamily: 'Dongle-Regular');
+    fontSize: 20.0, color: Colors.white, fontFamily: 'Dongle-Regular');
 
 const kLargeButtonTextStyle = TextStyle(
   fontSize: 25.0,
