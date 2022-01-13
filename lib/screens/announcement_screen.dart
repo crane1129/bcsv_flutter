@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:url_launcher/link.dart';
+import 'dart:convert';
+import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
+import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/components/list_tile.dart';
 import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
-import 'package:bcsv_flutter_project/data_models/endpoint_model.dart';
+import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:url_launcher/link.dart';
 
 class AnnouncementPage extends StatefulWidget {
   @override
@@ -24,13 +26,13 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     getAnnouncementFromGoogleSheet();
   }
 
-  var announcementTiles = <AnnounceListTile>[];
+  var announcementTiles = <ContentListTile>[];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent.withOpacity(0.5),
         title: AppBarHeaderText(text1: 'Announcement', text2: ''),
       ),
       body: isLoading
@@ -58,40 +60,51 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
   void getAnnouncementFromGoogleSheet() async {
     //Show loading spinner
     isLoading = true;
+    ModelParam modelParam = ModelParam(
+      apiEndpoint: ApiEndpoint.apiMap['ANNOUNCEMENT'],
+      tag: 'announcements',
+      cacheFileName: kAnnouncementData,
+      getSharedReference: UserSharedPreferences.getAnnouncementCache,
+      setSharedReference: UserSharedPreferences.setAnnouncementCache,
+    );
 
+    Map data = {};
     ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
-        api_endpoint: ApiEndpoint.apiMap['ANNOUNCEMENT'],
-        tag: 'announcements',
-        cacheFileName: kAnnouncementData);
+        modelParam: modelParam, body: data, isBodyRequired: false);
 
-    List<dynamic> announcementList = await myGoogleDocContent.getContent();
+    String _announcementList = await myGoogleDocContent.getContent();
+    var jsonObj = jsonDecode(_announcementList)[modelParam.tag] as List;
+
+    List<dynamic> announcementList =
+        jsonObj.map((tagJson) => Announcement.fromJson(tagJson)).toList();
 
     setState(
       () {
-        for (Announcement content in announcementList) {
+        for (Announcement content in announcementList.reversed) {
           if (content.announcement.isEmpty) {
             continue;
           }
           announcementTiles.add(
-            AnnounceListTile(
+            ContentListTile(
               icon: Icons.calendar_today_outlined,
-              headerText: content.date,
+              headerText: Text('${content.date}  설교 ${content.preacher}',
+                  style: kBodyTextStyle),
               contents: [
-                Text('설교 ${content.preacher}', style: kBodyTextStyle),
                 Text('기도 ${content.prayer}', style: kBodyTextStyle),
-                SelectableText('광고내용\n${content.announcement}',
+                SelectableText(
+                    '광고내용\n${content.announcement}\n\n헌금: ${content.offering}',
                     style: kBodyTextStyle),
                 Center(
-                  child: Link(
-                    target: LinkTarget.blank,
-                    uri: Uri.parse(content.File_url),
-                    builder: (context, followLink) => ElevatedButton(
-                      child: content.File_url.toString().isEmpty
-                          ? const Text('PDF not available')
-                          : const Text('Open PDF'),
-                      onPressed: followLink,
-                    ),
-                  ),
+                  child: content.File_url.toString().isEmpty
+                      ? null
+                      : Link(
+                          target: LinkTarget.blank,
+                          uri: Uri.parse(content.File_url),
+                          builder: (context, followLink) => ElevatedButton(
+                            child: const Text('Open PDF'),
+                            onPressed: followLink,
+                          ),
+                        ),
                 ),
               ],
             ),
@@ -121,10 +134,10 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     );
   }
 
-  Widget buildHeaderTile(AnnounceListTile tile) {
+  Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
         leading: tile.icon != null ? Icon(tile.icon) : null,
-        title: Text(tile.headerText));
+        title: tile.headerText);
   }
 
   Widget buildContentTile(Widget content) {

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 const String kAnnouncementData = 'announcement.json';
 const String kBibleTextData = 'bible_text.json';
 const String kServingTurnData = 'serving_turn.json';
-const String kDailyBibleData = 'daily_bible.json';
+const String kDailyBible1Data = 'daily_bible1.json';
+const String kDailyBible2Data = 'daily_bible2.json';
 const String kBibleReviewData = 'bible_review.json';
 
 const String kBaseUrl = "https://bcsv.org";
@@ -13,11 +14,13 @@ const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
-const kActiveCardColor = Color(0xFF1D1E33);
+Color kActiveCardColor = Color(0xFF616161).withOpacity(0.3);
 const kActiveIconColor = Colors.indigo;
 const kInactiveIconColor = Colors.blueGrey;
 const kCardIconColor = Colors.white54;
-const kMainAppBarColor = Color(0xFF0A0E21);
+const kMainAppBarColor = Colors.white38;
+const kMainThemeColor = Color(0xFF303030);
+const kDrawerBackgroundColor = Color(0xFF212121);
 
 const kAppBarTextStyle = TextStyle(
     fontSize: 45.0, fontWeight: FontWeight.normal, fontFamily: 'Dongle-Bold');

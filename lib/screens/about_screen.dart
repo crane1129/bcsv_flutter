@@ -15,7 +15,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kMainAppBarColor,
+        backgroundColor: Colors.transparent.withOpacity(0.5),
         title: AppBarHeaderText(text1: 'About', text2: 'app information'),
       ),
       body: SingleChildScrollView(

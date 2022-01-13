@@ -17,7 +17,7 @@ class AppBarHeaderText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: <Widget>[
         LocaleText(text1, style: kAppBarTextStyle),
-        SizedBox(width: 5.0),
+        SizedBox(width: text2.isEmpty? 0 : 5.0),
         LocaleText(text2, style: kAppBarTextStyleSmall),
       ],
     );

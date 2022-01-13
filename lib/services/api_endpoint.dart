@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:bcsv_flutter_project/data_models/endpoint_model.dart';
+import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:bcsv_flutter_project/screens/home_screen.dart';
 
 const String kEndpointAPI =

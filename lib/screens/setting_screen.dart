@@ -14,6 +14,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.transparent.withOpacity(0.5),
           title: LocaleText('Settings'),
 
         ),

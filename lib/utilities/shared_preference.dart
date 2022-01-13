@@ -6,7 +6,8 @@ class UserSharedPreferences{
   static const _keyAnnouncementCache = 'announcement_cache';
   static const _keyBibleTextCache = 'bible_text_cache';
   static const _keyServingTurnCache = 'serving_turn_cache';
-  static const _keyDailyBibleTextCache = 'daily_bible_text_cache';
+  static const _keyDailyBibleText1Cache = 'daily_bible_text1_cache';
+  static const _keyDailyBibleText2Cache = 'daily_bible_text2_cache';
   static const _keyBibleReviewCache = 'bible_review_cache';
   
   static Future init() async {
@@ -43,8 +44,13 @@ class UserSharedPreferences{
   static getServingTurnCache() => _peferences.getBool(_keyServingTurnCache);
 
   //Daily Bible Text
-  static Future setDailyBibleTextCache(bool isCacheAvailable) async {
-    await _peferences.setBool(_keyDailyBibleTextCache, isCacheAvailable);
+  static Future setDailyBibleText1Cache(bool isCacheAvailable) async {
+    await _peferences.setBool(_keyDailyBibleText1Cache, isCacheAvailable);
   }
-  static getDailyBibleTextCache() => _peferences.getBool(_keyDailyBibleTextCache);
+  static getDailyBibleText1Cache() => _peferences.getBool(_keyDailyBibleText1Cache);
+
+  static Future setDailyBibleText2Cache(bool isCacheAvailable) async {
+    await _peferences.setBool(_keyDailyBibleText2Cache, isCacheAvailable);
+  }
+  static getDailyBibleText2Cache() => _peferences.getBool(_keyDailyBibleText2Cache);
 }

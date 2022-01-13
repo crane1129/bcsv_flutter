@@ -12,7 +12,7 @@
   "Serving Turn": "Serving Turn",
   "Announcement": "Announcement",
   "Bible Text": "Bible Text",
-  "Sunday Bible Text": "Sunday Bible Text",
+  "Sermon Bible Text": "Sermon Bible Text",
   "Sermon Review": "Sermon Review",
   "Daily Bible": "Daily Bible",
   "Offering": "Offering",
@@ -22,5 +22,7 @@
   "bcsv.org": "bcsv.org",
   "Bridgeway": "Bridgeway",
   "Baptist Church": "Baptist Church",
-  "Reimbursement": "Reimbursement"
+  "Reimbursement": "Reimbursement",
+  "Sunday Serving Turn": "Sunday Serving Turn",
+  "": ""
 }

@@ -1,28 +1,30 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:bcsv_flutter_project/data_models/endpoint_model.dart';
+import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:bcsv_flutter_project/data_models/model_param.dart';
 
 class ApiGoogleDocContent {
-  final String api_endpoint;
-  final String tag;
-  final String cacheFileName;
+  final ModelParam modelParam;
+  final Map body;
+  final bool isBodyRequired;
 
   ApiGoogleDocContent(
-      {required this.api_endpoint,
-      required this.tag,
-      required this.cacheFileName});
+      {required this.modelParam,
+      required this.body,
+      required this.isBodyRequired});
 
-  Future<List> getContent() async {
+  Future<String> getContent() async {
     var dir = await getTemporaryDirectory();
-    File file = File("${dir.path}/$cacheFileName}");
+    File file = File("${dir.path}/${modelParam.cacheFileName}");
     String googleSheetContents;
 
-    if (UserSharedPreferences.getAnnouncementCache()) {
+    if (modelParam.getSharedReference()) {
       //Cache exists. Load data from cache.
       googleSheetContents = file.readAsStringSync();
+      print('Fetch data from local cache');
     } else {
       //Cache doesn't exist. Load data from Google Doc.
       googleSheetContents = await _getContents();
@@ -30,18 +32,28 @@ class ApiGoogleDocContent {
       //Save data to cache
       file.writeAsStringSync(googleSheetContents,
           flush: true, mode: FileMode.write);
-      UserSharedPreferences.setAnnouncementCache(true);
+      modelParam.setSharedReference(true);
+      print('Fetch data from web');
     }
 
-    var jsonObj = jsonDecode(googleSheetContents)[tag] as List;
-    List<dynamic> dataObjs =
-        jsonObj.map((tagJson) => Announcement.fromJson(tagJson)).toList();
-
-    return dataObjs;
+    return googleSheetContents;
   }
 
   Future<String> _getContents() async {
-    http.Response response = await http.get(Uri.parse(api_endpoint));
+
+    http.Response response;
+
+    if(isBodyRequired) {
+      response = await http.post(
+          Uri.parse(modelParam.apiEndpoint),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+    }else{
+      response = await http.get(
+          Uri.parse(modelParam.apiEndpoint),
+          headers: {"Content-Type": "application/json"},
+      );
+    }
 
     if (response.statusCode == 200) {
       String data = response.body;

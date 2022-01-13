@@ -76,6 +76,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     UserSharedPreferences.setBibleReviewCache(false);
     UserSharedPreferences.setBibleTextCache(false);
     UserSharedPreferences.setServingTurnCache(false);
-    UserSharedPreferences.setDailyBibleTextCache(false);
+    UserSharedPreferences.setDailyBibleText1Cache(false);
+    UserSharedPreferences.setDailyBibleText2Cache(false);
   }
 }

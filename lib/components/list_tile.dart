@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class AnnounceListTile {
+class ContentListTile {
   final IconData icon;
-  final String headerText;
+  final Widget headerText;
   final List<Widget> contents;
   bool isExpanded;
 
-  AnnounceListTile(
+  ContentListTile(
       {required this.headerText,
       this.contents = const [],
       this.isExpanded = false,

@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: ReusableCard(
+                    child: ReusableCard2(
                         onPress: () {
                           Navigator.push(
                             context,
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             label: 'Archives')),
                   ),
                   Expanded(
-                    child: ReusableCard(
+                    child: ReusableCard2(
                         onPress: () {
                           //AnnouncementPage
                           Navigator.push(
@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: ReusableCard(
+                    child: ReusableCard2(
                         onPress: () {
                           //ServingTurnPage
                           Navigator.push(
@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: ReusableCard(
+                    child: ReusableCard2(
                         onPress: () {
                           //BibleTextPage
                           Navigator.push(
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             label: 'Bible Text')),
                   ),
                   Expanded(
-                    child: ReusableCard(
+                    child: ReusableCard2(
                         onPress: () {
                           //DailyBibleTextPage
                           Navigator.push(

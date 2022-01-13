@@ -14,6 +14,7 @@ class OfferingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.transparent.withOpacity(0.5),
           title: LocaleText('Offering'),
         ),
         body: Container(
@@ -30,8 +31,8 @@ class OfferingScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: ReusableCard(
-                  color: kActiveCardColor,
+              child: ReusableCard2(
+                  color: kMainAppBarColor,
                   cardChild: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,7 +51,7 @@ class OfferingScreen extends StatelessWidget {
                     }
                   }),
             ),
-            SizedBox(height: 100)
+            SizedBox(height: 20)
           ],
         )));
   }

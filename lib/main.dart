@@ -25,7 +25,7 @@ class MyBCSVApp extends StatelessWidget {
         supportedLocales: Locales.supportedLocales,
         locale: locale,
         theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor: kMainAppBarColor,
+          scaffoldBackgroundColor: kMainThemeColor,
           colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.red),
         ),
         home: const LoadingScreen(),
