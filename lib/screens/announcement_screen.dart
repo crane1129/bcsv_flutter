@@ -122,6 +122,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
       children: announcementTiles
           .map(
             (tile) => ExpansionPanelRadio(
+              backgroundColor: kActiveCardColor,
               value: tile.headerText,
               canTapOnHeader: true,
               headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
@@ -136,8 +137,12 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
 
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
-        leading: tile.icon != null ? Icon(tile.icon) : null,
-        title: tile.headerText);
+      leading: tile.icon != null ? Icon(tile.icon) : null,
+      title: tile.headerText,
+      iconColor: kActiveIconColor,
+      // tileColor: kActiveCardColor,
+      // selectedTileColor: Colors.indigo,
+    );
   }
 
   Widget buildContentTile(Widget content) {

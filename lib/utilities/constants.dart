@@ -14,13 +14,13 @@ const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
-Color kActiveCardColor = Color(0xFF616161).withOpacity(0.3);
-const kActiveIconColor = Colors.indigo;
+const kActiveCardColor = Color(0xFF232F34);
+const kActiveIconColor = Color(0xFFF9AA33);
 const kInactiveIconColor = Colors.blueGrey;
-Color kCardIconColor = Colors.lightGreen;
-const kMainAppBarColor = Colors.white38;
-const kMainThemeColor = Color(0xFF303030);
-const kDrawerBackgroundColor = Color(0xFF212121);
+const kCardIconColor = Color(0xFFF9AA33);
+const kMainAppBarColor = Color(0xFF232F34);
+const kMainThemeColor = Color(0xFF344955);
+const kDrawerBackgroundColor = Color(0xFF232F34);
 
 const kAppBarTextStyle = TextStyle(
     fontSize: 45.0, fontWeight: FontWeight.normal, fontFamily: 'Dongle-Bold');
@@ -29,7 +29,7 @@ const kAppBarTextStyleSmall = TextStyle(
     fontSize: 20.0,
     fontWeight: FontWeight.normal,
     fontFamily: 'Dongle-Regular',
-    color: Colors.green);
+    color: Color(0xFFF9AA33));
 
 const kBodyTextStyle = TextStyle(
     fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
@@ -61,3 +61,32 @@ const kSubTitleTextStyle = TextStyle(
     color: Colors.lightGreen,
     fontFamily: 'Dongle-Regular',
     textBaseline: TextBaseline.alphabetic);
+
+const kDrawerTitleMenuTextStyle = TextStyle(
+    fontSize: 30.0,
+    color: Colors.white54,
+    fontFamily: 'Dongle-Regular',
+    fontWeight: FontWeight.w500,
+    textBaseline: TextBaseline.alphabetic);
+
+const kDrawerMenuTextStyle = TextStyle(
+    fontSize: 25.0,
+    color: Colors.white54,
+    fontFamily: 'Dongle-Regular',
+    fontWeight: FontWeight.w100,
+    textBaseline: TextBaseline.alphabetic);
+
+const kTextFieldInputDecoration = InputDecoration(
+  filled: true,
+  fillColor: Colors.white54,
+  counterStyle: kBodyTextStyle,
+  //icon: Icon(Icons.question_answer, color: Colors.white),
+  hintText: "Enter your opinion here...",
+  hintStyle: TextStyle(color: Colors.grey),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(10.0),
+    ),
+    borderSide: BorderSide.none,
+  ),
+);

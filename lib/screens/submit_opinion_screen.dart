@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_locales/flutter_locales.dart';
+import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
+import 'package:bcsv_flutter_project/services/gsheet_access.dart';
+import 'package:bcsv_flutter_project/utilities/constants.dart';
+
+class SubmitOpinionScreen extends StatefulWidget {
+  const SubmitOpinionScreen({Key? key}) : super(key: key);
+
+  @override
+  _SubmitOpinionScreenState createState() => _SubmitOpinionScreenState();
+}
+
+class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
+  var maxLines = 5;
+  String myMessage = '';
+
+  final fieldText = TextEditingController();
+
+  void clearText(){
+    fieldText.clear();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //getMessageData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent.withOpacity(0.5),
+          title: AppBarHeaderText(text1: 'Bridgeway Opinion', text2: ''),
+        ),
+        body: Container(
+          child: Card(
+            color: kActiveCardColor,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.question_answer, color: kActiveIconColor),
+                  title: LocaleText('Pleas send us your opinion',
+                      style: kBodyTextStyle),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: TextField(
+                    controller: fieldText,
+                    style: TextStyle(color: Colors.black),
+                    maxLines: maxLines,
+                    keyboardType: TextInputType.multiline,
+                    maxLength: 200,
+                    decoration: kTextFieldInputDecoration,
+                    onChanged: (value) {
+                      myMessage = value;
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    submitData();
+                  },
+                  child: Text('Submit'),
+                ),
+                SizedBox(
+                  height: 20.0,
+                  width: 150.0,
+                  child: Divider(
+                    color: Colors.teal.shade100,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void submitData() {
+    DateTime now = DateTime.now();
+    String formattedCurrentDate = DateFormat('yyyy-MM-dd').format(now);
+
+    if(myMessage.isEmpty){
+      Alert(
+        context: context,
+        title: "Text is empty",
+        desc: "Please input text",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "OK",
+              style: kLabelTextStyle,
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
+    }else{
+      setState(() {
+        final message = {
+          'Date': formattedCurrentDate,
+          "Category": "Question",
+          "Comment": myMessage
+        };
+        GoogleMessageSheet.insert([message]);
+        FocusScope.of(context).unfocus();
+        clearText();
+      });
+    }
+
+  }
+
+
+}

@@ -30,6 +30,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   'Build number', PackageInformation.packageInfo.buildNumber),
               _infoTile('Build signature',
                   PackageInformation.packageInfo.buildSignature),
+              _infoTile('Developer',
+                  'Haksoo Kim, Daniel Kim'),
             ],
           ),
         ),
@@ -39,7 +41,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _infoTile(String title, String subtitle) {
     return ListTile(
-      title: Text(title),
+      title: Text(title, style: kBodyTextStyle),
       subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle),
     );
   }

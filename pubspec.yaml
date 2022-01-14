@@ -57,6 +57,11 @@ dependencies:
   # Display top overlay
   overlay_support: ^1.2.1
 
+  # Google Sheet access
+  gsheets: ^0.3.2
+
+  # Alert message popup_window:
+  rflutter_alert: ^2.0.4
 
 dev_dependencies:
   flutter_test:

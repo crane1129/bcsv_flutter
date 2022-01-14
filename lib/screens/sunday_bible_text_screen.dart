@@ -65,6 +65,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
       children: bibleTextTiles
           .map(
             (tile) => ExpansionPanelRadio(
+              backgroundColor: kActiveCardColor,
               value: tile.headerText,
               canTapOnHeader: true,
               headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
@@ -79,6 +80,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
 
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
+
         leading: tile.icon != null ? Icon(tile.icon) : null,
         title: tile.headerText);
   }

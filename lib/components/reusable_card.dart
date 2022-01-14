@@ -35,15 +35,14 @@ class ReusableCard2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onPress,
-        child: Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)
-          ),
-          color: color,
-          clipBehavior: Clip.antiAlias,
-          child: cardChild
-        )
-    );
+        child: Padding(padding: EdgeInsets.all(10),
+          child: Card(
+              elevation: 2,
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              color: color,
+              clipBehavior: Clip.antiAlias,
+              child: cardChild),
+        ));
   }
 }
