@@ -8,9 +8,9 @@
   "Sunday Sermons": "주일설교",
   "Archives": "주일설교 모음",
   "Youtube Live": "Youtube 실황방송",
-  "News": "새 소식",
+  "Notification": "알림란",
   "Serving Turn": "주일 당번 순서",
-  "Announcement": "광고",
+  "Announcement": "주보 광고",
   "Sermon Bible Text": "주일 설교 본문",
   "Sermon Review": "설교 리뷰",
   "Daily Bible": "매일성경 본문",
@@ -31,5 +31,6 @@
   "Pleas send us your opinion": "공동체를 위한 소중한 의견을 보내주세요.",
   "Thank You": "감사합니다",
   "Your opinion has successfully submitted": "의견이 접수되었습니다. 감사합니다.",
-  "Prayer List": "기도 리스트"
+  "New Message": "교회 소식",
+  "app information": "앱 정보"
 }

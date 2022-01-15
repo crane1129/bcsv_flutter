@@ -8,7 +8,7 @@
   "Sunday Sermons": "Sunday Sermons",
   "Archives": "Archives",
   "Youtube Live": "Youtube Live",
-  "News": "News",
+  "Notification": "Notification",
   "Serving Turn": "Serving Turn",
   "Announcement": "Announcement",
   "Bible Text": "Bible Text",
@@ -31,5 +31,6 @@
   "Pleas send us your opinion": "Pleas send us your opinion",
   "Thank You": "Thank You",
   "Your opinion has successfully submitted": "Your opinion has successfully submitted",
-  "Prayer List": "Prayer List"
+  "New Message": "New Message",
+  "app information": "app information"
 }

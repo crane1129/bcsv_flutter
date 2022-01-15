@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
-import 'package:url_launcher/link.dart';
 import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
@@ -64,6 +63,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     return ExpansionPanelList.radio(
       children: SermonReviewTiles.map(
         (tile) => ExpansionPanelRadio(
+          backgroundColor: kActiveCardColor,
           value: tile.headerText,
           canTapOnHeader: true,
           headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
@@ -94,7 +94,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     ModelParam modelParam = ModelParam(
       apiEndpoint: ApiEndpoint.apiMap['BIBLE_REVIEW'],
       tag: 'sundayReview',
-      cacheFileName: kBibleTextData,
+      cacheFileName: kBibleReviewData,
       getSharedReference: UserSharedPreferences.getBibleReviewCache,
       setSharedReference: UserSharedPreferences.setBibleReviewCache,
     );

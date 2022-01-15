@@ -63,7 +63,7 @@ class _NavBarState extends State<NavBar> {
                 LocaleText('Sunday Sermons', style: kDrawerTitleMenuTextStyle),
           ),
           ListWebViewMenu(
-              myIcon: FontAwesomeIcons.archive,
+              myIcon: Icons.voice_chat_outlined,
               menuName: "Archives",
               url: ApiEndpoint.apiMap['SERMON_YOUTUBE'],
               trailing: emptyString),
@@ -75,11 +75,11 @@ class _NavBarState extends State<NavBar> {
           const Divider(color: Colors.white30),
           ListTile(
             //leading: Icon(Icons.speaker_notes, color: kInactiveIconColor),
-            title: LocaleText('News', style: kDrawerTitleMenuTextStyle),
+            title: LocaleText('Notification', style: kDrawerTitleMenuTextStyle),
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
-            leading: Icon(FontAwesomeIcons.peopleCarry,
+            leading: Icon(Icons.accessibility_new_outlined,
                 color: kActiveIconColor, size: 20),
             title: LocaleText('Serving Turn', style: kDrawerMenuTextStyle),
             onTap: () {
@@ -89,13 +89,28 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
-            leading: Icon(FontAwesomeIcons.bullhorn,
+            leading: Icon(Icons.notifications_none,
                 color: kActiveIconColor, size: 20),
             title: LocaleText('Announcement', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => AnnouncementPage()));
             },
+          ),
+          ListTile(
+            //contentPadding: EdgeInsets.only(left: 30.0),
+            leading:
+            Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
+            title: LocaleText('New Message', style: kDrawerMenuTextStyle),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => PrayerListScreen())).then(
+                    (onValue) {
+                  updateMessageCounter();
+                },
+              );
+            },
+            trailing: displayMsgCounter(),
           ),
           const Divider(color: Colors.white30),
           ListTile(
@@ -104,7 +119,7 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
-            leading: Icon(FontAwesomeIcons.bookOpen,
+            leading: Icon(Icons.book_outlined,
                 color: kActiveIconColor, size: 20),
             title: LocaleText('Sermon Bible Text', style: kDrawerMenuTextStyle),
             onTap: () {
@@ -124,7 +139,7 @@ class _NavBarState extends State<NavBar> {
           ),
           const Divider(color: Colors.white30),
           ListTile(
-            leading: Icon(Icons.calendar_today_sharp, color: kActiveIconColor),
+            leading: Icon(Icons.article_outlined, color: kActiveIconColor),
             title: LocaleText('Daily Bible', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
@@ -132,7 +147,7 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           ListTile(
-            leading: Icon(FontAwesomeIcons.handHoldingHeart,
+            leading: Icon(Icons.volunteer_activism,
                 color: kActiveIconColor),
             title: LocaleText('Offering', style: kDrawerMenuTextStyle),
             onTap: () {
@@ -147,20 +162,6 @@ class _NavBarState extends State<NavBar> {
               menuName: "Reimbursement",
               url: ApiEndpoint.apiMap['REIMBURSEMENT'],
               trailing: emptyString),
-          ListTile(
-              //contentPadding: EdgeInsets.only(left: 30.0),
-              leading:
-                  Icon(Icons.create_sharp, color: kActiveIconColor, size: 20),
-              title: LocaleText('Prayer List', style: kDrawerMenuTextStyle),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => PrayerListScreen())).then(
-                  (onValue) {
-                    updateMessageCounter();
-                  },
-                );
-              },
-              trailing: displayMsgCounter()),
           ListTile(
             leading: Icon(Icons.share, color: kActiveIconColor),
             title: LocaleText('Opinion', style: kDrawerMenuTextStyle),

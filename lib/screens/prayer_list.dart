@@ -32,7 +32,7 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'Prayer List', text2: ''),
+        title: AppBarHeaderText(text1: 'New Message', text2: ''),
       ),
       body: isLoading
           ? Center(
@@ -67,7 +67,7 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
     ModelParam modelParam = ModelParam(
       apiEndpoint: ApiEndpoint.apiMap['MESSAGE'],
       tag: '',
-      cacheFileName: kServingTurnData,
+      cacheFileName: kPrayerListData,
       getSharedReference: UserSharedPreferences.getPrayerListTextCache,
       setSharedReference: UserSharedPreferences.setPrayerListTextCache,
     );
@@ -94,6 +94,8 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
             Padding(
               padding: EdgeInsets.only(bottom: 10.0),
               child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
                 clipBehavior: Clip.antiAlias,
                 child: Column(
                   children: [
