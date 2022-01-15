@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:bcsv_flutter_project/services/gsheet_access.dart';
+import 'package:bcsv_flutter_project/screens/prayer_list.dart';
+import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:bcsv_flutter_project/screens/daily_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/screens/setting_screen.dart';
 import 'package:bcsv_flutter_project/screens/webview_screen.dart';
@@ -27,6 +27,15 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   Widget emptyString = Text('');
+  late int messageCounter;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    updateMessageCounter();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +72,7 @@ class _NavBarState extends State<NavBar> {
               menuName: "Youtube Live",
               url: ApiEndpoint.apiMap['YOUTUBE_LIVE'],
               trailing: emptyString),
-          const Divider(color:Colors.white30),
+          const Divider(color: Colors.white30),
           ListTile(
             //leading: Icon(Icons.speaker_notes, color: kInactiveIconColor),
             title: LocaleText('News', style: kDrawerTitleMenuTextStyle),
@@ -88,7 +97,7 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => AnnouncementPage()));
             },
           ),
-          const Divider(color:Colors.white30),
+          const Divider(color: Colors.white30),
           ListTile(
             //leading: Icon(FontAwesomeIcons.bible, color: kInactiveIconColor),
             title: LocaleText('Bible Text', style: kDrawerTitleMenuTextStyle),
@@ -113,7 +122,7 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => SermonReviewScreen()));
             },
           ),
-          const Divider(color:Colors.white30),
+          const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.calendar_today_sharp, color: kActiveIconColor),
             title: LocaleText('Daily Bible', style: kDrawerMenuTextStyle),
@@ -138,22 +147,20 @@ class _NavBarState extends State<NavBar> {
               menuName: "Reimbursement",
               url: ApiEndpoint.apiMap['REIMBURSEMENT'],
               trailing: emptyString),
-          ListWebViewMenu(
-            myIcon: Icons.event_available,
-            menuName: "Upcoming Event",
-            url: ApiEndpoint.apiMap['EVENT'],
-            trailing: ClipOval(
-              child: Container(
-                color: Colors.red,
-                width: 20,
-                height: 20,
-                child: const Center(
-                  child: Text('20',
-                      style: TextStyle(color: Colors.white, fontSize: 12)),
-                ),
-              ),
-            ),
-          ),
+          ListTile(
+              //contentPadding: EdgeInsets.only(left: 30.0),
+              leading:
+                  Icon(Icons.create_sharp, color: kActiveIconColor, size: 20),
+              title: LocaleText('Prayer List', style: kDrawerMenuTextStyle),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => PrayerListScreen())).then(
+                  (onValue) {
+                    updateMessageCounter();
+                  },
+                );
+              },
+              trailing: displayMsgCounter()),
           ListTile(
             leading: Icon(Icons.share, color: kActiveIconColor),
             title: LocaleText('Opinion', style: kDrawerMenuTextStyle),
@@ -162,7 +169,7 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
             },
           ),
-          const Divider(color:Colors.white30),
+          const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.info_outline, color: kActiveIconColor),
             title: LocaleText('About', style: kDrawerMenuTextStyle),
@@ -179,7 +186,7 @@ class _NavBarState extends State<NavBar> {
                   context, MaterialPageRoute(builder: (_) => SettingsPage()));
             },
           ),
-          const Divider(color:Colors.white30),
+          const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.exit_to_app, color: kActiveIconColor),
             title: LocaleText('Exit', style: kDrawerMenuTextStyle),
@@ -190,6 +197,30 @@ class _NavBarState extends State<NavBar> {
         ],
       ),
     );
+  }
+
+  void updateMessageCounter() {
+    setState(() {
+      messageCounter = UserSharedPreferences.getPrayerListCounter() ?? 0;
+    });
+  }
+
+  Widget displayMsgCounter() {
+    if (messageCounter == 0) {
+      return emptyString;
+    } else {
+      return ClipOval(
+        child: Container(
+          color: Colors.red,
+          width: 20,
+          height: 20,
+          child: Center(
+            child: Text(messageCounter.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 12)),
+          ),
+        ),
+      );
+    }
   }
 }
 
@@ -216,8 +247,7 @@ class ListWebViewMenu extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return WebviewScreen(
-                    url: url, title1: menuName, title2: '');
+                return WebviewScreen(url: url, title1: menuName, title2: '');
               },
             ),
           );

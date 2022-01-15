@@ -8,6 +8,7 @@ const String kServingTurnData = 'serving_turn.json';
 const String kDailyBible1Data = 'daily_bible1.json';
 const String kDailyBible2Data = 'daily_bible2.json';
 const String kBibleReviewData = 'bible_review.json';
+const String kPrayerListData = 'prayer_list.json';
 
 const String kBaseUrl = "https://bcsv.org";
 const String kOfferingUrl =

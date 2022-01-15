@@ -9,6 +9,8 @@ class UserSharedPreferences{
   static const _keyDailyBibleText1Cache = 'daily_bible_text1_cache';
   static const _keyDailyBibleText2Cache = 'daily_bible_text2_cache';
   static const _keyBibleReviewCache = 'bible_review_cache';
+  static const _keyPrayerListCache = 'bible_review_cache';
+  static const _keyPrayerListCounter = 'prayer_list_counter';
   
   static Future init() async {
     _peferences = await SharedPreferences.getInstance();
@@ -53,4 +55,16 @@ class UserSharedPreferences{
     await _peferences.setBool(_keyDailyBibleText2Cache, isCacheAvailable);
   }
   static getDailyBibleText2Cache() => _peferences.getBool(_keyDailyBibleText2Cache);
+
+  //Prayer List
+  static Future setPrayerListTextCache(bool isCacheAvailable) async {
+    await _peferences.setBool(_keyPrayerListCache, isCacheAvailable);
+  }
+  static getPrayerListTextCache() => _peferences.getBool(_keyPrayerListCache);
+
+  //Prayer List counter
+  static Future setPrayerListCounter(int count) async {
+    await _peferences.setInt(_keyPrayerListCounter, count);
+  }
+  static getPrayerListCounter() => _peferences.getInt(_keyPrayerListCounter);
 }

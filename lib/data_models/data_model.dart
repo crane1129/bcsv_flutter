@@ -128,3 +128,24 @@ class SermonReview {
         in_depth: json['in_depth']);
   }
 }
+
+class PrayerList {
+  final String expireDate;
+  final String category;
+  final String message;
+  final String imageLink;
+
+  PrayerList(
+      {required this.expireDate,
+      required this.category,
+      required this.message,
+      required this.imageLink});
+
+  factory PrayerList.fromJson(dynamic json) {
+    return PrayerList(
+        expireDate: json['ExpireDate'],
+        category: json['Category'],
+        message: json['Message'],
+        imageLink: json['ImageLink'] ?? "https://tinyurl.com/yc8rdbr4");
+  }
+}
