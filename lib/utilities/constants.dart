@@ -15,7 +15,7 @@ const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
-const kActiveCardColor = Color(0xFF232F34);
+const kActiveCardColor = Color(0x35232F34);
 const kActiveIconColor = Color(0xFFF9AA33);
 const kInactiveIconColor = Colors.blueGrey;
 const kCardIconColor = Color(0xFFF9AA33);

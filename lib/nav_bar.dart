@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bcsv_flutter_project/screens/prayer_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +157,7 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           ListWebViewMenu(
-              myIcon: Icons.note,
+              myIcon: Icons.add_shopping_cart_outlined,
               menuName: "Reimbursement",
               url: ApiEndpoint.apiMap['REIMBURSEMENT'],
               trailing: emptyString),

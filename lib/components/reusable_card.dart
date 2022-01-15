@@ -35,7 +35,7 @@ class ReusableCard2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onPress,
-        child: Padding(padding: EdgeInsets.all(10),
+        child: Padding(padding: EdgeInsets.all(2),
           child: Card(
               elevation: 2,
               shape:
