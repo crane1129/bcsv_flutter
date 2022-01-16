@@ -169,7 +169,7 @@ class _NavBarState extends State<NavBar> {
                   context,
                   MaterialPageRoute(
                       builder: (_) => ReimbursementScreen(
-                          selectedUrl: ApiEndpoint.apiMap['REIMBURSEMENT'])));
+                          url: ApiEndpoint.apiMap['REIMBURSEMENT'])));
             },
           ),
           ListTile(
