@@ -53,7 +53,7 @@ class _NavBarState extends State<NavBar> {
             decoration: BoxDecoration(
                 color: kMainAppBarColor,
                 image: DecorationImage(
-                  image: AssetImage('assets/images/mountain1.jpeg'),
+                  image: AssetImage('assets/images/mountain1.jpg'),
                   fit: BoxFit.cover,
                 )),
           ),

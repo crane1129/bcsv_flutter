@@ -16,33 +16,40 @@ class ReimbursementScreen extends StatelessWidget {
         backgroundColor: Colors.transparent.withOpacity(0.5),
         title: AppBarHeaderText(text1: 'Serving Turn', text2: ''),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                children: <Widget>[
-                  Image.asset('assets/images/mountain1.jpeg'),
-                  ListTile(
-                    leading: Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
-                    title: Text("Chruch Reimbursement"),
-                    subtitle: Text("Please submit your expense for church events"),
+      body: SafeArea(
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset('assets/images/mountain1.jpg'),
+                      SizedBox(height: 20.0),
+                      ListTile(
+                        leading: Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
+                        title: Text("Chruch Reimbursement"),
+                        subtitle: Text("Please submit your expense for church events"),
+                      ),
+                      Padding(padding: EdgeInsets.all(10.0),
+                        child: ElevatedButton.icon(
+                            onPressed: () async {
+                              if (await canLaunch(url)){
+                                await launch(url);
+                              }
+                            },
+                            icon: Icon(Icons.volunteer_activism),
+                            label: Text('Open Form')),
+                      ),
+                    ],
                   ),
-                  ElevatedButton.icon(
-                      onPressed: () async {
-                        if (await canLaunch(url)){
-                          await launch(url);
-                        }
-                      },
-                      icon: Icon(Icons.volunteer_activism),
-                      label: Text('Open Form')),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
