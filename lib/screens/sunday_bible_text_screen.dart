@@ -81,7 +81,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
 
-        leading: tile.icon != null ? Icon(tile.icon) : null,
+        leading: tile.icon != null ? Icon(tile.icon, color: kActiveIconColor) : null,
         title: tile.headerText);
   }
 

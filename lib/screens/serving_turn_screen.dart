@@ -94,7 +94,8 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                 children: [
                   ServingTurnTile(
                       content: content.date,
-                      leadingText: Icon(Icons.arrow_drop_down_circle)),
+                      leadingText: Icon(Icons.accessibility_new_outlined,
+                          color: kActiveIconColor)),
                   ServingTurnTile(
                       content: content.prayer,
                       leadingText: const Text('기도', style: kBodyTextStyle)),

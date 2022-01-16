@@ -45,7 +45,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
-                  Text('Bridgeway', style: kTitleTextStyle),
+                  Text('Bridgeway', style: kMainTitleTextStyle),
                 ]),
             Text('Baptist Church', style: kSubTitleTextStyle),
             SizedBox(height: 50),

@@ -83,7 +83,6 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
         jsonObj.map((tagJson) => PrayerList.fromJson(tagJson)).toList();
 
     setState(() {
-
       for (PrayerList myPrayerItem in prayerList) {
         DateTime givenDate = DateTime.parse(myPrayerItem.expireDate);
         if (todayDate.isAfter(givenDate)) {
@@ -98,10 +97,13 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
                     borderRadius: BorderRadius.circular(10)),
                 clipBehavior: Clip.antiAlias,
                 child: Column(
-                  children: [
+                  children: <Widget>[
                     ListTile(
-                      leading: Icon(Icons.event),
-                      title: Text(myPrayerItem.message, overflow: TextOverflow.ellipsis,),
+                      leading: Icon(Icons.event, color: kActiveIconColor),
+                      title: Text(
+                        myPrayerItem.message,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -110,14 +112,16 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
                         style: TextStyle(color: Colors.black.withOpacity(0.6)),
                       ),
                     ),
-                    Image.network(myPrayerItem.imageLink),
+                    myPrayerItem.imageLink.isEmpty
+                        ? Image.asset('assets/images/mountain1.jpeg')
+                        : Image.network(myPrayerItem.imageLink),
                   ],
                 ),
               ),
             ),
           );
 
-          messageCounter ++;
+          messageCounter++;
         }
       }
 

@@ -50,9 +50,16 @@ const kRegularButtonTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-const kTitleTextStyle = TextStyle(
+const kMainTitleTextStyle = TextStyle(
     fontSize: 100.0,
     color: Colors.white70,
+    fontFamily: 'Dongle-Regular',
+    letterSpacing: 1.0,
+    height: 0.0);
+
+const kTitleTextStyle = TextStyle(
+    fontSize: 30.0,
+    color: Colors.white,
     fontFamily: 'Dongle-Regular',
     letterSpacing: 1.0,
     height: 0.0);
