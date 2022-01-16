@@ -16,6 +16,7 @@ import 'package:bcsv_flutter_project/screens/about_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
+import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -99,12 +100,12 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading:
-            Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
+                Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
             title: LocaleText('New Message', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => PrayerListScreen())).then(
-                    (onValue) {
+                (onValue) {
                   updateMessageCounter();
                 },
               );
@@ -118,8 +119,8 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
-            leading: Icon(Icons.book_outlined,
-                color: kActiveIconColor, size: 20),
+            leading:
+                Icon(Icons.book_outlined, color: kActiveIconColor, size: 20),
             title: LocaleText('Sermon Bible Text', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
@@ -146,8 +147,7 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.volunteer_activism,
-                color: kActiveIconColor),
+            leading: Icon(Icons.volunteer_activism, color: kActiveIconColor),
             title: LocaleText('Offering', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(
@@ -156,11 +156,22 @@ class _NavBarState extends State<NavBar> {
                       builder: (_) => OfferingScreen(url: kOfferingUrl)));
             },
           ),
-          ListWebViewMenu(
-              myIcon: Icons.add_shopping_cart_outlined,
-              menuName: "Reimbursement",
-              url: ApiEndpoint.apiMap['REIMBURSEMENT'],
-              trailing: emptyString),
+          // ListWebViewMenu(
+          //     myIcon: Icons.add_shopping_cart_outlined,
+          //     menuName: "Reimbursement",
+          //     url: ApiEndpoint.apiMap['REIMBURSEMENT'],
+          //     trailing: emptyString),
+          ListTile(
+            leading: Icon(Icons.share, color: kActiveIconColor),
+            title: LocaleText('Reimbursement', style: kDrawerMenuTextStyle),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ReimbursementScreen(
+                          selectedUrl: ApiEndpoint.apiMap['REIMBURSEMENT'])));
+            },
+          ),
           ListTile(
             leading: Icon(Icons.share, color: kActiveIconColor),
             title: LocaleText('Opinion', style: kDrawerMenuTextStyle),
