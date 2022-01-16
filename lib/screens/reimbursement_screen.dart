@@ -9,19 +9,10 @@ class ReimbursementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
+    return new WebviewScaffold(
       url: selectedUrl,
       appBar: new AppBar(
-        title: const Text('Widget webview'),
-      ),
-      withZoom: true,
-      withLocalStorage: true,
-      hidden: true,
-      initialChild: Container(
-        color: Colors.redAccent,
-        child: const Center(
-          child: Text('Waiting.....'),
-        ),
+        title: new Text("Widget webview"),
       ),
     );
   }
