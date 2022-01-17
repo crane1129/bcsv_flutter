@@ -100,14 +100,17 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
                   children: <Widget>[
                     ListTile(
                       leading: Icon(Icons.event, color: kActiveIconColor),
-                      title: Text(
-                        myPrayerItem.message,
-                        overflow: TextOverflow.ellipsis,
+                      title: Padding(padding: EdgeInsets.only(top:10.0),
+                        child: Text(
+                          myPrayerItem.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: kCardTitleStyle,
+                        ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(
+                      child: SelectableText(
                         myPrayerItem.message,
                         style: TextStyle(color: Colors.black.withOpacity(0.6)),
                       ),

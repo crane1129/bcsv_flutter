@@ -162,7 +162,7 @@ class _NavBarState extends State<NavBar> {
           //     url: ApiEndpoint.apiMap['REIMBURSEMENT'],
           //     trailing: emptyString),
           ListTile(
-            leading: Icon(Icons.share, color: kActiveIconColor),
+            leading: Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
             title: LocaleText('Reimbursement', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(

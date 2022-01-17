@@ -24,7 +24,7 @@ const kMainThemeColor = Color(0xFF344955);
 const kDrawerBackgroundColor = Color(0xFF232F34);
 
 const kAppBarTextStyle = TextStyle(
-    fontSize: 45.0, fontWeight: FontWeight.normal, fontFamily: 'Dongle-Bold');
+    fontSize: 30.0, fontWeight: FontWeight.normal, fontFamily: 'Dongle-Bold');
 
 const kAppBarTextStyleSmall = TextStyle(
     fontSize: 20.0,
@@ -34,6 +34,9 @@ const kAppBarTextStyleSmall = TextStyle(
 
 const kBodyTextStyle = TextStyle(
     fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+
+const kCardTitleStyle = TextStyle(
+    fontSize: 25.0, color: Colors.black, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
 
 const kLabelTextStyle = TextStyle(
     fontSize: 20.0, color: Colors.white, fontFamily: 'Dongle-Regular');

@@ -10,6 +10,8 @@ import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 
 class SermonReviewScreen extends StatefulWidget {
   const SermonReviewScreen({Key? key}) : super(key: key);
@@ -77,7 +79,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
 
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
-        leading: tile.icon != null ? Icon(tile.icon) : null,
+        leading: tile.icon != null ? Icon(tile.icon, color: kActiveIconColor) : null,
         title: tile.headerText);
   }
 
@@ -104,55 +106,73 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
         modelParam: modelParam, body: data, isBodyRequired: false);
 
     String _reviewTextList = await myGoogleDocContent.getContent();
-    var jsonObj = jsonDecode(_reviewTextList)[modelParam.tag] as List;
+    if (_reviewTextList.isEmpty){
+      Alert(
+        context: context,
+        title: "File not found",
+        desc: "Please restart the application.",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "OK",
+              style: kLabelTextStyle,
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
 
-    List<dynamic> reviewTextList =
-        jsonObj.map((tagJson) => SermonReview.fromJson(tagJson)).toList();
+      isLoading = false;
+    }
+    else{
+      var jsonObj = jsonDecode(_reviewTextList)[modelParam.tag] as List;
 
-    setState(
-      () {
-        String applicationText = "";
-        String inDepthText = "";
-        String reviewText = "";
+      List<dynamic> reviewTextList =
+      jsonObj.map((tagJson) => SermonReview.fromJson(tagJson)).toList();
 
-        for (SermonReview content in reviewTextList.reversed) {
-          if (content.title.isEmpty) {
-            if (content.review.isNotEmpty) {
-              //This is InDepth question
-              reviewText += "\n📚복습 질문: ${content.review}\n";
-            } else if (content.application.isNotEmpty) {
-              //This is application question
-              applicationText += "\n️💁‍♀️적용 질문: ${content.application}\n";
-            } else if (content.in_depth.isNotEmpty) {
-              //This is application question
-              inDepthText += "\n🎓심화학습 질문: ${content.in_depth}\n";
-            }
-          } else {
-            print(applicationText);
-            print(reviewText);
-            print(inDepthText);
+      setState(
+            () {
+          String applicationText = "";
+          String inDepthText = "";
+          String reviewText = "";
 
-            SermonReviewTiles.add(
-              ContentListTile(
-                icon: FontAwesomeIcons.bible,
-                headerText: Text('${content.date}\n${content.title}',
-                    style: kBodyTextStyle),
-                contents: [
-                  SelectableText(
-                      "📚복습질문: ${content.review}\n$reviewText\n💁‍♀️️적용질문: ${content.application}\n$applicationText\n🎓심화학습 질문: ${content.in_depth}\n$inDepthText",
+          for (SermonReview content in reviewTextList.reversed) {
+            if (content.title.isEmpty) {
+              if (content.review.isNotEmpty) {
+                //This is InDepth question
+                reviewText += "\n📚복습 질문: ${content.review}\n";
+              } else if (content.application.isNotEmpty) {
+                //This is application question
+                applicationText += "\n️💁‍♀️적용 질문: ${content.application}\n";
+              } else if (content.in_depth.isNotEmpty) {
+                //This is application question
+                inDepthText += "\n🎓심화학습 질문: ${content.in_depth}\n";
+              }
+            } else {
+
+              SermonReviewTiles.add(
+                ContentListTile(
+                  icon: FontAwesomeIcons.bible,
+                  headerText: Text('${content.date}\n${content.title}',
                       style: kBodyTextStyle),
-                ],
-              ),
-            );
-            applicationText = '';
-            inDepthText = '';
-            reviewText = '';
+                  contents: [
+                    SelectableText(
+                        "📚복습질문: ${content.review}\n$reviewText\n💁‍♀️️적용질문: ${content.application}\n$applicationText\n🎓심화학습 질문: ${content.in_depth}\n$inDepthText",
+                        style: kBodyTextStyle),
+                  ],
+                ),
+              );
+              applicationText = '';
+              inDepthText = '';
+              reviewText = '';
+            }
           }
-        }
 
-        //Hide loading spinner
-        isLoading = false;
-      },
-    );
+          //Hide loading spinner
+          isLoading = false;
+        },
+      );
+    }
   }
 }

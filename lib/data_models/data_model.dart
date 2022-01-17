@@ -132,12 +132,14 @@ class SermonReview {
 class PrayerList {
   final String expireDate;
   final String category;
+  final String title;
   final String message;
   final String imageLink;
 
   PrayerList(
       {required this.expireDate,
       required this.category,
+        required this.title,
       required this.message,
       required this.imageLink});
 
@@ -145,6 +147,7 @@ class PrayerList {
     return PrayerList(
         expireDate: json['ExpireDate'],
         category: json['Category'],
+        title: json['Title'],
         message: json['Message'],
         imageLink: json['ImageLink'] ?? "https://tinyurl.com/yc8rdbr4");
   }
