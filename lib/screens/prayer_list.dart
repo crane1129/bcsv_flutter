@@ -116,8 +116,8 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
                       ),
                     ),
                     myPrayerItem.imageLink.isEmpty
-                        ? Image.asset('assets/images/mountain1.jpg')
-                        : Image.network(myPrayerItem.imageLink),
+                        ? Image.asset('assets/images/mountain1.jpg', height: 100.0,)
+                        : Image.network(myPrayerItem.imageLink, height: 200.0,),
                   ],
                 ),
               ),

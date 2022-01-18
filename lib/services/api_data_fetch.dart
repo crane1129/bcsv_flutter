@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:bcsv_flutter_project/data_models/data_model.dart';
-import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
 
