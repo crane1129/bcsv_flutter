@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:bcsv_flutter_project/screens/prayer_list.dart';
+import 'package:bcsv_flutter_project/screens/message_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
@@ -104,7 +104,7 @@ class _NavBarState extends State<NavBar> {
             title: LocaleText('New Message', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => PrayerListScreen())).then(
+                  MaterialPageRoute(builder: (_) => MessageListScreen())).then(
                 (onValue) {
                   updateMessageCounter();
                 },

@@ -129,26 +129,29 @@ class SermonReview {
   }
 }
 
-class PrayerList {
+class MessageList {
   final String expireDate;
   final String category;
   final String title;
   final String message;
   final String imageLink;
+  final String externalLink;
 
-  PrayerList(
+  MessageList(
       {required this.expireDate,
       required this.category,
-        required this.title,
+      required this.title,
       required this.message,
-      required this.imageLink});
+      required this.imageLink,
+      required this.externalLink});
 
-  factory PrayerList.fromJson(dynamic json) {
-    return PrayerList(
+  factory MessageList.fromJson(dynamic json) {
+    return MessageList(
         expireDate: json['ExpireDate'],
         category: json['Category'],
         title: json['Title'],
         message: json['Message'],
-        imageLink: json['ImageLink'] ?? "https://tinyurl.com/yc8rdbr4");
+        imageLink: json['ImageLink'] ?? "https://tinyurl.com/yc8rdbr4",
+        externalLink: json['ExternalLink'] ?? "");
   }
 }

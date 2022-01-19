@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
@@ -9,14 +10,14 @@ import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 
-class PrayerListScreen extends StatefulWidget {
-  const PrayerListScreen({Key? key}) : super(key: key);
+class MessageListScreen extends StatefulWidget {
+  const MessageListScreen({Key? key}) : super(key: key);
 
   @override
-  _PrayerListScreenState createState() => _PrayerListScreenState();
+  _MessageListScreenState createState() => _MessageListScreenState();
 }
 
-class _PrayerListScreenState extends State<PrayerListScreen> {
+class _MessageListScreenState extends State<MessageListScreen> {
   bool isLoading = false;
   var prayerListTiles = <Widget>[];
 
@@ -24,7 +25,7 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPrayerListFromGoogleSheet();
+    getMessageListFromGoogleSheet();
   }
 
   @override
@@ -58,7 +59,7 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
     );
   }
 
-  void getPrayerListFromGoogleSheet() async {
+  void getMessageListFromGoogleSheet() async {
     //Show loading spinner
     isLoading = true;
     var messageCounter = 0;
@@ -80,11 +81,11 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
     var jsonObj = jsonDecode(_prayerList) as List;
 
     List<dynamic> prayerList =
-        jsonObj.map((tagJson) => PrayerList.fromJson(tagJson)).toList();
+        jsonObj.map((tagJson) => MessageList.fromJson(tagJson)).toList();
 
     setState(() {
-      for (PrayerList myPrayerItem in prayerList) {
-        DateTime givenDate = DateTime.parse(myPrayerItem.expireDate);
+      for (MessageList myMessageItem in prayerList) {
+        DateTime givenDate = DateTime.parse(myMessageItem.expireDate);
         if (todayDate.isAfter(givenDate)) {
           //This is expired item
           continue;
@@ -98,11 +99,19 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
                 clipBehavior: Clip.antiAlias,
                 child: Column(
                   children: <Widget>[
+                    myMessageItem.imageLink.isEmpty
+                        ? Image.asset(
+                      'assets/images/mountain1.jpg',
+                    )
+                        : Image.network(
+                      myMessageItem.imageLink,
+                    ),
                     ListTile(
                       leading: Icon(Icons.event, color: kActiveIconColor),
-                      title: Padding(padding: EdgeInsets.only(top:10.0),
+                      title: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          myPrayerItem.title,
+                          myMessageItem.title,
                           overflow: TextOverflow.ellipsis,
                           style: kCardTitleStyle,
                         ),
@@ -111,13 +120,21 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: SelectableText(
-                        myPrayerItem.message,
+                        myMessageItem.message,
                         style: TextStyle(color: Colors.black.withOpacity(0.6)),
                       ),
                     ),
-                    myPrayerItem.imageLink.isEmpty
-                        ? Image.asset('assets/images/mountain1.jpg', height: 100.0,)
-                        : Image.network(myPrayerItem.imageLink, height: 200.0,),
+                    myMessageItem.externalLink.isNotEmpty
+                        ? OutlinedButton.icon(
+                            onPressed: () async {
+                              if (await canLaunch(myMessageItem.externalLink)) {
+                                await launch(myMessageItem.externalLink);
+                              }
+                            },
+                            icon: Icon(Icons.link),
+                            label: Text('Link'),
+                          )
+                        : SizedBox(height: 1.0),
                   ],
                 ),
               ),

@@ -71,7 +71,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     UserSharedPreferences.setServingTurnCache(false);
     UserSharedPreferences.setDailyBibleText1Cache(false);
     UserSharedPreferences.setDailyBibleText2Cache(false);
-    UserSharedPreferences.setMessageListTextCache(false);
+     UserSharedPreferences.setMessageListTextCache(false);
   }
 
   void checkNetworkConnection() async {
