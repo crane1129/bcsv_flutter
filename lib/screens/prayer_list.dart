@@ -68,8 +68,8 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
       apiEndpoint: ApiEndpoint.apiMap['MESSAGE'],
       tag: '',
       cacheFileName: kPrayerListData,
-      getSharedReference: UserSharedPreferences.getPrayerListTextCache,
-      setSharedReference: UserSharedPreferences.setPrayerListTextCache,
+      getSharedReference: UserSharedPreferences.getMessageListTextCache,
+      setSharedReference: UserSharedPreferences.setMessageListTextCache,
     );
 
     Map data = {};
@@ -128,7 +128,7 @@ class _PrayerListScreenState extends State<PrayerListScreen> {
         }
       }
 
-      UserSharedPreferences.setPrayerListCounter(messageCounter);
+      UserSharedPreferences.setMessageListCounter(messageCounter);
       isLoading = false;
     });
   }

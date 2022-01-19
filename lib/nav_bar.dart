@@ -212,7 +212,7 @@ class _NavBarState extends State<NavBar> {
 
   void updateMessageCounter() {
     setState(() {
-      messageCounter = UserSharedPreferences.getPrayerListCounter() ?? 0;
+      messageCounter = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
   }
 
