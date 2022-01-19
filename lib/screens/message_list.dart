@@ -77,14 +77,14 @@ class _MessageListScreenState extends State<MessageListScreen> {
     ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
         modelParam: modelParam, body: data, isBodyRequired: false);
 
-    String _prayerList = await myGoogleDocContent.getContent();
-    var jsonObj = jsonDecode(_prayerList) as List;
+    String _messageList = await myGoogleDocContent.getContent();
+    var jsonObj = jsonDecode(_messageList) as List;
 
-    List<dynamic> prayerList =
+    List<dynamic> messageList =
         jsonObj.map((tagJson) => MessageList.fromJson(tagJson)).toList();
 
     setState(() {
-      for (MessageList myMessageItem in prayerList) {
+      for (MessageList myMessageItem in messageList) {
         DateTime givenDate = DateTime.parse(myMessageItem.expireDate);
         if (todayDate.isAfter(givenDate)) {
           //This is expired item

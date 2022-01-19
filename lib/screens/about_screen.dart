@@ -22,6 +22,20 @@ class _AboutScreenState extends State<AboutScreen> {
         child: Container(
           child: Column(
             children: <Widget>[
+              const UserAccountsDrawerHeader(
+                accountName: Text('Bridgeway Baptist Church'),
+                accountEmail: Text('bcsv.org'),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: kActiveCardColor,
+                  backgroundImage: AssetImage('assets/images/app.png'),
+                ),
+                decoration: BoxDecoration(
+                    color: kMainAppBarColor,
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/mountain1.jpg'),
+                      fit: BoxFit.cover,
+                    )),
+              ),
               _infoTile('App name', PackageInformation.packageInfo.appName),
               _infoTile(
                   'Package name', PackageInformation.packageInfo.packageName),
@@ -30,8 +44,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   'Build number', PackageInformation.packageInfo.buildNumber),
               _infoTile('Build signature',
                   PackageInformation.packageInfo.buildSignature),
-              _infoTile('Developer',
-                  'Haksoo Kim, Daniel Kim'),
+              _infoTile('Developer', 'Haksoo Kim, Daniel Kim'),
             ],
           ),
         ),
