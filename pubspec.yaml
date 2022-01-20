@@ -63,6 +63,14 @@ dependencies:
   # Alert message popup_window:
   rflutter_alert: ^2.0.4
 
+  # Flutter splash screen
+  flutter_native_splash: ^1.3.3
+
+flutter_native_splash:
+  color: "#232F34"
+  image: assets/images/app.png
+  android: true
+  ios: true
 
 
 dev_dependencies:
