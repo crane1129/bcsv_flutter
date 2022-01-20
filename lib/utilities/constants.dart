@@ -35,6 +35,12 @@ const kAppBarTextStyleSmall = TextStyle(
 const kBodyTextStyle = TextStyle(
     fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
 
+const kListTitleStyle = TextStyle(
+    fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+
+const kListSubtitleStyle = TextStyle(
+    fontSize: 20.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+
 const kCardTitleStyle = TextStyle(
     fontSize: 25.0, color: Colors.black, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
 

@@ -19,7 +19,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
 
   final fieldText = TextEditingController();
 
-  void clearText(){
+  void clearText() {
     fieldText.clear();
   }
 
@@ -48,10 +48,13 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
             ),
             child: Column(
               children: [
+                SizedBox(height: 20),
                 ListTile(
                   leading: Icon(Icons.question_answer, color: kActiveIconColor),
                   title: LocaleText('Pleas send us your opinion',
-                      style: kBodyTextStyle),
+                      style: kListTitleStyle),
+                  subtitle: LocaleText("Your submission is made anonymously",
+                      style: kListSubtitleStyle),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -92,11 +95,11 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
     DateTime now = DateTime.now();
     String formattedCurrentDate = DateFormat('yyyy-MM-dd').format(now);
 
-    if(myMessage.isEmpty){
+    if (myMessage.isEmpty) {
       Alert(
         context: context,
         title: "Text is empty",
-        desc: "Please input text",
+        desc: "Please type your opinion",
         buttons: [
           DialogButton(
             child: Text(
@@ -108,7 +111,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
           )
         ],
       ).show();
-    }else{
+    } else {
       setState(() {
         final message = {
           'Date': formattedCurrentDate,
@@ -120,8 +123,5 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
         clearText();
       });
     }
-
   }
-
-
 }
