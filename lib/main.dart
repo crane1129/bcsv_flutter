@@ -36,7 +36,7 @@ class MyBCSVApp extends StatelessWidget {
           theme: ThemeData.fallback().copyWith(
             scaffoldBackgroundColor: kMainThemeColor,
             colorScheme:
-                ColorScheme.fromSwatch().copyWith(secondary: Colors.red),
+                ColorScheme.fromSwatch().copyWith(secondary: Colors.black),
           ),
           home: const LoadingScreen(),
         ),

@@ -36,14 +36,15 @@ class _AboutScreenState extends State<AboutScreen> {
                       fit: BoxFit.cover,
                     )),
               ),
+              SizedBox(height: 40.0),
               _infoTile('App name', PackageInformation.packageInfo.appName),
               _infoTile(
                   'Package name', PackageInformation.packageInfo.packageName),
               _infoTile('App version', PackageInformation.packageInfo.version),
               _infoTile(
                   'Build number', PackageInformation.packageInfo.buildNumber),
-              _infoTile('Build signature',
-                  PackageInformation.packageInfo.buildSignature),
+              // _infoTile('Build signature',
+              //     PackageInformation.packageInfo.buildSignature),
               _infoTile('Developer', 'Haksoo Kim, Daniel Kim'),
             ],
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:intl/intl.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/services/gsheet_access.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
@@ -96,21 +96,13 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
     String formattedCurrentDate = DateFormat('yyyy-MM-dd').format(now);
 
     if (myMessage.isEmpty) {
-      Alert(
-        context: context,
-        title: "Text is empty",
-        desc: "Please type your opinion",
-        buttons: [
-          DialogButton(
-            child: Text(
-              "OK",
-              style: kLabelTextStyle,
-            ),
-            onPressed: () => Navigator.pop(context),
-            width: 120,
-          )
-        ],
-      ).show();
+      showSimpleNotification(
+          LocaleText(
+            "Please enter your opinion.",
+          ),
+          leading: Icon(Icons.warning_amber_outlined),
+          background: Colors.red,
+          elevation: 5);
     } else {
       setState(() {
         final message = {

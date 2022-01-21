@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         drawer: NavBar(),
         appBar: AppBar(
-          backgroundColor: kMainAppBarColor,
+          backgroundColor: Colors.transparent.withOpacity(0.5),
           title: AppBarHeaderText(text1: 'Bridgeway', text2: 'Baptist Church'),
         ),
         body: SafeArea(
