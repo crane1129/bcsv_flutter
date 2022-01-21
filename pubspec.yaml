@@ -66,6 +66,9 @@ dependencies:
   # Flutter splash screen
   flutter_native_splash: ^1.3.3
 
+  # change app name for publication
+  rename: ^2.0.1
+
 flutter_native_splash:
   color: "#232F34"
   image: assets/images/app.png
