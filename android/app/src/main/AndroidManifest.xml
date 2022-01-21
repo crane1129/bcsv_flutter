@@ -2,7 +2,7 @@
     package="com.mobile.bcsv.org.bcsv_flutter_project">
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
    <application
-        android:label="Bridgeway
+        android:label="Bridgeway"
 "
         android:icon="@mipmap/ic_launcher">
         <activity
