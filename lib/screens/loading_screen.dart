@@ -88,7 +88,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           background: Colors.red,
           elevation: 5);
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (_) => DisconnectScreen(),
@@ -97,7 +97,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     } else {
       //bindEndpoints 작업을 마치면 bindEndpoints 안에서 메인페이지로 이동함.
-      ApiEndpoint.bindEndpoints(context);
+      bool result = await ApiEndpoint.bindEndpoints();
       GoogleMessageSheet.init();
       _initPackageInfo();
 
@@ -108,7 +108,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         },
       );
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (_) => MyHomePage(),

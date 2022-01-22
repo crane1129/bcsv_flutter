@@ -11,7 +11,7 @@ const String kEndpointAPI =
 class ApiEndpoint {
   static var apiMap = {};
 
-  static void bindEndpoints(BuildContext context) async {
+  static Future<bool> bindEndpoints() async {
     try {
       String endpointList = await _getApiEndpoints();
       var jsonObj = jsonDecode(endpointList)['endpoints'] as List;
@@ -22,11 +22,13 @@ class ApiEndpoint {
         apiMap[e.endpoint] = e.url;
       }
 
-      stdout.writeln('Endpoint bind is complete');
+      print('Endpoint bind is complete');
+      return true;
 
     } catch (e) {
-      stderr.writeln(e.toString());
+      print(e.toString());
     }
+    return false;
   }
 
   static Future<String> _getApiEndpoints() async {
