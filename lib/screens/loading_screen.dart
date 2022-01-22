@@ -1,3 +1,4 @@
+import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
           leading: Icon(Icons.network_check),
           background: Colors.red,
           elevation: 5);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => DisconnectScreen(),
+        ),
+      );
+
     } else {
       //bindEndpoints 작업을 마치면 bindEndpoints 안에서 메인페이지로 이동함.
       ApiEndpoint.bindEndpoints(context);
