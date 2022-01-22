@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:bcsv_flutter_project/screens/home_screen.dart';
 
@@ -21,16 +22,10 @@ class ApiEndpoint {
         apiMap[e.endpoint] = e.url;
       }
 
-      print('Endpoint bind is complete');
+      stdout.writeln('Endpoint bind is complete');
 
-      //Navigate to Home screen and destroy the loading screen.
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-        builder: (context) {
-          return MyHomePage();
-        },
-      ), (e) => false);
     } catch (e) {
-      print(e.toString());
+      stderr.writeln(e.toString());
     }
   }
 
@@ -41,7 +36,7 @@ class ApiEndpoint {
       String data = response.body;
       return data;
     } else {
-      print(response.statusCode);
+      stdout.writeln(response.statusCode);
     }
 
     return "";
