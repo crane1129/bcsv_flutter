@@ -51,7 +51,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                 SizedBox(height: 20),
                 ListTile(
                   leading: Icon(Icons.question_answer, color: kActiveIconColor),
-                  title: LocaleText('Pleas send us your opinion',
+                  title: LocaleText('Please send us your opinion',
                       style: kListTitleStyle),
                   subtitle: LocaleText("Your submission is made anonymously",
                       style: kListSubtitleStyle),
