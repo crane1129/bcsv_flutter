@@ -22,75 +22,79 @@ const kCardIconColor = Color(0xFFF9AA33);
 const kMainAppBarColor = Color(0xFF232F34);
 const kMainThemeColor = Color(0xFF344955);
 const kDrawerBackgroundColor = Color(0xFF232F34);
-
+const kSystemWideFont = 'Dongle';
 const kAppBarTextStyle = TextStyle(
-    fontSize: 30.0, fontWeight: FontWeight.normal, fontFamily: 'Dongle-Bold');
+    fontSize: 30.0, fontFamily: kSystemWideFont);
 
 const kAppBarTextStyleSmall = TextStyle(
-    fontSize: 20.0,
-    fontWeight: FontWeight.normal,
-    fontFamily: 'Dongle-Regular',
-    color: Color(0xFFF9AA33));
+  fontSize: 20.0,
+  fontFamily: kSystemWideFont,
+  color: Color(0xFFF9AA33),
+);
 
 const kBodyTextStyle = TextStyle(
-    fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+    fontSize: 25.0,
+    color: Colors.white,
+    fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
 
 const kListTitleStyle = TextStyle(
-    fontSize: 25.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+    fontSize: 25.0,
+    color: Colors.white,
+    fontFamily: kSystemWideFont, fontWeight: FontWeight.w700);
 
 const kListSubtitleStyle = TextStyle(
-    fontSize: 20.0, color: Colors.white, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+    fontSize: 20.0,
+    color: Colors.white,
+    fontFamily: kSystemWideFont);
 
 const kCardTitleStyle = TextStyle(
-    fontSize: 25.0, color: Colors.black, fontFamily: 'Dongle-Regular', fontWeight: FontWeight.w100);
+    fontSize: 25.0,
+    color: Colors.black,
+    fontFamily: kSystemWideFont);
 
-const kLabelTextStyle = TextStyle(
-    fontSize: 20.0, color: Colors.white, fontFamily: 'Dongle-Regular');
+const kLabelTextStyle =
+    TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: kSystemWideFont);
 
 const kLargeButtonTextStyle = TextStyle(
   fontSize: 25.0,
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
+  color: Colors.white
 );
 
 const kRegularButtonTextStyle = TextStyle(
   fontSize: 12.0,
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
+  color: Colors.white
 );
 
 const kMainTitleTextStyle = TextStyle(
     fontSize: 100.0,
     color: Colors.white70,
-    fontFamily: 'Dongle-Regular',
+    fontFamily: kSystemWideFont,
     letterSpacing: 1.0,
     height: 0.0);
 
 const kTitleTextStyle = TextStyle(
     fontSize: 30.0,
     color: Colors.white,
-    fontFamily: 'Dongle-Regular',
+    fontFamily: kSystemWideFont,
     letterSpacing: 1.0,
     height: 0.0);
 
 const kSubTitleTextStyle = TextStyle(
     fontSize: 50.0,
     color: Colors.lightGreen,
-    fontFamily: 'Dongle-Regular',
+    fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
 
 const kDrawerTitleMenuTextStyle = TextStyle(
     fontSize: 30.0,
     color: Colors.white54,
-    fontFamily: 'Dongle-Regular',
-    fontWeight: FontWeight.w500,
+    fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
 
 const kDrawerMenuTextStyle = TextStyle(
     fontSize: 25.0,
-    color: Colors.white54,
-    fontFamily: 'Dongle-Regular',
-    fontWeight: FontWeight.w100,
+    color: Colors.white70,
+    fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
 
 const kTextFieldInputDecoration = InputDecoration(

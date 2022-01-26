@@ -106,15 +106,36 @@ flutter:
 
 
   fonts:
+    - family: Dongle
+      fonts:
+        - asset: fonts/Dongle-Light.ttf
+          weight: 300
+        - asset: fonts/Dongle-Regular.ttf
+          weight: 400
+        - asset: fonts/Dongle-Bold.ttf
+          weight: 700
+
     - family: SingleDay
       fonts:
         - asset: fonts/SingleDay-Regular.ttf
-    - family: Dongle-Bold
+
+    - family: Sunflower-Light
       fonts:
-        - asset: fonts/Dongle-Bold.ttf
-    - family: Dongle-Regular
+        - asset: fonts/Sunflower-Light.ttf
+
+    - family: Sunflower
       fonts:
-        - asset: fonts/Dongle-Regular.ttf
+        - asset: fonts/Sunflower-Light.ttf
+          weight: 300
+        - asset: fonts/Sunflower-Medium.ttf
+          weight: 400
+        - asset: fonts/Sunflower-Bold.ttf
+          weight: 700
+
+
+    - family: PoorStory
+      fonts:
+        - asset: fonts/PoorStory-Regular.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

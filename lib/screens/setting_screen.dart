@@ -2,6 +2,8 @@ import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
+
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -31,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: LocaleText('Settings'),
+        title: AppBarHeaderText(text1: 'Offering', text2: ''),
       ),
       body: SingleChildScrollView(
         child: Column(

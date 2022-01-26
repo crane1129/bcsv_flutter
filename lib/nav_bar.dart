@@ -45,8 +45,11 @@ class _NavBarState extends State<NavBar> {
         padding: EdgeInsets.zero,
         children: [
           const UserAccountsDrawerHeader(
-            accountName: Text('Bridgeway Baptist Church'),
-            accountEmail: Text('bcsv.org'),
+            accountName: Text('Bridgeway'),
+            accountEmail: Text(
+              'Baptist Church',
+              style: TextStyle(fontSize: 10),
+            ),
             currentAccountPicture: CircleAvatar(
               backgroundColor: kActiveCardColor,
               backgroundImage: AssetImage('assets/images/app.png'),
@@ -163,7 +166,8 @@ class _NavBarState extends State<NavBar> {
           //     url: ApiEndpoint.apiMap['REIMBURSEMENT'],
           //     trailing: emptyString),
           ListTile(
-            leading: Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
+            leading:
+                Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
             title: LocaleText('Reimbursement', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(
