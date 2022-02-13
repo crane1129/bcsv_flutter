@@ -23,8 +23,8 @@ class _AboutScreenState extends State<AboutScreen> {
           child: Column(
             children: <Widget>[
               const UserAccountsDrawerHeader(
-                accountName: Text('Bridgeway Baptist Church'),
-                accountEmail: Text('bcsv.org'),
+                accountName: Text(kMissionStatement),
+                accountEmail: Text(kMissionVerse),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: kActiveCardColor,
                   backgroundImage: AssetImage('assets/images/app.png'),

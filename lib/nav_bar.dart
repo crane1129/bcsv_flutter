@@ -45,9 +45,9 @@ class _NavBarState extends State<NavBar> {
         padding: EdgeInsets.zero,
         children: [
           const UserAccountsDrawerHeader(
-            accountName: Text('Bridgeway'),
+            accountName: Text(kMissionStatement),
             accountEmail: Text(
-              'Baptist Church',
+              kMissionVerse,
               style: TextStyle(fontSize: 10),
             ),
             currentAccountPicture: CircleAvatar(

@@ -119,10 +119,6 @@ flutter:
       fonts:
         - asset: fonts/SingleDay-Regular.ttf
 
-    - family: Sunflower-Light
-      fonts:
-        - asset: fonts/Sunflower-Light.ttf
-
     - family: Sunflower
       fonts:
         - asset: fonts/Sunflower-Light.ttf

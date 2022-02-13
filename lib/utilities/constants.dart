@@ -9,7 +9,8 @@ const String kDailyBible1Data = 'daily_bible1.json';
 const String kDailyBible2Data = 'daily_bible2.json';
 const String kBibleReviewData = 'bible_review.json';
 const String kPrayerListData = 'prayer_list.json';
-
+const String kMissionStatement = 'Mission Statement';
+const String kMissionVerse = 'John 13: 34~35';
 const String kBaseUrl = "https://bcsv.org";
 const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
@@ -22,7 +23,7 @@ const kCardIconColor = Color(0xFFF9AA33);
 const kMainAppBarColor = Color(0xFF232F34);
 const kMainThemeColor = Color(0xFF344955);
 const kDrawerBackgroundColor = Color(0xFF232F34);
-const kSystemWideFont = 'Dongle';
+const kSystemWideFont = 'PoorStory';
 const kAppBarTextStyle = TextStyle(
     fontSize: 30.0, fontFamily: kSystemWideFont);
 
@@ -33,17 +34,17 @@ const kAppBarTextStyleSmall = TextStyle(
 );
 
 const kBodyTextStyle = TextStyle(
-    fontSize: 25.0,
+    fontSize: 18.0,
     color: Colors.white,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
 
 const kListTitleStyle = TextStyle(
-    fontSize: 25.0,
+    fontSize: 18.0,
     color: Colors.white,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w700);
 
 const kListSubtitleStyle = TextStyle(
-    fontSize: 20.0,
+    fontSize: 15.0,
     color: Colors.white,
     fontFamily: kSystemWideFont);
 
@@ -86,20 +87,20 @@ const kSubTitleTextStyle = TextStyle(
     textBaseline: TextBaseline.alphabetic);
 
 const kDrawerTitleMenuTextStyle = TextStyle(
-    fontSize: 30.0,
-    color: Colors.white54,
+    fontSize: 20.0,
+    color: Colors.white,
     fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
 
 const kDrawerMenuTextStyle = TextStyle(
-    fontSize: 25.0,
+    fontSize: 18.0,
     color: Colors.white70,
     fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
 
 const kTextFieldInputDecoration = InputDecoration(
   filled: true,
-  fillColor: Colors.white54,
+  fillColor: Colors.white,
   counterStyle: kBodyTextStyle,
   //icon: Icon(Icons.question_answer, color: Colors.white),
   hintText: "Enter your opinion here...",
