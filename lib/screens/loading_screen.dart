@@ -48,6 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 children: <Widget>[
                   Text('Bridgeway', style: kMainTitleTextStyle),
                 ]),
+            SizedBox(height: 50),
             Text('Baptist Church', style: kSubTitleTextStyle),
             SizedBox(height: 50),
             SpinKitFadingCube(

@@ -67,7 +67,7 @@ const kRegularButtonTextStyle = TextStyle(
 );
 
 const kMainTitleTextStyle = TextStyle(
-    fontSize: 100.0,
+    fontSize: 70.0,
     color: Colors.white70,
     fontFamily: kSystemWideFont,
     letterSpacing: 1.0,
@@ -81,7 +81,7 @@ const kTitleTextStyle = TextStyle(
     height: 0.0);
 
 const kSubTitleTextStyle = TextStyle(
-    fontSize: 50.0,
+    fontSize: 30.0,
     color: Colors.lightGreen,
     fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
