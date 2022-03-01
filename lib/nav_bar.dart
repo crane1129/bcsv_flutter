@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:bcsv_flutter_project/screens/message_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/screens/daily_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/screens/setting_screen.dart';
@@ -64,7 +63,7 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             //leading: Icon(FontAwesomeIcons.church, color: kInactiveIconColor),
             title:
-                LocaleText('Sunday Sermons', style: kDrawerTitleMenuTextStyle),
+                Text('Sunday Sermons', style: kDrawerTitleMenuTextStyle),
           ),
           ListWebViewMenu(
               myIcon: Icons.voice_chat_outlined,
@@ -79,13 +78,13 @@ class _NavBarState extends State<NavBar> {
           const Divider(color: Colors.white30),
           ListTile(
             //leading: Icon(Icons.speaker_notes, color: kInactiveIconColor),
-            title: LocaleText('Notification', style: kDrawerTitleMenuTextStyle),
+            title: Text('Notification', style: kDrawerTitleMenuTextStyle),
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading: Icon(Icons.accessibility_new_outlined,
                 color: kActiveIconColor, size: 20),
-            title: LocaleText('Serving Turn', style: kDrawerMenuTextStyle),
+            title: Text('Serving Turn', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => ServingTurnPage()));
@@ -95,7 +94,7 @@ class _NavBarState extends State<NavBar> {
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading: Icon(Icons.notifications_none,
                 color: kActiveIconColor, size: 20),
-            title: LocaleText('Announcement', style: kDrawerMenuTextStyle),
+            title: Text('Announcement', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => AnnouncementPage()));
@@ -105,7 +104,7 @@ class _NavBarState extends State<NavBar> {
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading:
                 Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
-            title: LocaleText('New Message', style: kDrawerMenuTextStyle),
+            title: Text('New Message', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => MessageListScreen())).then(
@@ -119,13 +118,13 @@ class _NavBarState extends State<NavBar> {
           const Divider(color: Colors.white30),
           ListTile(
             //leading: Icon(FontAwesomeIcons.bible, color: kInactiveIconColor),
-            title: LocaleText('Bible Text', style: kDrawerTitleMenuTextStyle),
+            title: Text('Bible Text', style: kDrawerTitleMenuTextStyle),
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading:
                 Icon(Icons.book_outlined, color: kActiveIconColor, size: 20),
-            title: LocaleText('Sermon Bible Text', style: kDrawerMenuTextStyle),
+            title: Text('Sermon Bible Text', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => SundayBibleTextScreen()));
@@ -135,7 +134,7 @@ class _NavBarState extends State<NavBar> {
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading:
                 Icon(Icons.create_sharp, color: kActiveIconColor, size: 20),
-            title: LocaleText('Sermon Review', style: kDrawerMenuTextStyle),
+            title: Text('Sermon Review', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => SermonReviewScreen()));
@@ -144,7 +143,7 @@ class _NavBarState extends State<NavBar> {
           const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.article_outlined, color: kActiveIconColor),
-            title: LocaleText('Daily Bible', style: kDrawerMenuTextStyle),
+            title: Text('Daily Bible', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => DailyBibleTextScreen()));
@@ -152,7 +151,7 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             leading: Icon(Icons.volunteer_activism, color: kActiveIconColor),
-            title: LocaleText('Offering', style: kDrawerMenuTextStyle),
+            title: Text('Offering', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(
                   context,
@@ -168,7 +167,7 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading:
                 Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
-            title: LocaleText('Reimbursement', style: kDrawerMenuTextStyle),
+            title: Text('Reimbursement', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(
                   context,
@@ -179,7 +178,7 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             leading: Icon(Icons.share, color: kActiveIconColor),
-            title: LocaleText('Opinion', style: kDrawerMenuTextStyle),
+            title: Text('Opinion', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
@@ -188,7 +187,7 @@ class _NavBarState extends State<NavBar> {
           const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.info_outline, color: kActiveIconColor),
-            title: LocaleText('About', style: kDrawerMenuTextStyle),
+            title: Text('About', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => AboutScreen()));
@@ -196,7 +195,7 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             leading: Icon(Icons.settings, color: kActiveIconColor),
-            title: LocaleText('Settings', style: kDrawerMenuTextStyle),
+            title: Text('Settings', style: kDrawerMenuTextStyle),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => SettingsPage()));
@@ -205,7 +204,7 @@ class _NavBarState extends State<NavBar> {
           const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.exit_to_app, color: kActiveIconColor),
-            title: LocaleText('Exit', style: kDrawerMenuTextStyle),
+            title: Text('Exit', style: kDrawerMenuTextStyle),
             onTap: () {
               exit(0);
             },
@@ -257,7 +256,7 @@ class ListWebViewMenu extends StatelessWidget {
     return ListTile(
         //contentPadding: EdgeInsets.only(left: 20.0),
         leading: Icon(myIcon, color: kActiveIconColor, size: 20),
-        title: LocaleText(menuName, style: kDrawerMenuTextStyle),
+        title: Text(menuName, style: kDrawerMenuTextStyle),
         onTap: () {
           Navigator.push(
             context,

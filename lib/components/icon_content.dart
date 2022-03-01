@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 
 
 class IconContent extends StatelessWidget {
@@ -22,7 +21,7 @@ class IconContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15.0),
-          LocaleText(label,
+          Text(label,
               style: kLabelTextStyle,
               )
         ]);

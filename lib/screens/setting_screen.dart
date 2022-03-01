@@ -1,6 +1,5 @@
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 
@@ -48,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     leading:
                         Icon(Icons.language_outlined, color: kActiveIconColor),
-                    title: LocaleText('Language Setting', style: kTitleTextStyle),
+                    title: Text('Language Setting', style: kTitleTextStyle),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +57,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         groupValue: _groupValue,
                         onChanged: (value) async {
                           _groupValue = value;
-                          LocaleNotifier.of(context)!.change('ko');
                           await UserSharedPreferences.setLanguageOption('ko');
                           print(_groupValue);
                           setState(() {
@@ -73,7 +71,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         groupValue: _groupValue,
                         onChanged: (value) async {
                           _groupValue = value;
-                          LocaleNotifier.of(context)!.change('en');
                           await UserSharedPreferences.setLanguageOption('en');
                           print(_groupValue);
                           setState(() {

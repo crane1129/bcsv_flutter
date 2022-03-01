@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
@@ -51,9 +50,9 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                 SizedBox(height: 20),
                 ListTile(
                   leading: Icon(Icons.question_answer, color: kActiveIconColor),
-                  title: LocaleText('Please send us your opinion',
+                  title: Text('Please send us your opinion',
                       style: kListTitleStyle),
-                  subtitle: LocaleText("Your submission is made anonymously",
+                  subtitle: Text("Your submission is made anonymously",
                       style: kListSubtitleStyle),
                 ),
                 Padding(
@@ -97,7 +96,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
 
     if (myMessage.isEmpty) {
       showSimpleNotification(
-          LocaleText(
+          Text(
             "Please enter your opinion.",
           ),
           leading: Icon(Icons.warning_amber_outlined),

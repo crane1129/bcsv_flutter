@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 
 
 class AppBarHeaderText extends StatelessWidget {
@@ -16,9 +15,9 @@ class AppBarHeaderText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: <Widget>[
-        LocaleText(text1, style: kAppBarTextStyle),
+        Text(text1, style: kAppBarTextStyle),
         SizedBox(width: text2.isEmpty? 0 : 5.0),
-        LocaleText(text2, style: kAppBarTextStyleSmall),
+        Text(text2, style: kAppBarTextStyleSmall),
       ],
     );
   }

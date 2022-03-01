@@ -1,7 +1,6 @@
 import 'package:gsheets/gsheets.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 
 
 class GoogleMessageSheet {
@@ -50,7 +49,7 @@ class GoogleMessageSheet {
     _userSheet!.values.map.appendRows(rowList);
 
     showSimpleNotification(
-        LocaleText(
+        Text(
           "Your opinion has successfully submitted",
         ),
         leading: Icon(Icons.send),
