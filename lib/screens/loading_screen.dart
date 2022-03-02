@@ -11,6 +11,9 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
 import 'package:bcsv_flutter_project/services/gsheet_access.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
+import 'package:provider/provider.dart';
+import 'dart:developer';
 
 
 class LoadingScreen extends StatefulWidget {
@@ -65,7 +68,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void loadSettings() async {
     //언어옵션 Default: Korean
     String languageOption = UserSharedPreferences.getLanguageOption() ?? 'ko';
-    print('Language: $languageOption');
+    final provider = Provider.of<LocaleProvider>(context, listen: false);
+    provider.setLocale(Locale.fromSubtags(languageCode: languageOption));
+    log('Language: $languageOption');
 
     //Settings
     UserSharedPreferences.setAnnouncementCache(false);

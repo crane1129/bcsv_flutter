@@ -204,15 +204,15 @@ class _NavBarState extends State<NavBar> {
                   context, MaterialPageRoute(builder: (_) => AboutScreen()));
             },
           ),
-          // ListTile(
-          //   leading: Icon(Icons.settings, color: kActiveIconColor),
-          //   title: Text(AppLocalizations.of(context)!.settings,
-          //       style: kDrawerMenuTextStyle),
-          //   onTap: () {
-          //     Navigator.push(
-          //         context, MaterialPageRoute(builder: (_) => SettingsPage()));
-          //   },
-          // ),
+          ListTile(
+            leading: Icon(Icons.settings, color: kActiveIconColor),
+            title: Text(AppLocalizations.of(context)!.settings,
+                style: kDrawerMenuTextStyle),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => SettingsPage()));
+            },
+          ),
           const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.exit_to_app, color: kActiveIconColor),

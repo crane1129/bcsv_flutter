@@ -6,7 +6,6 @@ import 'package:bcsv_flutter_project/services/gsheet_access.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SubmitOpinionScreen extends StatefulWidget {
   const SubmitOpinionScreen({Key? key}) : super(key: key);
 
@@ -38,53 +37,60 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent.withOpacity(0.5),
-          title: AppBarHeaderText(text1: AppLocalizations.of(context)!.bridgewayOpinion, text2: ''),
+          title: AppBarHeaderText(
+              text1: AppLocalizations.of(context)!.bridgewayOpinion, text2: ''),
         ),
         body: Container(
-          child: Card(
-            color: kActiveCardColor,
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                ListTile(
-                  leading: Icon(Icons.question_answer, color: kActiveIconColor),
-                  title: Text(AppLocalizations.of(context)!.opinionTitle,
-                      style: kListTitleStyle),
-                  subtitle: Text(AppLocalizations.of(context)!.opinionSubTitle,
-                      style: kListSubtitleStyle),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: TextField(
-                    controller: fieldText,
-                    style: TextStyle(color: Colors.black),
-                    maxLines: maxLines,
-                    keyboardType: TextInputType.multiline,
-                    maxLength: 200,
-                    decoration: kTextFieldInputDecoration,
-                    onChanged: (value) {
-                      myMessage = value;
+          child: SingleChildScrollView(
+            reverse: true,
+            padding: EdgeInsets.all(10),
+            child: Card(
+              color: kActiveCardColor,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  ListTile(
+                    leading:
+                        Icon(Icons.question_answer, color: kActiveIconColor),
+                    title: Text(AppLocalizations.of(context)!.opinionTitle,
+                        style: kListTitleStyle),
+                    subtitle: Text(
+                        AppLocalizations.of(context)!.opinionSubTitle,
+                        style: kListSubtitleStyle),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    child: TextField(
+                      controller: fieldText,
+                      style: TextStyle(color: Colors.black),
+                      maxLines: maxLines,
+                      keyboardType: TextInputType.multiline,
+                      maxLength: 200,
+                      decoration: kTextFieldInputDecoration,
+                      onChanged: (value) {
+                        myMessage = value;
+                      },
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      submitData();
                     },
+                    child: Text(AppLocalizations.of(context)!.submit),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    submitData();
-                  },
-                  child: Text(AppLocalizations.of(context)!.submit),
-                ),
-                SizedBox(
-                  height: 20.0,
-                  width: 150.0,
-                  child: Divider(
-                    color: Colors.teal.shade100,
+                  SizedBox(
+                    height: 20.0,
+                    width: 150.0,
+                    child: Divider(
+                      color: Colors.teal.shade100,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

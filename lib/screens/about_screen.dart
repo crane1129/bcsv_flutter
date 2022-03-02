@@ -28,7 +28,8 @@ class _AboutScreenState extends State<AboutScreen> {
               UserAccountsDrawerHeader(
                 accountName:
                     Text(AppLocalizations.of(context)!.missionStatement),
-                accountEmail: Text(AppLocalizations.of(context)!.missionVerse),
+                accountEmail: Text(AppLocalizations.of(context)!.missionVerse,
+                    style: TextStyle(fontSize: 10)),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: kActiveCardColor,
                   backgroundImage: AssetImage('assets/images/app.png'),
@@ -40,7 +41,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       fit: BoxFit.cover,
                     )),
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 20.0),
               _infoTile('App name', PackageInformation.packageInfo.appName),
               _infoTile(
                   'Package name', PackageInformation.packageInfo.packageName),
@@ -51,6 +52,9 @@ class _AboutScreenState extends State<AboutScreen> {
               //     PackageInformation.packageInfo.buildSignature),
               _infoTile('Developer',
                   'Daniel Kim (dankim0822@gmail.com)\nHaksoo Kim(crane1129@gmail.com)'),
+              _infoTile('\n© 2022 Bridgeway Baptist Church',
+                  '     2490 Middlefield. Palo Alto, CA 94301'),
+              SizedBox(height: 40.0),
             ],
           ),
         ),
@@ -60,8 +64,9 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _infoTile(String title, String subtitle) {
     return ListTile(
-      title: Text(title, style: kBodyTextStyle),
-      subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle),
+      title: Text(title, style: kBodyTextStyle, textAlign: TextAlign.center),
+      subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle,
+          style: kBodyTextSmallStyle, textAlign: TextAlign.center,),
     );
   }
 }

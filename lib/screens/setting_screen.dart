@@ -2,14 +2,16 @@ import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
+import 'package:provider/provider.dart';
+import 'dart:developer';
 
 
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
-
 }
-
 
 class _SettingsPageState extends State<SettingsPage> {
   @override
@@ -20,9 +22,9 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
 
     setState(() {
-      if (UserSharedPreferences.getLanguageOption() == 'ko'){
+      if (UserSharedPreferences.getLanguageOption() == 'ko') {
         _groupValue = 1;
-      }else{
+      } else {
         _groupValue = 2;
       }
     });
@@ -32,7 +34,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'Offering', text2: ''),
+        title: AppBarHeaderText(
+            text1: AppLocalizations.of(context)!.settings, text2: ''),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -47,7 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     leading:
                         Icon(Icons.language_outlined, color: kActiveIconColor),
-                    title: Text('Language Setting', style: kTitleTextStyle),
+                    title: Text(AppLocalizations.of(context)!.languageSetting,
+                        style: kCardTitleStyle),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -58,9 +62,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         onChanged: (value) async {
                           _groupValue = value;
                           await UserSharedPreferences.setLanguageOption('ko');
-                          print(_groupValue);
+                          log('Language option: $_groupValue');
                           setState(() {
-
+                            final provider = Provider.of<LocaleProvider>(context, listen: false);
+                            provider.setLocale(Locale.fromSubtags(languageCode: 'ko'));
                           });
                         },
                       ),
@@ -72,9 +77,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         onChanged: (value) async {
                           _groupValue = value;
                           await UserSharedPreferences.setLanguageOption('en');
-                          print(_groupValue);
+                          log('Language option: $_groupValue');
                           setState(() {
-
+                            final provider = Provider.of<LocaleProvider>(context, listen: false);
+                            provider.setLocale(Locale.fromSubtags(languageCode: 'en'));
                           });
                         },
                       ),

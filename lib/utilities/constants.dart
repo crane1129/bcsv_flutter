@@ -36,6 +36,11 @@ const kBodyTextStyle = TextStyle(
     color: Colors.white,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
 
+const kBodyTextSmallStyle = TextStyle(
+    fontSize: 15.0,
+    color: Colors.white38,
+    fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
+
 const kListTitleStyle = TextStyle(
     fontSize: 18.0,
     color: Colors.white,
@@ -79,7 +84,7 @@ const kTitleTextStyle = TextStyle(
     height: 0.0);
 
 const kSubTitleTextStyle = TextStyle(
-    fontSize: 30.0,
+    fontSize: 25.0,
     color: Colors.lightGreen,
     fontFamily: kSystemWideFont,
     textBaseline: TextBaseline.alphabetic);
