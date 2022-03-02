@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
@@ -16,15 +17,18 @@ class _AboutScreenState extends State<AboutScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'About', text2: 'app information'),
+        title: AppBarHeaderText(
+            text1: 'About',
+            text2: AppLocalizations.of(context)!.appInformation),
       ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: <Widget>[
-              const UserAccountsDrawerHeader(
-                accountName: Text(kMissionStatement),
-                accountEmail: Text(kMissionVerse),
+              UserAccountsDrawerHeader(
+                accountName:
+                    Text(AppLocalizations.of(context)!.missionStatement),
+                accountEmail: Text(AppLocalizations.of(context)!.missionVerse),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: kActiveCardColor,
                   backgroundImage: AssetImage('assets/images/app.png'),
@@ -45,7 +49,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   'Build number', PackageInformation.packageInfo.buildNumber),
               // _infoTile('Build signature',
               //     PackageInformation.packageInfo.buildSignature),
-              _infoTile('Developer', 'Haksoo Kim, Daniel Kim'),
+              _infoTile('Developer',
+                  'Daniel Kim (dankim0822@gmail.com)\nHaksoo Kim(crane1129@gmail.com)'),
             ],
           ),
         ),

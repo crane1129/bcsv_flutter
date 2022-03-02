@@ -9,6 +9,7 @@ import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DailyBibleTextScreen extends StatefulWidget {
   const DailyBibleTextScreen({Key? key}) : super(key: key);
@@ -34,7 +35,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'Daily Bible', text2: ''),
+        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.dailyBible, text2: ''),
       ),
       body: isLoading
           ? Center(

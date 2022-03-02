@@ -4,6 +4,8 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/services/gsheet_access.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SubmitOpinionScreen extends StatefulWidget {
   const SubmitOpinionScreen({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent.withOpacity(0.5),
-          title: AppBarHeaderText(text1: 'Bridgeway Opinion', text2: ''),
+          title: AppBarHeaderText(text1: AppLocalizations.of(context)!.bridgewayOpinion, text2: ''),
         ),
         body: Container(
           child: Card(
@@ -50,9 +52,9 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                 SizedBox(height: 20),
                 ListTile(
                   leading: Icon(Icons.question_answer, color: kActiveIconColor),
-                  title: Text('Please send us your opinion',
+                  title: Text(AppLocalizations.of(context)!.opinionTitle,
                       style: kListTitleStyle),
-                  subtitle: Text("Your submission is made anonymously",
+                  subtitle: Text(AppLocalizations.of(context)!.opinionSubTitle,
                       style: kListSubtitleStyle),
                 ),
                 Padding(
@@ -73,7 +75,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                   onPressed: () {
                     submitData();
                   },
-                  child: Text('Submit'),
+                  child: Text(AppLocalizations.of(context)!.submit),
                 ),
                 SizedBox(
                   height: 20.0,

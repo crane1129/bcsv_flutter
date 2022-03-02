@@ -10,6 +10,8 @@ import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
 import 'package:bcsv_flutter_project/services/gsheet_access.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
@@ -45,10 +47,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
-                  Text('Bridgeway', style: kMainTitleTextStyle),
+                  Text(AppLocalizations.of(context)!.bridgeway, style: kMainTitleTextStyle),
                 ]),
             SizedBox(height: 50),
-            Text('Baptist Church', style: kSubTitleTextStyle),
+            Text(AppLocalizations.of(context)!.baptistChurch, style: kSubTitleTextStyle),
             SizedBox(height: 50),
             SpinKitFadingCube(
               color: Colors.white,

@@ -9,8 +9,6 @@ const String kDailyBible1Data = 'daily_bible1.json';
 const String kDailyBible2Data = 'daily_bible2.json';
 const String kBibleReviewData = 'bible_review.json';
 const String kPrayerListData = 'prayer_list.json';
-const String kMissionStatement = 'Mission Statement';
-const String kMissionVerse = 'John 13: 34~35';
 const String kBaseUrl = "https://bcsv.org";
 const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";

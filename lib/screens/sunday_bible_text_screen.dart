@@ -11,6 +11,8 @@ import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SundayBibleTextScreen extends StatefulWidget {
   const SundayBibleTextScreen({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'Sermon Bible Text', text2: ''),
+        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.sermonBibleText, text2: ''),
       ),
       body: isLoading
           ? Center(

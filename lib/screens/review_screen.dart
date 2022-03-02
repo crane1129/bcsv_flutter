@@ -11,7 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SermonReviewScreen extends StatefulWidget {
   const SermonReviewScreen({Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'Sermon Review', text2: ''),
+        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.sermonReview, text2: ''),
       ),
       body: isLoading
           ? Center(

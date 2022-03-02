@@ -9,6 +9,8 @@ import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MessageListScreen extends StatefulWidget {
   const MessageListScreen({Key? key}) : super(key: key);
@@ -33,7 +35,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: 'New Message', text2: ''),
+        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.newMessage, text2: ''),
       ),
       body: isLoading
           ? Center(

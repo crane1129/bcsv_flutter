@@ -11,6 +11,7 @@ import 'package:bcsv_flutter_project/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -26,7 +27,9 @@ class _MyHomePageState extends State<MyHomePage> {
         drawer: NavBar(),
         appBar: AppBar(
           backgroundColor: Colors.transparent.withOpacity(0.5),
-          title: AppBarHeaderText(text1: 'Bridgeway', text2: 'Baptist Church'),
+          title: AppBarHeaderText(
+              text1: AppLocalizations.of(context)!.bridgeway,
+              text2: AppLocalizations.of(context)!.baptistChurch),
         ),
         body: SafeArea(
           child: Column(
@@ -46,7 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       url: ApiEndpoint
                                               .apiMap['SERMON_YOUTUBE'] ??
                                           kBaseUrl,
-                                      title1: 'Archives',
+                                      title1: AppLocalizations.of(context)!
+                                          .archives,
                                       title2: '');
                                 },
                               ),
@@ -55,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.solidFileVideo,
-                              label: 'Archives')),
+                              label: AppLocalizations.of(context)!.archives)),
                     ),
                     Expanded(
                       child: ReusableCard2(
@@ -73,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.bullhorn,
-                              label: 'Announcement')),
+                              label:
+                                  AppLocalizations.of(context)!.announcement)),
                     )
                   ],
                 ),
@@ -97,7 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.peopleCarry,
-                              label: 'Serving Turn')),
+                              label:
+                                  AppLocalizations.of(context)!.servingTurn)),
                     ),
                   ],
                 ),
@@ -121,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.bible,
-                              label: 'Bible Text')),
+                              label: AppLocalizations.of(context)!.bibleText)),
                     ),
                     Expanded(
                       child: ReusableCard2(
@@ -139,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.cross,
-                              label: 'Daily Bible')),
+                              label: AppLocalizations.of(context)!.dailyBible)),
                     ),
                   ],
                 ),

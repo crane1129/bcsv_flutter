@@ -1,0 +1,186 @@
+{
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "description"
+  },
+  "english": "English",
+  "@english": {
+    "description": "description"
+  },
+  "korean": "Korean",
+  "@korean": {
+    "description": "description"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "description"
+  },
+  "share": "Share",
+  "@share": {
+    "description": "description"
+  },
+  "sundaySermons": "Sunday Sermons",
+  "@sundaySermons": {
+    "description": "description"
+  },
+  "archives": "Archives",
+  "@archives": {
+    "description": "description"
+  },
+  "youtubeLive": "Youtube Live",
+  "@youtubeLive": {
+    "description": "description"
+  },
+  "notification": "Notification",
+  "@notification": {
+    "description": "description"
+  },
+  "servingTurn": "Serving Turn",
+  "@servingTurn": {
+    "description": "description"
+  },
+  "announcement": "Announcement",
+  "@announcement": {
+    "description": "description"
+  },
+  "bibleText": "Bible Text",
+  "@bibleText": {
+    "description": "description"
+  },
+  "sermonBibleText": "Sermon Bible Text",
+  "@sermonBibleText": {
+    "description": "description"
+  },
+  "sermonReview": "Sermon Review",
+  "@sermonReview": {
+    "description": "description"
+  },
+  "dailyBible": "Daily Bible",
+  "@dailyBible": {
+    "description": "description"
+  },
+  "offering": "Offering",
+  "@offering": {
+    "description": "description"
+  },
+  "upcomingEvent": "Upcoming Event",
+  "@upcomingEvent": {
+    "description": "description"
+  },
+  "about": "About",
+  "@about": {
+    "description": "description"
+  },
+  "exit": "Exit",
+  "@exit": {
+    "description": "description"
+  },
+  "bridgeway": "Bridgeway",
+  "@bridgeway": {
+    "description": "description"
+  },
+  "baptistChurch": "Baptist Church",
+  "@baptistChurch": {
+    "description": "description"
+  },
+  "reimbursement": "Reimbursement",
+  "@reimbursement": {
+    "description": "description"
+  },
+  "sundayServingTurn": "Sunday Serving Turn",
+  "@sundayServingTurn": {
+    "description": "description"
+  },
+  "noInternetConnectionPleaseCheckTheNetworkConnection": "No Internet connection. Please check the network connection.",
+  "@noInternetConnectionPleaseCheckTheNetworkConnection": {
+    "description": "description"
+  },
+  "opinion": "Opinion",
+  "@opinion": {
+    "description": "description"
+  },
+  "bridgewayOpinion": "Bridgeway Opinion",
+  "@bridgewayOpinion": {
+    "description": "description"
+  },
+  "pleaseSendUsYourOpinion": "Please send us your opinion",
+  "@pleaseSendUsYourOpinion": {
+    "description": "description"
+  },
+  "thankYou": "Thank You",
+  "@thankYou": {
+    "description": "description"
+  },
+  "yourOpinionHasSuccessfullySubmitted": "Your opinion has successfully submitted",
+  "@yourOpinionHasSuccessfullySubmitted": {
+    "description": "description"
+  },
+  "newMessage": "New Message",
+  "@newMessage": {
+    "description": "description"
+  },
+  "appInformation": "app information",
+  "@appInformation": {
+    "description": "description"
+  },
+  "languageSetting": "Language Setting",
+  "@languageSetting": {
+    "description": "description"
+  },
+  "churchReimbursement": "Church Reimbursement",
+  "@churchReimbursement": {
+    "description": "description"
+  },
+  "pleaseSubmitYourExpenseForChurchEvents": "Please submit your expense for church events",
+  "@pleaseSubmitYourExpenseForChurchEvents": {
+    "description": "description"
+  },
+  "yourSubmissionIsMadeAnonymously": "Your submission is made anonymously",
+  "@yourSubmissionIsMadeAnonymously": {
+    "description": "description"
+  },
+  "pleaseEnterYourOpinion": "The text is empty. Please enter your opinion.",
+  "@pleaseEnterYourOpinion": {
+    "description": "description"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "The current language"
+  },
+  "openPdf": "Open PDF",
+  "@openPdf": {
+    "description": "The current language"
+  },
+  "offeringVerse": "Each man should give what he has decided\nin his heart to give,\nnot reluctantly or under compulsion,\nfor God loves a cheerful giver.\n(2 Corinthians 9:7)",
+  "@offeringVerse": {
+    "description": "The current language"
+  },
+  "submit": "Submit",
+  "@submit": {
+    "description": "The current language"
+  },
+  "opinionTitle": "Please send us your opinion",
+  "@opinionTitle": {
+    "description": "The current language"
+  },
+  "opinionSubTitle": "Your submission is made anonymously",
+  "@opinionSubTitle": {
+    "description": "The current language"
+  },
+  "openButtonText": "Open",
+  "@openButtonText": {
+    "description": "The current language"
+  },
+  "reimbursementDesc": "Please submit your expense for church events",
+  "@reimbursementDesc": {
+    "description": "The current language"
+  },
+  "missionStatement": "Mission Statement",
+  "@missionStatement": {
+    "description": "The current language"
+  },
+  "missionVerse": "John 13: 34-35",
+  "@missionVerse": {
+    "description": "The current language"
+  }
+}
