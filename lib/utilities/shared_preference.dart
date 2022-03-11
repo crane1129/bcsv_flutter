@@ -56,13 +56,13 @@ class UserSharedPreferences{
   }
   static getDailyBibleText2Cache() => _peferences.getBool(_keyDailyBibleText2Cache);
 
-  //Prayer List
+  //Message List
   static Future setMessageListTextCache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyMessageListCache, isCacheAvailable);
   }
   static getMessageListTextCache() => _peferences.getBool(_keyMessageListCache);
 
-  //Prayer List counter
+  //Message List counter
   static Future setMessageListCounter(int count) async {
     await _peferences.setInt(_keyMessageListCounter, count);
   }

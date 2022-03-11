@@ -10,6 +10,8 @@ const String kDailyBible2Data = 'daily_bible2.json';
 const String kBibleReviewData = 'bible_review.json';
 const String kPrayerListData = 'prayer_list.json';
 const String kBaseUrl = "https://bcsv.org";
+const String kEndpointAPI =
+    "https://script.google.com/macros/s/AKfycbwW_u3urSmxnQrIFsPxwVVzvbNnAtscBZGvxcRfYzJXuLQEWMNB/exec";
 const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
 const String kYoutubeLiveUrl =

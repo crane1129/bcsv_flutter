@@ -136,6 +136,7 @@ class MessageList {
   final String message;
   final String imageLink;
   final String externalLink;
+  final int messageID;
 
   MessageList(
       {required this.expireDate,
@@ -143,7 +144,8 @@ class MessageList {
       required this.title,
       required this.message,
       required this.imageLink,
-      required this.externalLink});
+      required this.externalLink,
+      required this.messageID});
 
   factory MessageList.fromJson(dynamic json) {
     return MessageList(
@@ -152,6 +154,7 @@ class MessageList {
         title: json['Title'],
         message: json['Message'],
         imageLink: json['ImageLink'] ?? "https://tinyurl.com/yc8rdbr4",
-        externalLink: json['ExternalLink'] ?? "");
+        externalLink: json['ExternalLink'] ?? "",
+        messageID: json['MessageID'] ?? "");
   }
 }

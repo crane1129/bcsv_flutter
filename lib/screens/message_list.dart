@@ -64,7 +64,6 @@ class _MessageListScreenState extends State<MessageListScreen> {
   void getMessageListFromGoogleSheet() async {
     //Show loading spinner
     isLoading = true;
-    var messageCounter = 0;
     var todayDate = DateTime.now();
 
     ModelParam modelParam = ModelParam(
@@ -87,67 +86,65 @@ class _MessageListScreenState extends State<MessageListScreen> {
 
     setState(() {
       for (MessageList myMessageItem in messageList) {
-        DateTime givenDate = DateTime.parse(myMessageItem.expireDate);
-        if (todayDate.isAfter(givenDate)) {
-          //This is expired item
-          continue;
-        } else {
-          prayerListTiles.add(
-            Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: <Widget>[
-                    myMessageItem.imageLink.isEmpty
-                        ? Image.asset(
-                      'assets/images/mountain1.jpg',
-                    )
-                        : Image.network(
-                      myMessageItem.imageLink,
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.event, color: kActiveIconColor),
-                      title: Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          myMessageItem.title,
-                          overflow: TextOverflow.ellipsis,
-                          style: kCardTitleStyle,
-                        ),
+        // DateTime givenDate = DateTime.parse(myMessageItem.expireDate);
+        // if (todayDate.isAfter(givenDate)) {
+        //   //This is expired item
+        //   continue;
+        // } else {
+        //
+        // }
+        prayerListTiles.add(
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: <Widget>[
+                  myMessageItem.imageLink.isEmpty
+                      ? Image.asset(
+                    'assets/images/mountain1.jpg',
+                  )
+                      : Image.network(
+                    myMessageItem.imageLink,
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.event, color: kActiveIconColor),
+                    title: Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        myMessageItem.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: kCardTitleStyle,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SelectableText(
-                        myMessageItem.message,
-                        style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SelectableText(
+                      myMessageItem.message,
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
                     ),
-                    myMessageItem.externalLink.isNotEmpty
-                        ? OutlinedButton.icon(
-                            onPressed: () async {
-                              if (await canLaunch(myMessageItem.externalLink)) {
-                                await launch(myMessageItem.externalLink);
-                              }
-                            },
-                            icon: Icon(Icons.link),
-                            label: Text('Link'),
-                          )
-                        : SizedBox(height: 1.0),
-                  ],
-                ),
+                  ),
+                  myMessageItem.externalLink.isNotEmpty
+                      ? OutlinedButton.icon(
+                    onPressed: () async {
+                      if (await canLaunch(myMessageItem.externalLink)) {
+                        await launch(myMessageItem.externalLink);
+                      }
+                    },
+                    icon: Icon(Icons.link),
+                    label: Text('Link'),
+                  )
+                      : SizedBox(height: 1.0),
+                ],
               ),
             ),
-          );
-
-          messageCounter++;
-        }
+          ),
+        );
       }
-
-      UserSharedPreferences.setMessageListCounter(messageCounter);
+      UserSharedPreferences.setMessageListCounter(0);
       isLoading = false;
     });
   }

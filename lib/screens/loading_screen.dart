@@ -79,7 +79,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     UserSharedPreferences.setServingTurnCache(false);
     UserSharedPreferences.setDailyBibleText1Cache(false);
     UserSharedPreferences.setDailyBibleText2Cache(false);
-    UserSharedPreferences.setMessageListTextCache(false);
+
+    //It is done before loadSettings() is called.
+    //UserSharedPreferences.setMessageListTextCache(false);
   }
 
   void checkNetworkConnection() async {
@@ -103,8 +105,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
       );
 
     } else {
-      //bindEndpoints 작업을 마치면 bindEndpoints 안에서 메인페이지로 이동함.
-      bool result = await ApiEndpoint.bindEndpoints();
+
+      if(await ApiEndpoint.bindEndpoints()){
+        await ApiEndpoint.checkNewMessage();
+      }
+
       GoogleMessageSheet.init();
       _initPackageInfo();
 
