@@ -1,3 +1,5 @@
+import 'package:bcsv_flutter_project/screens/message_list.dart';
+import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/screens/announcement_screen.dart';
 import 'package:bcsv_flutter_project/screens/webview_screen.dart';
@@ -12,6 +14,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/globals.dart' as globals;
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -21,6 +25,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Widget emptyString = Text('');
+  late int messageCounter;
+
+  @override
+  void initState() {
+    //refresh the page here
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,6 +118,24 @@ class _MyHomePageState extends State<MyHomePage> {
                               label:
                                   AppLocalizations.of(context)!.servingTurn)),
                     ),
+                    Expanded(
+                      child: ReusableCard3(
+                          onPress: () {
+                            //New Message Page
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (_) => MessageListScreen())).then(
+                                  (onValue) {
+                                updateMessageCounter();
+                              },
+                            );
+                          },
+                          color: kActiveCardColor,
+                          cardChild: IconMsgContent(
+                            cardIcon: FontAwesomeIcons.facebookMessenger,
+                            label: AppLocalizations.of(context)!.newMessage,
+                            msg_widget: displayMsgCounter(),
+                          )),
+                    )
                   ],
                 ),
               ),
@@ -153,5 +184,32 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ));
+  }
+
+  Widget displayMsgCounter() {
+
+    updateMessageCounter();
+
+    if (globals.messageCnt == 0) {
+      return emptyString;
+    } else {
+      return ClipOval(
+        child: Container(
+          color: Colors.red,
+          width: 20,
+          height: 20,
+          child: Center(
+            child: Text(globals.messageCnt.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 12)),
+          ),
+        ),
+      );
+    }
+  }
+
+  void updateMessageCounter() {
+    setState(() {
+      globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
+    });
   }
 }

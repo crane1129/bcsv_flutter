@@ -10,7 +10,7 @@ import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:bcsv_flutter_project/globals.dart' as globals;
 
 class MessageListScreen extends StatefulWidget {
   const MessageListScreen({Key? key}) : super(key: key);
@@ -145,6 +145,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
         );
       }
       UserSharedPreferences.setMessageListCounter(0);
+      globals.messageCnt = 0;
       isLoading = false;
     });
   }

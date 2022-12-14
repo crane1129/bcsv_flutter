@@ -44,5 +44,7 @@
     "openButtonText": "열기",
     "reimbursementDesc": "교회 행사관련 비용을 환급신청 하세요.",
     "missionStatement": "우리의 사명",
-    "missionVerse": "요 13: 34-35"
+    "missionVerse": "요 13: 34-35",
+    "newMessage": "새 메시지",
+    "initMessage": "메시지 초기화"
 }

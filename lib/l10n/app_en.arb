@@ -182,5 +182,13 @@
   "missionVerse": "John 13: 34-35",
   "@missionVerse": {
     "description": "The current language"
+  },
+  "newMessage": "New Message",
+  "@newMessage": {
+    "description": "The current language"
+  },
+  "initMessage": "Reset Messages",
+  "@initMessage": {
+    "description": "The current language"
   }
 }
