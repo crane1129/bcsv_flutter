@@ -6,6 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -87,6 +89,31 @@ class _SettingsPageState extends State<SettingsPage> {
                       Text('English', style: kBodyTextStyle),
                     ],
                   ),
+                  ListTile(
+                    leading:
+                    Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor),
+                    title: Text(AppLocalizations.of(context)!.initMessage,
+                        style: kCardTitleStyle),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+
+                      OutlinedButton(
+                        child: Text(AppLocalizations.of(context)!.runButton,
+                            style: kCardTitleStyle),
+                        style: OutlinedButton.styleFrom(
+                          primary: Colors.white,
+                          side: BorderSide(
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                        onPressed: () {
+                          resetCache(kPrayerListData);
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -94,5 +121,15 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  void resetCache(String target_file) async{
+    var dir = await getTemporaryDirectory();
+    File file = File("${dir.path}/${target_file}");
+
+    file.writeAsStringSync("",
+        flush: true, mode: FileMode.write);
+
+    log("Reset Message cache file successfully.");
   }
 }

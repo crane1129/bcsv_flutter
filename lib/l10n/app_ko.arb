@@ -46,5 +46,6 @@
     "missionStatement": "우리의 사명",
     "missionVerse": "요 13: 34-35",
     "newMessage": "새 메시지",
-    "initMessage": "메시지 초기화"
+    "initMessage": "메시지 초기화",
+    "runButton": "실행"
 }

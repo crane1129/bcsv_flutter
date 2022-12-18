@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
@@ -148,5 +150,16 @@ class _MessageListScreenState extends State<MessageListScreen> {
       globals.messageCnt = 0;
       isLoading = false;
     });
+
+    // Update the "viewed" field and save to file
+    for (var i=0; i < jsonObj.length; i++) {
+      jsonObj[i]['viewed']=true;
+    }
+
+    var dir = await getTemporaryDirectory();
+    File file = File("${dir.path}/${kPrayerListData}");
+    file.writeAsStringSync(jsonEncode(jsonObj),
+        flush: true, mode: FileMode.write);
+
   }
 }

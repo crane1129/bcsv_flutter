@@ -67,4 +67,5 @@ class UserSharedPreferences{
     await _peferences.setInt(_keyMessageListCounter, count);
   }
   static getMessageListCounter() => _peferences.getInt(_keyMessageListCounter);
+
 }

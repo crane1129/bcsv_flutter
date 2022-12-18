@@ -53,6 +53,7 @@ class ApiEndpoint {
     int messageCounter = 0;
 
     if (response.statusCode == 200) {
+      var new_msg_id = [];
 
       var downloadedJsonObjMsg = jsonDecode(response.body) as List;
       var storedJsonObjMsg = [];
@@ -67,28 +68,55 @@ class ApiEndpoint {
         //Need to generate messageID list from the stored message object
         //And count how many new messages are there in the downloaded message obj
 
-        //1. Generate messageID list
-        var messageIdList =[];
+        //1. Generate messageID list from the file
+        var messageIdList = [];
+        var messageIdList_plus_viewed = [];
         for(dynamic message in storedJsonObjMsg){
           messageIdList.add(message['MessageID']);
+          messageIdList_plus_viewed.add([message['MessageID'], message['viewed']]);
         }
 
         for(dynamic message in downloadedJsonObjMsg){
           if (!messageIdList.contains(message['MessageID'])){
+            // The message id does not exist. Which means it is a new message.
+            // Therefore increment the counter.
+            new_msg_id.add(message['MessageID']);
             messageCounter++;
+          }else{
+            for (var i= 0; i< messageIdList_plus_viewed.length; i++){
+              if(messageIdList_plus_viewed[i][0] == message['MessageID']
+                  && messageIdList_plus_viewed[i][1]==false){
+
+                // The message ID exists in stored message list
+                // but never been viewed
+                new_msg_id.add(message['MessageID']);
+                messageCounter++;
+              }
+            }
           }
         }
 
         UserSharedPreferences.setMessageListCounter(messageCounter);
 
       }else{
+        // This block is executed at the first time
+        // when the app is installed and launched.
+
         //Just count the number of messages in response.body
         var jsonObj = jsonDecode(response.body) as List;
         UserSharedPreferences.setMessageListCounter(jsonObj.length);
+
       }
 
-      //Save data to cache
-      file.writeAsStringSync(response.body,
+      //Add 'viewed' element in message and save data to cache
+      var messages = jsonDecode(response.body) as List;
+      for (var i=0; i < messages.length; i++) {
+        if (new_msg_id.contains(messages[i]['MessageID']))
+          messages[i]['viewed']=false;
+        else messages[i]['viewed']=true;
+      }
+
+      file.writeAsStringSync(jsonEncode(messages),
           flush: true, mode: FileMode.write);
 
       UserSharedPreferences.setMessageListTextCache(true);
