@@ -6,6 +6,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:bcsv_flutter_project/dialog/dialog.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -16,7 +19,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   var _groupValue;
-
+  Dialogs dialog = new Dialogs();
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -87,6 +90,36 @@ class _SettingsPageState extends State<SettingsPage> {
                       Text('English', style: kBodyTextStyle),
                     ],
                   ),
+                  ListTile(
+                    leading:
+                    Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor),
+                    title: Text(AppLocalizations.of(context)!.initMessage,
+                        style: kCardTitleStyle),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+
+                      OutlinedButton(
+                        child: Text(AppLocalizations.of(context)!.runButton,
+                            style: kCardTitleStyle),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: BorderSide(
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                        onPressed: () async {
+                          resetCache(kPrayerListData);
+                          await dialog.confirm(context, AppLocalizations.of(context)!.noticeTitle, AppLocalizations.of(context)!.restartNotice);
+                          if (dialog.isPressedConfirm){
+                            //Terminate app
+                            exit(0);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -95,4 +128,15 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  void resetCache(String target_file) async{
+    var dir = await getTemporaryDirectory();
+    File file = File("${dir.path}/${target_file}");
+
+    file.writeAsStringSync("",
+        flush: true, mode: FileMode.write);
+
+    log("Reset Message cache file successfully.");
+  }
 }
+

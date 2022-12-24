@@ -182,5 +182,25 @@
   "missionVerse": "John 13: 34-35",
   "@missionVerse": {
     "description": "The current language"
+  },
+  "newMessage": "New Message",
+  "@newMessage": {
+    "description": "The current language"
+  },
+  "initMessage": "Reset Messages",
+  "@initMessage": {
+    "description": "The current language"
+  },
+  "runButton": "Execute",
+  "@Run": {
+    "description": "The current language"
+  },
+  "noticeTitle": "Notice",
+  "@Run": {
+    "description": "The current language"
+  },
+  "restartNotice": "The app is now closing.",
+  "@Run": {
+    "description": "The current language"
   }
 }

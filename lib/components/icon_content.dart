@@ -27,3 +27,37 @@ class IconContent extends StatelessWidget {
         ]);
   }
 }
+
+class IconMsgContent extends StatelessWidget {
+  IconMsgContent({required this.cardIcon, required this.label, required this.msg_widget});
+
+  final IconData cardIcon;
+  final String label;
+  final Widget msg_widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Icon(
+              cardIcon,
+              size: 40.0,
+              color: kCardIconColor,
+            ),
+          ),
+          const SizedBox(height: 15.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(label,
+                style: kLabelTextStyle,
+              ),
+              const SizedBox(width: 5.0),
+              msg_widget
+            ],
+          )
+        ]);
+  }
+}

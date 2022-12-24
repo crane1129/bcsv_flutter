@@ -17,6 +17,7 @@ import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/globals.dart' as globals;
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -33,7 +34,6 @@ class _NavBarState extends State<NavBar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     updateMessageCounter();
   }
 
@@ -102,22 +102,22 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => AnnouncementPage()));
             },
           ),
-          ListTile(
-            //contentPadding: EdgeInsets.only(left: 30.0),
-            leading:
-                Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
-            title: Text(AppLocalizations.of(context)!.newMessage,
-                style: kDrawerMenuTextStyle),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => MessageListScreen())).then(
-                (onValue) {
-                  updateMessageCounter();
-                },
-              );
-            },
-            trailing: displayMsgCounter(),
-          ),
+          // ListTile(
+          //   //contentPadding: EdgeInsets.only(left: 30.0),
+          //   leading:
+          //       Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
+          //   title: Text(AppLocalizations.of(context)!.newMessage,
+          //       style: kDrawerMenuTextStyle),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (_) => MessageListScreen())).then(
+          //       (onValue) {
+          //         updateMessageCounter();
+          //       },
+          //     );
+          //   },
+          //   trailing: displayMsgCounter(),
+          // ),
           const Divider(color: Colors.white30),
           ListTile(
             //leading: Icon(FontAwesomeIcons.bible, color: kInactiveIconColor),
@@ -229,12 +229,12 @@ class _NavBarState extends State<NavBar> {
 
   void updateMessageCounter() {
     setState(() {
-      messageCounter = UserSharedPreferences.getMessageListCounter() ?? 0;
+      globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
   }
 
   Widget displayMsgCounter() {
-    if (messageCounter == 0) {
+    if (globals.messageCnt == 0) {
       return emptyString;
     } else {
       return ClipOval(
@@ -243,7 +243,7 @@ class _NavBarState extends State<NavBar> {
           width: 20,
           height: 20,
           child: Center(
-            child: Text(messageCounter.toString(),
+            child: Text(globals.messageCnt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 12)),
           ),
         ),
