@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:bcsv_flutter_project/dialog/dialog.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   var _groupValue;
-
+  Dialogs dialog = new Dialogs();
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -103,13 +104,18 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Text(AppLocalizations.of(context)!.runButton,
                             style: kCardTitleStyle),
                         style: OutlinedButton.styleFrom(
-                          primary: Colors.white,
+                          foregroundColor: Colors.white,
                           side: BorderSide(
                             color: Colors.blueAccent,
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           resetCache(kPrayerListData);
+                          await dialog.confirm(context, AppLocalizations.of(context)!.noticeTitle, AppLocalizations.of(context)!.restartNotice);
+                          if (dialog.isPressedConfirm){
+                            //Terminate app
+                            exit(0);
+                          }
                         },
                       ),
                     ],
@@ -133,3 +139,4 @@ class _SettingsPageState extends State<SettingsPage> {
     log("Reset Message cache file successfully.");
   }
 }
+

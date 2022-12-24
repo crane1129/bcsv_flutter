@@ -43,6 +43,11 @@ const kBodyTextSmallStyle = TextStyle(
     color: Colors.white38,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
 
+const kDialogBodyTextSmallStyle = TextStyle(
+    fontSize: 15.0,
+    color: Colors.black54,
+    fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
+
 const kListTitleStyle = TextStyle(
     fontSize: 18.0,
     color: Colors.white,
@@ -55,7 +60,7 @@ const kListSubtitleStyle = TextStyle(
 
 const kCardTitleStyle = TextStyle(
     fontSize: 25.0,
-    color: Colors.black,
+    color: Colors.white60,
     fontFamily: kSystemWideFont);
 
 const kLabelTextStyle =

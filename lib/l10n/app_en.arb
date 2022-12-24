@@ -194,5 +194,13 @@
   "runButton": "Execute",
   "@Run": {
     "description": "The current language"
+  },
+  "noticeTitle": "Notice",
+  "@Run": {
+    "description": "The current language"
+  },
+  "restartNotice": "The app is now closing.",
+  "@Run": {
+    "description": "The current language"
   }
 }

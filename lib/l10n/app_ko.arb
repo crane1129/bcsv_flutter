@@ -47,5 +47,7 @@
     "missionVerse": "요 13: 34-35",
     "newMessage": "새 메시지",
     "initMessage": "메시지 초기화",
-    "runButton": "실행"
+    "runButton": "실행",
+    "noticeTitle": "알림",
+    "restartNotice": "앱을 다시 시작합니다."
 }
