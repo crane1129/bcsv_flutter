@@ -164,7 +164,7 @@ class _NavBarState extends State<NavBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => OfferingScreen(url: kOfferingUrl)));
+                      builder: (_) => OfferingScreen(url: ApiEndpoint.apiMap['OFFERING'])));
             },
           ),
           // ListWebViewMenu(

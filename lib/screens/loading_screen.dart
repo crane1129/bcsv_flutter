@@ -67,7 +67,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void loadSettings() async {
     //언어옵션 Default: Korean
-    String languageOption = UserSharedPreferences.getLanguageOption() ?? 'ko';
+    String languageOption = UserSharedPreferences.getLanguageOption() ?? 'en';
     final provider = Provider.of<LocaleProvider>(context, listen: false);
     provider.setLocale(Locale.fromSubtags(languageCode: languageOption));
     log('Language: $languageOption');
