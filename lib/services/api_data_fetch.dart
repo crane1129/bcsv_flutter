@@ -44,12 +44,12 @@ class ApiGoogleDocContent {
 
     if(isBodyRequired) {
       response = await http.post(
-          Uri.parse(modelParam.apiEndpoint),
+          modelParam.apiEndpoint,
           headers: {"Content-Type": "application/json"},
           body: json.encode(body));
     }else{
       response = await http.get(
-          Uri.parse(modelParam.apiEndpoint),
+          modelParam.apiEndpoint,
           headers: {"Content-Type": "application/json"},
       );
     }

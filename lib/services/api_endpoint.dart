@@ -17,7 +17,7 @@ class ApiEndpoint {
           jsonObj.map((tagJson) => Endpoint.fromJson(tagJson)).toList();
 
       for (Endpoint e in endpointObjs) {
-        apiMap[e.endpoint] = e.url;
+        apiMap[e.endpoint] = Uri.parse(e.url);
       }
 
       stdout.writeln('Endpoint bind is complete');
@@ -43,7 +43,7 @@ class ApiEndpoint {
 
   static Future<void> checkNewMessage() async {
     // Get messages from the google doc
-    http.Response response = await http.get(Uri.parse(apiMap['MESSAGE']));
+    http.Response response = await http.get(apiMap['MESSAGE']);
     var dir = await getTemporaryDirectory();
     File file = File("${dir.path}/${kPrayerListData}");
 

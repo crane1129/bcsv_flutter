@@ -5,7 +5,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OfferingScreen extends StatelessWidget {
-  final String url;
+  final Uri url;
 
   OfferingScreen({required this.url});
 
@@ -42,8 +42,8 @@ class OfferingScreen extends StatelessWidget {
                         padding: EdgeInsets.all(10.0),
                         child: ElevatedButton.icon(
                           onPressed: () async {
-                            if (await canLaunch(url)) {
-                              await launch(url);
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
                             }
                           },
                           icon: Icon(Icons.volunteer_activism),

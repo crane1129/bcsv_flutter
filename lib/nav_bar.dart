@@ -255,7 +255,7 @@ class _NavBarState extends State<NavBar> {
 class ListWebViewMenu extends StatelessWidget {
   final IconData myIcon;
   final String menuName;
-  final String url;
+  final Uri url;
   final Widget trailing;
 
   ListWebViewMenu(

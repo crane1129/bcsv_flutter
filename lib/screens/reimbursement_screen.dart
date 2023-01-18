@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ReimbursementScreen extends StatelessWidget {
   ReimbursementScreen({required this.url});
 
-  final String url;
+  final Uri url;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class ReimbursementScreen extends StatelessWidget {
                         padding: EdgeInsets.all(10.0),
                         child: ElevatedButton.icon(
                           onPressed: () async {
-                            if (await canLaunch(url)) {
-                              await launch(url);
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
                             }
                           },
                           icon: Icon(Icons.add_shopping_cart_rounded),

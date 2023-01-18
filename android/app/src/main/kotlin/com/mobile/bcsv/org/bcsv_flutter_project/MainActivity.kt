@@ -1,4 +1,4 @@
-package com.mobile.bcsv.org.bcsv_flutter_project
+package com.bcsv.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

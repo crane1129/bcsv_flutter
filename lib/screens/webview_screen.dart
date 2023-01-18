@@ -3,7 +3,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 
 class WebviewScreen extends StatelessWidget {
-  final String url;
+  final Uri url;
   final String title1;
   final String title2;
 
@@ -24,7 +24,7 @@ class WebviewScreen extends StatelessWidget {
 }
 
 class WebViewClass extends StatefulWidget {
-  final String url;
+  final Uri url;
 
   WebViewClass({required this.url});
   _WebViewClassState createState() => _WebViewClassState(url: url);
@@ -32,7 +32,7 @@ class WebViewClass extends StatefulWidget {
 
 class _WebViewClassState extends State<WebViewClass> {
   _WebViewClassState({required this.url});
-  final String url;
+  final Uri url;
   int position = 1;
   final key = UniqueKey();
 
@@ -54,7 +54,7 @@ class _WebViewClassState extends State<WebViewClass> {
       index: position,
       children: <Widget>[
         WebView(
-          initialUrl: url,
+          initialUrl: url.toString(),
           javascriptMode: JavascriptMode.unrestricted,
           key: key,
           onPageFinished: doneLoading,

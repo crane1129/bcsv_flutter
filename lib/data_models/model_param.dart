@@ -1,5 +1,5 @@
 class ModelParam {
-  final String apiEndpoint;
+  final Uri apiEndpoint;
   final String tag;
   final String cacheFileName;
   final Function setSharedReference;
