@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 
 class OfferingScreen extends StatelessWidget {
   final Uri url;
@@ -38,18 +39,40 @@ class OfferingScreen extends StatelessWidget {
                         subtitle:
                             Text(AppLocalizations.of(context)!.offeringVerse),
                       ),
+                      // Padding(
+                      //   padding: EdgeInsets.all(10.0),
+                      //   child: ElevatedButton.icon(
+                      //     onPressed: () async {
+                      //       if (await canLaunchUrl(url)) {
+                      //         await launchUrl(url);
+                      //       }
+                      //     },
+                      //     icon: Icon(Icons.volunteer_activism),
+                      //     label: Text(
+                      //         AppLocalizations.of(context)!.openButtonText),
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            }
-                          },
-                          icon: Icon(Icons.volunteer_activism),
-                          label: Text(
-                              AppLocalizations.of(context)!.openButtonText),
-                        ),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              await LaunchApp.openApp(
+                                androidPackageName: 'com.zellepay.zelle',
+                                iosUrlScheme: 'zelle://',
+                                appStoreLink: 'itms-apps://apps.apple.com/us/app/zelle/id1260755201',
+                                // openStore: false
+                              );
+
+                              // Enter the package name of the App you want to open and for iOS add the URLscheme to the Info.plist file.
+                              // The `openStore` argument decides whether the app redirects to PlayStore or AppStore.
+                              // For testing purpose you can enter com.instagram.android
+                            },
+                            child: Container(
+                                child: Center(
+                                  child: Text("Open",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ))),
                       ),
                     ],
                   ),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/screens/daily_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/screens/setting_screen.dart';
-import 'package:bcsv_flutter_project/screens/webview_screen.dart';
+import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
 import 'package:bcsv_flutter_project/screens/offering_screen.dart';
 import 'package:bcsv_flutter_project/screens/announcement_screen.dart';
 import 'package:bcsv_flutter_project/screens/serving_turn_screen.dart';
@@ -275,7 +275,8 @@ class ListWebViewMenu extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return WebviewScreen(url: url, title1: menuName, title2: '');
+                // return WebviewScreen(url: url, title1: menuName, title2: '');
+                return WebViewApp();
               },
             ),
           );

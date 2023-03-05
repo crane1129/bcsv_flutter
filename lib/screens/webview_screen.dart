@@ -18,53 +18,63 @@ class WebviewScreen extends StatelessWidget {
         title: AppBarHeaderText(
             text1: title1, text2: title2),
       ),
-      body: WebViewClass(url: url),
+      body: WebViewApp(url: url),
     );
   }
 }
 
-class WebViewClass extends StatefulWidget {
+class WebViewApp extends StatefulWidget {
+  // const WebViewApp({super.key});
   final Uri url;
+  WebViewApp({required this.url});
 
-  WebViewClass({required this.url});
-  _WebViewClassState createState() => _WebViewClassState(url: url);
+  @override
+  State<WebViewApp> createState() => _WebViewAppState(url: url);
 }
 
-class _WebViewClassState extends State<WebViewClass> {
-  _WebViewClassState({required this.url});
+class _WebViewAppState extends State<WebViewApp> {
   final Uri url;
-  int position = 1;
-  final key = UniqueKey();
+  _WebViewAppState({required this.url});
+  var loadingPercentage = 0;
+  late final WebViewController controller;
 
-  doneLoading(String a) {
-    setState(() {
-      position = 0;
-    });
-  }
-
-  startLoading(String a) {
-    setState(() {
-      position = 1;
-    });
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageStarted: (url) {
+          setState(() {
+            loadingPercentage = 0;
+          });
+        },
+        onProgress: (progress) {
+          setState(() {
+            loadingPercentage = progress;
+          });
+        },
+        onPageFinished: (url) {
+          setState(() {
+            loadingPercentage = 100;
+          });
+        },
+      ))
+      ..loadRequest(
+        Uri.parse(this.url.toString()),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
-    return IndexedStack(
-      index: position,
-      children: <Widget>[
-        WebView(
-          initialUrl: url.toString(),
-          javascriptMode: JavascriptMode.unrestricted,
-          key: key,
-          onPageFinished: doneLoading,
-          onPageStarted: startLoading,
+    return Stack(
+      children: [
+        WebViewWidget(
+          controller: controller,
         ),
-        Container(
-            color: Colors.white,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ))
+        if (loadingPercentage < 100)
+          LinearProgressIndicator(
+            value: loadingPercentage / 100.0,
+          ),
       ],
     );
   }
