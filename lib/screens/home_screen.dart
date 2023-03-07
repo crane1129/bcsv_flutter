@@ -2,7 +2,6 @@ import 'package:bcsv_flutter_project/screens/message_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/screens/announcement_screen.dart';
-import 'package:bcsv_flutter_project/screens/webview_screen.dart';
 import 'package:bcsv_flutter_project/screens/serving_turn_screen.dart';
 import 'package:bcsv_flutter_project/screens/daily_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/screens/sunday_bible_text_screen.dart';
@@ -10,6 +9,7 @@ import 'package:bcsv_flutter_project/nav_bar.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/components/reusable_card.dart';
 import 'package:bcsv_flutter_project/components/icon_content.dart';
+import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return WebviewScreen(
+                                  return WebViewApp(
                                       url: ApiEndpoint
                                               .apiMap['SERMON_YOUTUBE'] ??
                                           kBaseUrl,

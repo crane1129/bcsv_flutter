@@ -2,24 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bcsv_flutter_project/components/webview/stack.dart';
 import 'package:bcsv_flutter_project/components/webview/navigation_controls.dart';
+import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class WebViewApp extends StatefulWidget {
-  const WebViewApp({super.key});
+  final Uri url;
+  final String title1;
+  final String title2;
+
+  WebViewApp(
+      {required this.url, required this.title1, required this.title2, super.key});
 
   @override
-  State<WebViewApp> createState() => _WebViewAppState();
+  State<WebViewApp> createState() => _WebViewAppState(url: url, title1: title1);
 }
 
 class _WebViewAppState extends State<WebViewApp> {
   late final WebViewController controller;
+  final Uri url;
+  final String title1;
+
+  _WebViewAppState(
+      {required this.url, required this.title1});
 
   @override
   void initState() {
     super.initState();
     controller = WebViewController()
       ..loadRequest(
-        Uri.parse('https://m.youtube.com/@BridgewayKMService/streams'),
+        Uri.parse(url.toString()),
       );
   }
 
@@ -28,10 +40,11 @@ class _WebViewAppState extends State<WebViewApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter WebView'),
-        actions: [
-          NavigationControls(controller: controller),
-        ],
+        backgroundColor: Colors.transparent.withOpacity(0.5),
+        title: AppBarHeaderText(text1: title1, text2: ''),
+        // actions: [
+        //   NavigationControls(controller: controller),
+        // ],
       ),
       body: WebViewStack(controller: controller),
     );

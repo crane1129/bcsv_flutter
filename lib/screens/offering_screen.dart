@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
@@ -7,6 +8,8 @@ import 'package:external_app_launcher/external_app_launcher.dart';
 
 class OfferingScreen extends StatelessWidget {
   final Uri url;
+  final benevolence_account = "benevolence@bridgeway.online";
+  final offering_account = "offering@bridgeway.online";
 
   OfferingScreen({required this.url});
 
@@ -18,69 +21,136 @@ class OfferingScreen extends StatelessWidget {
         title: AppBarHeaderText(
             text1: AppLocalizations.of(context)!.offering, text2: ''),
       ),
-      body: SafeArea(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  clipBehavior: Clip.antiAlias,
+      body: ListView(
+        children: <Widget>[
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: <Widget>[
+                Image.asset('assets/images/offering_background.png'),
+                SizedBox(height: 20.0),
+                ListTile(
+                  leading:
+                      Icon(Icons.volunteer_activism, color: kActiveIconColor),
+                  title: Text(AppLocalizations.of(context)!.offering),
+                  subtitle: Text(AppLocalizations.of(context)!.offeringVerse),
+                ),
+                SizedBox(height: 10.0),
+                Card(
+                  color: Colors.white,
+                  borderOnForeground: true,
+                  elevation: 5,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset('assets/images/offering_background.png'),
-                      SizedBox(height: 20.0),
                       ListTile(
-                        leading: Icon(Icons.volunteer_activism,
-                            color: kActiveIconColor),
-                        title: Text(AppLocalizations.of(context)!.offering),
-                        subtitle:
-                            Text(AppLocalizations.of(context)!.offeringVerse),
+                        leading: Icon(Icons.verified_user_outlined),
+                        title:
+                            Text("주일헌금", style: TextStyle(color: Colors.green)),
+                        subtitle: Text(
+                          "${offering_account}",
+                          style: TextStyle(color: Colors.orangeAccent.shade400),
+                        ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(10.0),
-                      //   child: ElevatedButton.icon(
-                      //     onPressed: () async {
-                      //       if (await canLaunchUrl(url)) {
-                      //         await launchUrl(url);
-                      //       }
-                      //     },
-                      //     icon: Icon(Icons.volunteer_activism),
-                      //     label: Text(
-                      //         AppLocalizations.of(context)!.openButtonText),
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: ElevatedButton(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          TextButton(
+                            child: const Text('Open Zelle'),
                             onPressed: () async {
+                              Clipboard.setData(
+                                  ClipboardData(text: "${offering_account}"));
                               await LaunchApp.openApp(
                                 androidPackageName: 'com.zellepay.zelle',
                                 iosUrlScheme: 'zelle://',
-                                appStoreLink: 'itms-apps://apps.apple.com/us/app/zelle/id1260755201',
+                                appStoreLink:
+                                    'itms-apps://apps.apple.com/us/app/zelle/id1260755201',
                                 // openStore: false
                               );
-
-                              // Enter the package name of the App you want to open and for iOS add the URLscheme to the Info.plist file.
-                              // The `openStore` argument decides whether the app redirects to PlayStore or AppStore.
-                              // For testing purpose you can enter com.instagram.android
                             },
-                            child: Container(
-                                child: Center(
-                                  child: Text("Open",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ))),
+                          )
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Card(
+                  color: Colors.white,
+                  borderOnForeground: true,
+                  elevation: 5,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: Icon(Icons.verified_user_outlined),
+                        title:
+                            Text("구제헌금", style: TextStyle(color: Colors.green)),
+                        subtitle: Text(
+                          "${benevolence_account}",
+                          style: TextStyle(color: Colors.orangeAccent.shade400),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          TextButton(
+                            child: const Text('Open Zelle'),
+                            onPressed: () async {
+                              Clipboard.setData(ClipboardData(
+                                  text: "${benevolence_account}"));
+                              await LaunchApp.openApp(
+                                androidPackageName: 'com.zellepay.zelle',
+                                iosUrlScheme: 'zelle://',
+                                appStoreLink:
+                                    'itms-apps://apps.apple.com/us/app/zelle/id1260755201',
+                                // openStore: false
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  color: Colors.white,
+                  borderOnForeground: true,
+                  elevation: 5,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: Icon(Icons.verified_user_outlined),
+                        title:
+                            Text("주일헌금", style: TextStyle(color: Colors.black)),
+                        subtitle: Text(
+                          "Cheddar Up을 통한 헌금",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          TextButton(
+                            child: const Text('Open Website'),
+                            onPressed: () async {
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -276,7 +276,7 @@ class ListWebViewMenu extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 // return WebviewScreen(url: url, title1: menuName, title2: '');
-                return WebViewApp();
+                return WebViewApp(url: url, title1: menuName, title2: '');
               },
             ),
           );
