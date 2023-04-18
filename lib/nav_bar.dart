@@ -66,7 +66,7 @@ class _NavBarState extends State<NavBar> {
           ),
           ListWebViewMenu(
               myIcon: Icons.voice_chat_outlined,
-              menuName: AppLocalizations.of(context)!.archives,
+              menuName: AppLocalizations.of(context)!.sermonArchives,
               url: ApiEndpoint.apiMap['SERMON_YOUTUBE'],
               trailing: emptyString),
           ListWebViewMenu(

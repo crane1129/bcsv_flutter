@@ -23,8 +23,8 @@
   "@sundaySermons": {
     "description": "description"
   },
-  "archives": "Archives",
-  "@archives": {
+  "sermonArchives": "Sermon Archives",
+  "@sermonArchives": {
     "description": "description"
   },
   "youtubeLive": "Youtube Live",
@@ -200,6 +200,14 @@
     "description": "The current language"
   },
   "restartNotice": "The app is now closing.",
+  "@Run": {
+    "description": "The current language"
+  },
+  "sundayOffering": "Sunday Offering",
+  "@Run": {
+    "description": "The current language"
+  },
+  "benevolenceOffering": "Benevolence Offering",
   "@Run": {
     "description": "The current language"
   }

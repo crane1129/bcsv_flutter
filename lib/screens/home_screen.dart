@@ -16,6 +16,8 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
 
+import 'offering_screen.dart';
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -63,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               .apiMap['SERMON_YOUTUBE'] ??
                                           kBaseUrl,
                                       title1: AppLocalizations.of(context)!
-                                          .archives,
+                                          .sermonArchives,
                                       title2: '');
                                 },
                               ),
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.solidFileVideo,
-                              label: AppLocalizations.of(context)!.archives)),
+                              label: AppLocalizations.of(context)!.sermonArchives)),
                     ),
                     Expanded(
                       child: ReusableCard2(
@@ -114,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           color: kActiveCardColor,
                           cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.peopleCarry,
+                              cardIcon: FontAwesomeIcons.peopleCarryBox,
                               label:
                                   AppLocalizations.of(context)!.servingTurn)),
                     ),
@@ -131,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           color: kActiveCardColor,
                           cardChild: IconMsgContent(
-                            cardIcon: FontAwesomeIcons.facebookMessenger,
+                            cardIcon: FontAwesomeIcons.message,
                             label: AppLocalizations.of(context)!.newMessage,
                             msg_widget: displayMsgCounter(),
                           )),
@@ -157,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           color: kActiveCardColor,
                           cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.bible,
+                              cardIcon: FontAwesomeIcons.bookBible,
                               label: AppLocalizations.of(context)!.bibleText)),
                     ),
                     Expanded(
@@ -175,9 +177,33 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           color: kActiveCardColor,
                           cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.cross,
+                              cardIcon: FontAwesomeIcons.calendarDays,
                               label: AppLocalizations.of(context)!.dailyBible)),
                     ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ReusableCard2(
+                          onPress: () {
+                            //BibleTextPage
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return OfferingScreen(url: ApiEndpoint.apiMap['OFFERING']);
+                                },
+                              ),
+                            );
+                          },
+                          color: kActiveCardColor,
+                          cardChild: IconContent(
+                              cardIcon: FontAwesomeIcons.handHoldingHeart,
+                              label: AppLocalizations.of(context)!.offering)),
+                    )
                   ],
                 ),
               ),

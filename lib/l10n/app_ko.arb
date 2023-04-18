@@ -5,7 +5,7 @@
     "settings": "설정",
     "share": "나눔",
     "sundaySermons": "주일설교",
-    "archives": "주일설교 모음",
+    "sermonArchives": "주일설교 모음",
     "youtubeLive": "Youtube 실황방송",
     "notification": "알림란",
     "servingTurn": "주일 당번 순서",
@@ -49,5 +49,7 @@
     "initMessage": "메시지 초기화",
     "runButton": "실행",
     "noticeTitle": "알림",
-    "restartNotice": "앱을 다시 시작합니다."
+    "restartNotice": "앱을 다시 시작합니다.",
+    "sundayOffering": "주일헌금",
+    "benevolenceOffering": "구제헌금"
 }

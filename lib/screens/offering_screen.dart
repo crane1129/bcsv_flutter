@@ -38,21 +38,23 @@ class OfferingScreen extends StatelessWidget {
                   title: Text(AppLocalizations.of(context)!.offering),
                   subtitle: Text(AppLocalizations.of(context)!.offeringVerse),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 20.0),
                 Card(
                   color: Colors.white,
                   borderOnForeground: true,
-                  elevation: 5,
+                  elevation: 1,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
-                        leading: Icon(Icons.verified_user_outlined),
-                        title:
-                            Text("주일헌금", style: TextStyle(color: Colors.green)),
+                        leading: Icon(Icons.verified_user_outlined,
+                            color: Colors.green),
+                        title: Text(
+                            AppLocalizations.of(context)!.sundayOffering,
+                            style: TextStyle(color: Colors.black)),
                         subtitle: Text(
                           "${offering_account}",
-                          style: TextStyle(color: Colors.orangeAccent.shade400),
+                          style: TextStyle(color: Colors.blueAccent),
                         ),
                       ),
                       Row(
@@ -80,17 +82,19 @@ class OfferingScreen extends StatelessWidget {
                 Card(
                   color: Colors.white,
                   borderOnForeground: true,
-                  elevation: 5,
+                  elevation: 1,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
-                        leading: Icon(Icons.verified_user_outlined),
-                        title:
-                            Text("구제헌금", style: TextStyle(color: Colors.green)),
+                        leading: Icon(Icons.verified_user_outlined,
+                            color: Colors.green),
+                        title: Text(
+                            AppLocalizations.of(context)!.benevolenceOffering,
+                            style: TextStyle(color: Colors.black)),
                         subtitle: Text(
                           "${benevolence_account}",
-                          style: TextStyle(color: Colors.orangeAccent.shade400),
+                          style: TextStyle(color: Colors.blueAccent),
                         ),
                       ),
                       Row(
@@ -118,14 +122,15 @@ class OfferingScreen extends StatelessWidget {
                 Card(
                   color: Colors.white,
                   borderOnForeground: true,
-                  elevation: 5,
+                  elevation: 0,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
                         leading: Icon(Icons.verified_user_outlined),
-                        title:
-                            Text("주일헌금", style: TextStyle(color: Colors.black)),
+                        title: Text(
+                            AppLocalizations.of(context)!.sundayOffering,
+                            style: TextStyle(color: Colors.black)),
                         subtitle: Text(
                           "Cheddar Up을 통한 헌금",
                           style: TextStyle(color: Colors.black),
@@ -135,7 +140,7 @@ class OfferingScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           TextButton(
-                            child: const Text('Open Website'),
+                            child: const Text('Open Cheddar Up'),
                             onPressed: () async {
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
