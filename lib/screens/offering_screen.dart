@@ -5,6 +5,7 @@ import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class OfferingScreen extends StatelessWidget {
   final Uri url;
@@ -61,10 +62,16 @@ class OfferingScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           TextButton(
-                            child: const Text('Open Zelle'),
+                            child: const Text('Copy'),
                             onPressed: () async {
+                              showMessage(offering_account);
                               Clipboard.setData(
                                   ClipboardData(text: "${offering_account}"));
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Open Zelle'),
+                            onPressed: () async {
                               await LaunchApp.openApp(
                                 androidPackageName: 'com.zellepay.zelle',
                                 iosUrlScheme: 'zelle://',
@@ -101,10 +108,16 @@ class OfferingScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           TextButton(
+                            child: const Text('Copy'),
+                            onPressed: () async {
+                              showMessage(benevolence_account);
+                              Clipboard.setData(
+                                  ClipboardData(text: "${benevolence_account}"));
+                            },
+                          ),
+                          TextButton(
                             child: const Text('Open Zelle'),
                             onPressed: () async {
-                              Clipboard.setData(ClipboardData(
-                                  text: "${benevolence_account}"));
                               await LaunchApp.openApp(
                                 androidPackageName: 'com.zellepay.zelle',
                                 iosUrlScheme: 'zelle://',
@@ -158,5 +171,15 @@ class OfferingScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void showMessage(email) {
+    showSimpleNotification(
+        Text(
+          email + " copied to clipboard",
+        ),
+        leading: Icon(Icons.content_paste_outlined),
+        background: Colors.blueAccent,
+        elevation: 5);
   }
 }
