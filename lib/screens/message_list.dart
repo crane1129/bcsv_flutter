@@ -106,7 +106,10 @@ class _MessageListScreenState extends State<MessageListScreen> {
                 children: <Widget>[
                   myMessageItem.imageLink.isEmpty
                       ? Image.asset(
-                    'assets/images/mountain1.jpg',
+                    'assets/images/bridgeway.png',
+                    height: 100,
+                    width: 200,
+                    fit: BoxFit.fitWidth
                   )
                       : Image.network(
                     myMessageItem.imageLink,

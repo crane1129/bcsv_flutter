@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   AppLocalizations.of(context)!.servingTurn)),
                     ),
                     Expanded(
-                      child: ReusableCard3(
+                      child: ReusableCard2(
                           onPress: () {
                             //New Message Page
                             Navigator.push(context,

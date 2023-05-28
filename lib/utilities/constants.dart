@@ -16,12 +16,12 @@ const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
-const kActiveCardColor = Color(0x35232F34);
+const kActiveCardColor = Color(0x84042B3F);
 const kActiveIconColor = Color(0xFFF9AA33);
 const kInactiveIconColor = Colors.blueGrey;
 const kCardIconColor = Color(0xFFF9AA33);
 const kMainAppBarColor = Color(0xFF232F34);
-const kMainThemeColor = Color(0xFF344955);
+const kMainThemeColor = Color(0xFF0C1B21);
 const kDrawerBackgroundColor = Color(0xFF223841);
 const kSystemWideFont = 'PoorStory';
 const kAppBarTextStyle = TextStyle(
