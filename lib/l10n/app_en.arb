@@ -210,5 +210,17 @@
   "benevolenceOffering": "Benevolence Offering",
   "@Run": {
     "description": "The current language"
+  },
+  "prayer": "Prayer",
+  "@Run": {
+    "description": "The current language"
+  },
+  "foodPrep": "Food Prep",
+  "@Run": {
+    "description": "The current language"
+  },
+  "babysitting": "Tuesday Baby Sitting",
+  "@Run": {
+    "description": "The current language"
   }
 }

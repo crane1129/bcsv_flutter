@@ -51,5 +51,8 @@
     "noticeTitle": "알림",
     "restartNotice": "앱을 다시 시작합니다.",
     "sundayOffering": "주일헌금",
-    "benevolenceOffering": "구제헌금"
+    "benevolenceOffering": "구제헌금",
+    "prayer": "기도",
+    "babysitting": "화요기도회 아이돌봄",
+    "foodPrep": "음식준비"
 }

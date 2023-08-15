@@ -100,12 +100,12 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                           color: kActiveIconColor)),
                   ServingTurnTile(
                       content: content.prayer,
-                      leadingText: const Text('기도', style: kBodyTextStyle)),
+                      leadingText: Text(AppLocalizations.of(context)!.prayer, style: kBodyTextStyle)),
                   ServingTurnTile(
                       content: content.food,
-                      leadingText: const Text('음식준비', style: kBodyTextStyle)),
+                      leadingText: Text(AppLocalizations.of(context)!.foodPrep, style: kBodyTextStyle)),
                   ListTile(
-                    leading: Text('화요 기도회', style: kBodyTextStyle),
+                    leading: Text(AppLocalizations.of(context)!.babysitting, style: kBodyTextStyle),
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

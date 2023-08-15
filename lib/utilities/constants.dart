@@ -68,7 +68,7 @@ const kLabelTextStyle =
 
 const kLargeButtonTextStyle = TextStyle(
   fontSize: 25.0,
-  color: Colors.white
+  color: Colors.white, fontFamily: kSystemWideFont, fontWeight: FontWeight.w400
 );
 
 const kRegularButtonTextStyle = TextStyle(

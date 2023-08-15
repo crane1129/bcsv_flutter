@@ -54,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     leading:
                         Icon(Icons.language_outlined, color: kActiveIconColor),
                     title: Text(AppLocalizations.of(context)!.languageSetting,
-                        style: kCardTitleStyle),
+                        style: kLargeButtonTextStyle),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     leading:
                     Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor),
                     title: Text(AppLocalizations.of(context)!.initMessage,
-                        style: kCardTitleStyle),
+                        style: kLargeButtonTextStyle),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       OutlinedButton(
                         child: Text(AppLocalizations.of(context)!.runButton,
-                            style: kCardTitleStyle),
+                            style: kLargeButtonTextStyle),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
                           side: BorderSide(
