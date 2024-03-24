@@ -37,7 +37,13 @@ class _MessageListScreenState extends State<MessageListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.newMessage, text2: ''),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: kNavBackButtonColor,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: AppBarHeaderText(
+            text1: AppLocalizations.of(context)!.newMessage, text2: ''),
       ),
       body: isLoading
           ? Center(
@@ -105,15 +111,11 @@ class _MessageListScreenState extends State<MessageListScreen> {
               child: Column(
                 children: <Widget>[
                   myMessageItem.imageLink.isEmpty
-                      ? Image.asset(
-                    'assets/images/bridgeway.png',
-                    height: 100,
-                    width: 200,
-                    fit: BoxFit.fitWidth
-                  )
+                      ? Image.asset('assets/images/bridgeway.png',
+                          height: 100, width: 200, fit: BoxFit.fitWidth)
                       : Image.network(
-                    myMessageItem.imageLink,
-                  ),
+                          myMessageItem.imageLink,
+                        ),
                   ListTile(
                     leading: Icon(Icons.event, color: kActiveIconColor),
                     title: Padding(
@@ -134,14 +136,14 @@ class _MessageListScreenState extends State<MessageListScreen> {
                   ),
                   myMessageItem.externalLink.isNotEmpty
                       ? OutlinedButton.icon(
-                    onPressed: () async {
-                      if (await canLaunch(myMessageItem.externalLink)) {
-                        await launch(myMessageItem.externalLink);
-                      }
-                    },
-                    icon: Icon(Icons.link),
-                    label: Text('Link'),
-                  )
+                          onPressed: () async {
+                            if (await canLaunch(myMessageItem.externalLink)) {
+                              await launch(myMessageItem.externalLink);
+                            }
+                          },
+                          icon: Icon(Icons.link),
+                          label: Text('Link'),
+                        )
                       : SizedBox(height: 1.0),
                 ],
               ),
@@ -155,14 +157,13 @@ class _MessageListScreenState extends State<MessageListScreen> {
     });
 
     // Update the "viewed" field and save to file
-    for (var i=0; i < jsonObj.length; i++) {
-      jsonObj[i]['viewed']=true;
+    for (var i = 0; i < jsonObj.length; i++) {
+      jsonObj[i]['viewed'] = true;
     }
 
     var dir = await getTemporaryDirectory();
     File file = File("${dir.path}/${kPrayerListData}");
     file.writeAsStringSync(jsonEncode(jsonObj),
         flush: true, mode: FileMode.write);
-
   }
 }

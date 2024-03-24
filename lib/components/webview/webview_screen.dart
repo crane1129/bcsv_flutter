@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bcsv_flutter_project/components/webview/stack.dart';
-import 'package:bcsv_flutter_project/components/webview/navigation_controls.dart';
+import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class WebViewApp extends StatefulWidget {
@@ -41,6 +40,11 @@ class _WebViewAppState extends State<WebViewApp> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: kNavBackButtonColor,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: AppBarHeaderText(text1: title1, text2: ''),
         // actions: [
         //   NavigationControls(controller: controller),

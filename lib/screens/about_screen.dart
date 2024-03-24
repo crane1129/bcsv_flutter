@@ -18,6 +18,11 @@ class _AboutScreenState extends State<AboutScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: kNavBackButtonColor,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: AppBarHeaderText(
             text1: 'About',
             text2: AppLocalizations.of(context)!.appInformation),

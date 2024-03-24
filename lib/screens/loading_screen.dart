@@ -44,7 +44,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       body: Container(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 300),
+            SizedBox(height: 250),
             Row(
                 textBaseline: TextBaseline.alphabetic,
                 mainAxisAlignment: MainAxisAlignment.center,

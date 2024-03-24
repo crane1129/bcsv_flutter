@@ -35,6 +35,11 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: kNavBackButtonColor,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: AppBarHeaderText(text1: AppLocalizations.of(context)!.dailyBible, text2: ''),
       ),
       body: isLoading

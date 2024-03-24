@@ -36,7 +36,12 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withOpacity(0.1),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: kNavBackButtonColor,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: AppBarHeaderText(
             text1: AppLocalizations.of(context)!.settings, text2: ''),
       ),
@@ -45,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
-              color: kActiveCardColor,
+              color: kActiveCardColor.withOpacity(0.9),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
               child: Column(
@@ -90,6 +95,15 @@ class _SettingsPageState extends State<SettingsPage> {
                       Text('English', style: kBodyTextStyle),
                     ],
                   ),
+                ],
+              ),
+            ),
+            Card(
+              color: kActiveCardColor.withOpacity(0.9),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Column(
+                children: <Widget>[
                   ListTile(
                     leading:
                     Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor),
@@ -122,7 +136,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

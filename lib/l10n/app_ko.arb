@@ -28,7 +28,7 @@
     "pleaseSendUsYourOpinion": "공동체를 위한 소중한 의견을 보내주세요.",
     "thankYou": "감사합니다",
     "yourOpinionHasSuccessfullySubmitted": "의견이 접수되었습니다. 감사합니다.",
-    "newMessage": "교회 소식",
+    "Message": "교회 소식",
     "appInformation": "앱 정보",
     "languageSetting": "언어선택",
     "churchReimbursement": "환급신청",
@@ -53,6 +53,6 @@
     "sundayOffering": "주일헌금",
     "benevolenceOffering": "구제헌금",
     "prayer": "기도",
-    "babysitting": "화요기도회 아이돌봄",
+    "babysitting": "수요기도회 아이돌봄",
     "foodPrep": "음식준비"
 }

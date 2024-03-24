@@ -18,7 +18,6 @@ import 'package:bcsv_flutter_project/globals.dart' as globals;
 
 import 'offering_screen.dart';
 
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -27,6 +26,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget emptyString = Text('');
   late int messageCounter;
 
@@ -39,9 +39,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         drawer: NavBar(),
         appBar: AppBar(
           backgroundColor: Colors.transparent.withOpacity(0.5),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            color: Colors.white70,
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+          ),
           title: AppBarHeaderText(
               text1: AppLocalizations.of(context)!.bridgeway,
               text2: AppLocalizations.of(context)!.baptistChurch),
@@ -49,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: SafeArea(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Expanded(
                 child: Row(
                   children: <Widget>[
@@ -74,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: kActiveCardColor,
                           cardChild: IconContent(
                               cardIcon: FontAwesomeIcons.solidFileVideo,
-                              label: AppLocalizations.of(context)!.sermonArchives)),
+                              label: AppLocalizations.of(context)!
+                                  .sermonArchives)),
                     ),
                     Expanded(
                       child: ReusableCard2(
@@ -124,9 +133,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ReusableCard2(
                           onPress: () {
                             //New Message Page
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => MessageListScreen())).then(
-                                  (onValue) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => MessageListScreen())).then(
+                              (onValue) {
                                 updateMessageCounter();
                               },
                             );
@@ -194,7 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return OfferingScreen(url: ApiEndpoint.apiMap['OFFERING']);
+                                  return OfferingScreen(
+                                      url: ApiEndpoint.apiMap['OFFERING']);
                                 },
                               ),
                             );
@@ -207,14 +219,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
             ],
           ),
         ));
   }
 
   Widget displayMsgCounter() {
-
     updateMessageCounter();
 
     if (globals.messageCnt == 0) {
