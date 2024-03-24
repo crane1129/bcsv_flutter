@@ -13,7 +13,6 @@ import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SundayBibleTextScreen extends StatefulWidget {
   const SundayBibleTextScreen({Key? key}) : super(key: key);
 
@@ -38,7 +37,13 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.sermonBibleText, text2: ''),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: kNavBackButtonColor,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: AppBarHeaderText(
+            text1: AppLocalizations.of(context)!.sermonBibleText, text2: ''),
       ),
       body: isLoading
           ? Center(
@@ -82,8 +87,8 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
 
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
-
-        leading: tile.icon != null ? Icon(tile.icon, color: kActiveIconColor) : null,
+        leading:
+            tile.icon != null ? Icon(tile.icon, color: kActiveIconColor) : null,
         title: tile.headerText);
   }
 
@@ -106,8 +111,8 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     );
 
     Map data = {};
-    ApiGoogleDocContent myGoogleDocContent =
-        ApiGoogleDocContent(modelParam: modelParam, body: data, isBodyRequired: false);
+    ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
+        modelParam: modelParam, body: data, isBodyRequired: false);
 
     String _bibleTextList = await myGoogleDocContent.getContent();
     var jsonObj = jsonDecode(_bibleTextList)[modelParam.tag] as List;
@@ -126,7 +131,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
           } else {
             bibleTextTiles.add(
               ContentListTile(
-                icon: FontAwesomeIcons.bible,
+                icon: FontAwesomeIcons.bookBible,
                 headerText: Text('${content.date}\n${content.title}',
                     style: kBodyTextStyle),
                 contents: [

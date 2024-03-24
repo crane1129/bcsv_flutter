@@ -17,7 +17,8 @@ const String kOfferingUrl =
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
 const kActiveCardColor = Color(0x84042B3F);
-const kActiveIconColor = Color(0xFFF9AA33);
+const kActiveIconColor = Color(0xFFF68502);
+const kNavBackButtonColor = Color(0xFFFF9C02);
 const kInactiveIconColor = Colors.blueGrey;
 const kCardIconColor = Color(0xFFF9AA33);
 const kMainAppBarColor = Color(0xFF232F34);
@@ -25,12 +26,12 @@ const kMainThemeColor = Color(0xFF0C1B21);
 const kDrawerBackgroundColor = Color(0xFF223841);
 const kSystemWideFont = 'PoorStory';
 const kAppBarTextStyle = TextStyle(
-    fontSize: 30.0, fontFamily: kSystemWideFont);
+    fontSize: 30.0, fontFamily: kSystemWideFont, color: Color(0xFFF9AA33));
 
 const kAppBarTextStyleSmall = TextStyle(
   fontSize: 20.0,
   fontFamily: kSystemWideFont,
-  color: Color(0xFFF9AA33),
+  color: Color(0xFF854906),
 );
 
 const kBodyTextStyle = TextStyle(
