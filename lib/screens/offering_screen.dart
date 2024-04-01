@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
@@ -44,7 +43,7 @@ class OfferingScreen extends StatelessWidget {
                   title: Text(AppLocalizations.of(context)!.offering),
                   subtitle: Text(AppLocalizations.of(context)!.offeringVerse),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 40.0),
                 Card(
                   color: Colors.white,
                   borderOnForeground: true,
@@ -88,6 +87,7 @@ class OfferingScreen extends StatelessWidget {
                           )
                         ],
                       ),
+                      SizedBox(height: 30.0)
                     ],
                   ),
                 ),
@@ -134,39 +134,7 @@ class OfferingScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                Card(
-                  color: Colors.white,
-                  borderOnForeground: true,
-                  elevation: 0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: Icon(Icons.verified_user_outlined),
-                        title: Text(
-                            AppLocalizations.of(context)!.sundayOffering,
-                            style: TextStyle(color: Colors.black)),
-                        subtitle: Text(
-                          "Cheddar Up을 통한 헌금",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          TextButton(
-                            child: const Text('Open Cheddar Up'),
-                            onPressed: () async {
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              }
-                            },
-                          )
-                        ],
-                      ),
+                      SizedBox(height: 30.0)
                     ],
                   ),
                 )

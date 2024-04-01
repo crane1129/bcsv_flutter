@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 
 class IconContent extends StatelessWidget {
@@ -18,7 +19,7 @@ class IconContent extends StatelessWidget {
               cardIcon,
               size: 40.0,
               color: kCardIconColor,
-            ),
+            ).animate().fade(end: 1).scaleXY(end: 1.2, duration: 500.ms),
           ),
           const SizedBox(height: 15.0),
           Text(label,

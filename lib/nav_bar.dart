@@ -185,15 +185,20 @@ class _NavBarState extends State<NavBar> {
                           url: ApiEndpoint.apiMap['REIMBURSEMENT'])));
             },
           ),
-          ListTile(
-            leading: Icon(Icons.share, color: kActiveIconColor),
-            title: Text(AppLocalizations.of(context)!.opinion,
-                style: kDrawerMenuTextStyle),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.share, color: kActiveIconColor),
+          //   title: Text(AppLocalizations.of(context)!.opinion,
+          //       style: kDrawerMenuTextStyle),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
+          //   },
+          // ),
+          ListWebViewMenu(
+              myIcon: Icons.share,
+              menuName: AppLocalizations.of(context)!.opinion,
+              url: ApiEndpoint.apiMap['FEEDBACK'],
+              trailing: emptyString),
           const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.info_outline, color: kActiveIconColor),

@@ -14,6 +14,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
 
+
 class MessageListScreen extends StatefulWidget {
   const MessageListScreen({Key? key}) : super(key: key);
 
@@ -137,8 +138,8 @@ class _MessageListScreenState extends State<MessageListScreen> {
                   myMessageItem.externalLink.isNotEmpty
                       ? OutlinedButton.icon(
                           onPressed: () async {
-                            if (await canLaunch(myMessageItem.externalLink)) {
-                              await launch(myMessageItem.externalLink);
+                            if (await canLaunchUrl(Uri.parse(myMessageItem.externalLink))) {
+                              await launchUrl(Uri.parse(myMessageItem.externalLink));
                             }
                           },
                           icon: Icon(Icons.link),
