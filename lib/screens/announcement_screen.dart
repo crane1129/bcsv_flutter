@@ -11,6 +11,7 @@ import 'package:bcsv_flutter_project/data_models/data_model.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class AnnouncementPage extends StatefulWidget {
   @override
@@ -100,7 +101,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                 Text('기도 ${content.prayer}', style: kBodyTextStyle),
                 SelectableText(
                     '광고내용\n${content.announcement}\n\n헌금: ${content.offering}',
-                    style: kBodyTextStyle),
+                    style: kBodyTextStyle).animate().fade(duration: 500.ms),
                 Center(
                   child: content.File_url.toString().isEmpty
                       ? null

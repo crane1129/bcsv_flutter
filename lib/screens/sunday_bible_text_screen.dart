@@ -12,6 +12,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
 
 class SundayBibleTextScreen extends StatefulWidget {
   const SundayBibleTextScreen({Key? key}) : super(key: key);
@@ -136,7 +138,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
                     style: kBodyTextStyle),
                 contents: [
                   SelectableText("📖본문: ${content.bibleText} $referenceText",
-                      style: kBodyTextStyle),
+                      style: kBodyTextStyle).animate().fade(duration: 500.ms),
                   Center(
                     child: content.fileUrl.toString().isEmpty
                         ? null

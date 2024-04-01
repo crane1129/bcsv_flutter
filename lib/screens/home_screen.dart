@@ -15,7 +15,7 @@ import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
-
+import 'package:flutter_animate/flutter_animate.dart';
 import 'offering_screen.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -52,7 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           title: AppBarHeaderText(
               text1: AppLocalizations.of(context)!.bridgeway,
-              text2: AppLocalizations.of(context)!.baptistChurch),
+              text2: AppLocalizations.of(context)!.baptistChurch)
+              .animate()
+              .fade()
+              .scale(duration: 500.ms),
         ),
         body: SafeArea(
           child: Column(

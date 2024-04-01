@@ -363,12 +363,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 001;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = 7KNQR27P8D;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bridgeway Palo Alto";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -501,12 +502,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 001;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = 7KNQR27P8D;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bridgeway Palo Alto";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -529,13 +531,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 001;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = 7KNQR27P8D;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = armv7;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bridgeway Palo Alto";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -10,6 +10,8 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
 
 class DailyBibleTextScreen extends StatefulWidget {
   const DailyBibleTextScreen({Key? key}) : super(key: key);
@@ -123,7 +125,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
             title: SelectableText(
               bodyText,
               style: kBodyTextStyle,
-            ),
+            ).animate().fade(duration: 500.ms),
           ),
         );
 
