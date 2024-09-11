@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -16,6 +15,7 @@ const String kOfferingUrl =
     "https://my.cheddarup.com/c/bridgeway-church-of-silicon-valley-2022";
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
+const kOpinionCardColor = Color(0xFF54636B);
 const kActiveCardColor = Color(0x84042B3F);
 const kActiveIconColor = Color(0xFFF68502);
 const kNavBackButtonColor = Color(0xFFFF9C02);

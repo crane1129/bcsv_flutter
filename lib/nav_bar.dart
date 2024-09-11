@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:bcsv_flutter_project/screens/message_list.dart';
+import 'package:bcsv_flutter_project/screens/submit_opinion_google_form.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +14,6 @@ import 'package:bcsv_flutter_project/screens/review_screen.dart';
 import 'package:bcsv_flutter_project/screens/about_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
-import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
@@ -185,20 +184,20 @@ class _NavBarState extends State<NavBar> {
                           url: ApiEndpoint.apiMap['REIMBURSEMENT'])));
             },
           ),
-          // ListTile(
-          //   leading: Icon(Icons.share, color: kActiveIconColor),
-          //   title: Text(AppLocalizations.of(context)!.opinion,
-          //       style: kDrawerMenuTextStyle),
-          //   onTap: () {
-          //     Navigator.push(context,
-          //         MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
-          //   },
-          // ),
-          ListWebViewMenu(
-              myIcon: Icons.share,
-              menuName: AppLocalizations.of(context)!.opinion,
-              url: ApiEndpoint.apiMap['FEEDBACK'],
-              trailing: emptyString),
+          ListTile(
+            leading: Icon(Icons.share, color: kActiveIconColor),
+            title: Text(AppLocalizations.of(context)!.opinion,
+                style: kDrawerMenuTextStyle),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => SubmitOpinionViaGoogleFormScreen()));
+            },
+          ),
+          // ListWebViewMenu(
+          //     myIcon: Icons.share,
+          //     menuName: AppLocalizations.of(context)!.opinion,
+          //     url: ApiEndpoint.apiMap['FEEDBACK'],
+          //     trailing: emptyString),
           const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.info_outline, color: kActiveIconColor),

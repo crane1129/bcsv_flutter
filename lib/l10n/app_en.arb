@@ -159,7 +159,7 @@
   "@submit": {
     "description": "The current language"
   },
-  "opinionTitle": "Please send us your opinion",
+  "opinionTitle": "Please send us your opinion\nto Bridgeway church",
   "@opinionTitle": {
     "description": "The current language"
   },
@@ -220,6 +220,10 @@
     "description": "The current language"
   },
   "babysitting": "Wednesday Baby Sitting",
+  "@Run": {
+    "description": "The current language"
+  },
+  "clear": "Clear",
   "@Run": {
     "description": "The current language"
   }

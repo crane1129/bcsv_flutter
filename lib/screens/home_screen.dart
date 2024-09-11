@@ -16,6 +16,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:upgrader/upgrader.dart';
 import 'offering_screen.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -38,194 +39,200 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        drawer: NavBar(),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent.withOpacity(0.5),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            color: Colors.white70,
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-          title: AppBarHeaderText(
-              text1: AppLocalizations.of(context)!.bridgeway,
-              text2: AppLocalizations.of(context)!.baptistChurch)
-              .animate()
-              .fade()
-              .scale(duration: 500.ms),
-        ),
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 10),
-              Expanded(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return WebViewApp(
-                                      url: ApiEndpoint
-                                              .apiMap['SERMON_YOUTUBE'] ??
-                                          kBaseUrl,
-                                      title1: AppLocalizations.of(context)!
-                                          .sermonArchives,
-                                      title2: '');
-                                },
-                              ),
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.solidFileVideo,
-                              label: AppLocalizations.of(context)!
-                                  .sermonArchives)),
-                    ),
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            //AnnouncementPage
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return AnnouncementPage();
-                                },
-                              ),
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.bullhorn,
-                              label:
-                                  AppLocalizations.of(context)!.announcement)),
-                    )
-                  ],
-                ),
+    return UpgradeAlert(
+        dialogStyle: UpgradeDialogStyle.cupertino,
+        child: Scaffold(
+            key: _scaffoldKey,
+            drawer: NavBar(),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent.withOpacity(0.5),
+              leading: IconButton(
+                icon: Icon(Icons.menu),
+                color: Colors.white70,
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
               ),
-              Expanded(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            //ServingTurnPage
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return ServingTurnPage();
-                                },
-                              ),
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.peopleCarryBox,
-                              label:
-                                  AppLocalizations.of(context)!.servingTurn)),
-                    ),
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            //New Message Page
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => MessageListScreen())).then(
-                              (onValue) {
-                                updateMessageCounter();
+              title: AppBarHeaderText(
+                      text1: AppLocalizations.of(context)!.bridgeway,
+                      text2: AppLocalizations.of(context)!.baptistChurch)
+                  .animate()
+                  .fade()
+                  .scale(duration: 500.ms),
+            ),
+            body: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return WebViewApp(
+                                          url: ApiEndpoint
+                                                  .apiMap['SERMON_YOUTUBE'] ??
+                                              kBaseUrl,
+                                          title1: AppLocalizations.of(context)!
+                                              .sermonArchives,
+                                          title2: '');
+                                    },
+                                  ),
+                                );
                               },
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconMsgContent(
-                            cardIcon: FontAwesomeIcons.message,
-                            label: AppLocalizations.of(context)!.newMessage,
-                            msg_widget: displayMsgCounter(),
-                          )),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            //BibleTextPage
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return SundayBibleTextScreen();
-                                },
-                              ),
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.bookBible,
-                              label: AppLocalizations.of(context)!.bibleText)),
+                              color: kActiveCardColor,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.solidFileVideo,
+                                  label: AppLocalizations.of(context)!
+                                      .sermonArchives)),
+                        ),
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //AnnouncementPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return AnnouncementPage();
+                                    },
+                                  ),
+                                );
+                              },
+                              color: kActiveCardColor,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.bullhorn,
+                                  label: AppLocalizations.of(context)!
+                                      .announcement)),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            //DailyBibleTextPage
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return DailyBibleTextScreen();
-                                },
-                              ),
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.calendarDays,
-                              label: AppLocalizations.of(context)!.dailyBible)),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //ServingTurnPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ServingTurnPage();
+                                    },
+                                  ),
+                                );
+                              },
+                              color: kActiveCardColor,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.peopleCarryBox,
+                                  label: AppLocalizations.of(context)!
+                                      .servingTurn)),
+                        ),
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //New Message Page
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            MessageListScreen())).then(
+                                  (onValue) {
+                                    updateMessageCounter();
+                                  },
+                                );
+                              },
+                              color: kActiveCardColor,
+                              cardChild: IconMsgContent(
+                                cardIcon: FontAwesomeIcons.message,
+                                label: AppLocalizations.of(context)!.newMessage,
+                                msg_widget: displayMsgCounter(),
+                              )),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //BibleTextPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return SundayBibleTextScreen();
+                                    },
+                                  ),
+                                );
+                              },
+                              color: kActiveCardColor,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.bookBible,
+                                  label:
+                                      AppLocalizations.of(context)!.bibleText)),
+                        ),
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //DailyBibleTextPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return DailyBibleTextScreen();
+                                    },
+                                  ),
+                                );
+                              },
+                              color: kActiveCardColor,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.calendarDays,
+                                  label: AppLocalizations.of(context)!
+                                      .dailyBible)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //BibleTextPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return OfferingScreen(
+                                          url: ApiEndpoint.apiMap['OFFERING']);
+                                    },
+                                  ),
+                                );
+                              },
+                              color: kActiveCardColor,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.handHoldingHeart,
+                                  label:
+                                      AppLocalizations.of(context)!.offering)),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ReusableCard2(
-                          onPress: () {
-                            //BibleTextPage
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return OfferingScreen(
-                                      url: ApiEndpoint.apiMap['OFFERING']);
-                                },
-                              ),
-                            );
-                          },
-                          color: kActiveCardColor,
-                          cardChild: IconContent(
-                              cardIcon: FontAwesomeIcons.handHoldingHeart,
-                              label: AppLocalizations.of(context)!.offering)),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
-        ));
+            )));
   }
 
   Widget displayMsgCounter() {

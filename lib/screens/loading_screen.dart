@@ -122,7 +122,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       _initPackageInfo();
 
       //스크린에 위젯 바인딩이 모두 끝나고나서 세팅을 로드해야 정상으로 반영됨.
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (context) {
           loadSettings();
         },
