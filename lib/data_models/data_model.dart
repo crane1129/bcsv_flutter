@@ -51,6 +51,7 @@ class Announcement {
 class BibleText {
   final String date;
   final String title;
+  final String category;
   final String bibleChapter;
   final String bibleText;
   final String fileUrl;
@@ -58,6 +59,7 @@ class BibleText {
   BibleText({
     required this.date,
     required this.title,
+    required this.category,
     required this.bibleChapter,
     required this.bibleText,
     required this.fileUrl,
@@ -67,6 +69,7 @@ class BibleText {
     return BibleText(
       date: json['Date'],
       title: json['Title'],
+      category: json['Category'],
       bibleChapter: json['Bible_chapter'],
       bibleText: json['Bible_text'],
       fileUrl: json['File_url'],

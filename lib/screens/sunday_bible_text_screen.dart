@@ -125,19 +125,24 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     setState(
       () {
         String referenceText = "";
+        String reviewQuestion = "";
 
         for (BibleText content in bibleTextList.reversed) {
-          if (content.title.isEmpty) {
+          if (content.title.isEmpty && content.category == 'ReferenceText') {
             referenceText +=
-                "\n\n📚참고본문: ${content.bibleChapter}\n${content.bibleText}";
-          } else {
+            "\n\n📚참고본문: ${content.bibleChapter}\n${content.bibleText}";
+          } else if(content.title.isEmpty && content.category == 'ReviewQuestion'){
+            reviewQuestion +=
+            "\n\n✏️말씀 Review: ${content.bibleChapter}\n${content.bibleText}";
+          }
+          else {
             bibleTextTiles.add(
               ContentListTile(
                 icon: FontAwesomeIcons.bookBible,
                 headerText: Text('${content.date}\n${content.title}',
                     style: kBodyTextStyle),
                 contents: [
-                  SelectableText("📖본문: ${content.bibleText} $referenceText",
+                  SelectableText("📖본문: ${content.bibleText} $referenceText $reviewQuestion",
                       style: kBodyTextStyle).animate().fade(duration: 500.ms),
                   Center(
                     child: content.fileUrl.toString().isEmpty
@@ -155,9 +160,9 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
               ),
             );
             referenceText = '';
+            reviewQuestion = '';
           }
         }
-
         //Hide loading spinner
         isLoading = false;
       },
