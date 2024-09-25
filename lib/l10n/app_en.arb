@@ -183,48 +183,48 @@
   "@missionVerse": {
     "description": "The current language"
   },
-  "newMessage": "New Message",
-  "@newMessage": {
-    "description": "The current language"
-  },
   "initMessage": "Reset Messages",
   "@initMessage": {
     "description": "The current language"
   },
   "runButton": "Execute",
-  "@Run": {
+  "@runButton": {
     "description": "The current language"
   },
   "noticeTitle": "Notice",
-  "@Run": {
+  "@noticeTitle": {
     "description": "The current language"
   },
   "restartNotice": "The app is now closing.",
-  "@Run": {
+  "@restartNotice": {
     "description": "The current language"
   },
   "sundayOffering": "Sunday Offering",
-  "@Run": {
+  "@sundayOffering": {
     "description": "The current language"
   },
   "benevolenceOffering": "Benevolence Offering",
-  "@Run": {
+  "@benevolenceOffering": {
     "description": "The current language"
   },
   "prayer": "Prayer",
-  "@Run": {
+  "@prayer": {
     "description": "The current language"
   },
   "foodPrep": "Food Prep",
-  "@Run": {
+  "@foodPrep": {
     "description": "The current language"
   },
   "babysitting": "Wednesday Baby Sitting",
-  "@Run": {
+  "@babysitting": {
     "description": "The current language"
   },
   "clear": "Clear",
-  "@Run": {
+  "@clear": {
+    "description": "The current language"
+  },
+  "copy": "Copy",
+  "@copy": {
     "description": "The current language"
   }
 }

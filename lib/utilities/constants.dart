@@ -19,12 +19,13 @@ const kOpinionCardColor = Color(0xFF54636B);
 const kActiveCardColor = Color(0x84042B3F);
 const kActiveIconColor = Color(0xFFF68502);
 const kNavBackButtonColor = Color(0xFFFF9C02);
-const kInactiveIconColor = Colors.blueGrey;
+const kInactiveIconColor = Color(0xFFB7C7CE);
 const kCardIconColor = Color(0xFFF9AA33);
 const kMainAppBarColor = Color(0xFF232F34);
 const kMainThemeColor = Color(0xFF0C1B21);
 const kDrawerBackgroundColor = Color(0xFF223841);
 const kSystemWideFont = 'PoorStory';
+const kSystemWideFont2 = 'Dongle-Light';
 const kAppBarTextStyle = TextStyle(
     fontSize: 30.0, fontFamily: kSystemWideFont, color: Color(0xFFF9AA33));
 
@@ -63,6 +64,11 @@ const kCardTitleStyle = TextStyle(
     fontSize: 25.0,
     color: Colors.black,
     fontFamily: kSystemWideFont);
+
+const kBodyCardTitleStyle = TextStyle(
+    fontSize: 25.0,
+    color: Colors.black,
+    fontFamily: kSystemWideFont2);
 
 const kLabelTextStyle =
     TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: kSystemWideFont);
