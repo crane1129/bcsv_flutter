@@ -1,5 +1,4 @@
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/screens/loading_screen.dart';

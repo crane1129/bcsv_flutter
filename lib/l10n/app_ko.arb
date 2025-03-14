@@ -39,8 +39,8 @@
     "openPdf": "PDF 보기",
     "offeringVerse": "각각 그 마음에 정한 대로 할 것이요\n인색함으로나 억지로 하지 말지니\n하나님은 즐겨 내는 자를 사랑 하시느니라.\n(고후9:7)",
     "submit": "제출",
-    "opinionTitle": "공동체를 위한 소중한 의견을 받습니다",
-    "opinionSubTitle": "보내주신 의견은 익명으로 처리됩니다",
+    "opinionTitle": "하나님의 은혜와 사랑의 공동체를\n여러분과 함께 만들어갑니다.",
+    "opinionSubTitle": "교회 운영에 관한 의견, 개선이 필요한 부분 등,\n교회 공동체의 미래를 위한 귀한 의견을\n보내 주십시오.",
     "openButtonText": "열기",
     "reimbursementDesc": "교회 행사관련 비용을 환급신청 하세요.",
     "missionStatement": "우리의 사명",
@@ -50,9 +50,11 @@
     "runButton": "실행",
     "noticeTitle": "알림",
     "restartNotice": "앱을 다시 시작합니다.",
-    "sundayOffering": "주일헌금",
-    "benevolenceOffering": "구제헌금",
+    "sundayOffering": "주일헌금 (Zelle® Only)",
+    "benevolenceOffering": "구제헌금 (Zelle® Only)",
     "prayer": "기도",
     "babysitting": "수요기도회 아이돌봄",
-    "foodPrep": "음식준비"
+    "foodPrep": "음식준비",
+    "clear": "지우기",
+    "copy": "복사"
 }

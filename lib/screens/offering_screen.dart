@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class OfferingScreen extends StatelessWidget {
@@ -33,6 +32,7 @@ class OfferingScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             clipBehavior: Clip.antiAlias,
+            color: kActiveCardColor,
             child: Column(
               children: <Widget>[
                 Image.asset('assets/images/offering_background.png'),
@@ -40,14 +40,15 @@ class OfferingScreen extends StatelessWidget {
                 ListTile(
                   leading:
                       Icon(Icons.volunteer_activism, color: kActiveIconColor),
-                  title: Text(AppLocalizations.of(context)!.offering),
-                  subtitle: Text(AppLocalizations.of(context)!.offeringVerse),
+                  title: Text(AppLocalizations.of(context)!.offering,
+                      style: kTitleTextStyle),
+                  subtitle: Text(AppLocalizations.of(context)!.offeringVerse,
+                      style: kBodyTextStyle),
                 ),
-                SizedBox(height: 40.0),
                 Card(
-                  color: Colors.white,
+                  color: kInactiveIconColor,
                   borderOnForeground: true,
-                  elevation: 1,
+                  elevation: 3,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -56,45 +57,35 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.sundayOffering,
-                            style: TextStyle(color: Colors.black)),
-                        subtitle: Text(
-                          "${offering_account}",
-                          style: TextStyle(color: Colors.blueAccent),
-                        ),
+                            style: kListTitleStyleBlack),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          TextButton(
-                            child: const Text('Copy'),
-                            onPressed: () async {
-                              showMessage(offering_account);
-                              Clipboard.setData(
-                                  ClipboardData(text: "${offering_account}"));
-                            },
-                          ),
-                          TextButton(
-                            child: const Text('Open Zelle'),
-                            onPressed: () async {
-                              await LaunchApp.openApp(
-                                androidPackageName: 'com.zellepay.zelle',
-                                iosUrlScheme: 'zelle://',
-                                appStoreLink:
-                                    'itms-apps://apps.apple.com/us/app/zelle/id1260755201',
-                                // openStore: false
-                              );
-                            },
-                          )
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${offering_account}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16)),
+                            TextButton(
+                              child: Text(AppLocalizations.of(context)!.copy),
+                              onPressed: () async {
+                                showMessage(offering_account);
+                                Clipboard.setData(
+                                    ClipboardData(text: "${offering_account}"));
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 30.0)
                     ],
                   ),
                 ),
                 Card(
-                  color: Colors.white,
+                  color: kInactiveIconColor,
                   borderOnForeground: true,
-                  elevation: 1,
+                  elevation: 3,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -103,36 +94,26 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.benevolenceOffering,
-                            style: TextStyle(color: Colors.black)),
-                        subtitle: Text(
-                          "${benevolence_account}",
-                          style: TextStyle(color: Colors.blueAccent),
-                        ),
+                            style: kListTitleStyleBlack),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          TextButton(
-                            child: const Text('Copy'),
-                            onPressed: () async {
-                              showMessage(benevolence_account);
-                              Clipboard.setData(
-                                  ClipboardData(text: "${benevolence_account}"));
-                            },
-                          ),
-                          TextButton(
-                            child: const Text('Open Zelle'),
-                            onPressed: () async {
-                              await LaunchApp.openApp(
-                                androidPackageName: 'com.zellepay.zelle',
-                                iosUrlScheme: 'zelle://',
-                                appStoreLink:
-                                    'itms-apps://apps.apple.com/us/app/zelle/id1260755201',
-                                // openStore: false
-                              );
-                            },
-                          )
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${benevolence_account}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16)),
+                            TextButton(
+                              child: Text(AppLocalizations.of(context)!.copy),
+                              onPressed: () async {
+                                showMessage(benevolence_account);
+                                Clipboard.setData(
+                                    ClipboardData(text: "${benevolence_account}"));
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 30.0)
                     ],

@@ -57,7 +57,7 @@ class ApiEndpoint {
 
       try {
         storedJsonObjMsg = jsonDecode(file.readAsStringSync()) as List;
-      } on Exception catch (FileSystemException) {
+      } on Exception {
         stdout.writeln("File not found: ${file}");
       }
 

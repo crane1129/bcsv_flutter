@@ -15,7 +15,7 @@ import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
 import 'package:flutter_animate/flutter_animate.dart';
-
+import 'package:bcsv_flutter_project/utilities/package_information.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
@@ -29,6 +29,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _initPackageInfo();
     checkNetworkConnection();
   }
 
@@ -51,22 +52,29 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
-                  Text(AppLocalizations.of(context)!
-                      .bridgeway, style: kMainTitleTextStyle)
+                  Text(AppLocalizations.of(context)!.bridgeway,
+                          style: kMainTitleTextStyle)
                       .animate()
                       .fadeIn() // uses `Animate.defaultDuration`
                       .scale() // inherits duration from fadeIn
                       .move(delay: 300.ms, duration: 600.ms),
                 ]),
             SizedBox(height: 50),
-            Text(AppLocalizations.of(context)!
-                .baptistChurch, style: kSubTitleTextStyle)
-                .animate().fadeIn(duration: 1000.ms).slideY(end:-1),
+            Text(AppLocalizations.of(context)!.baptistChurch,
+                    style: kSubTitleTextStyle)
+                .animate()
+                .fadeIn(duration: 1000.ms)
+                .slideY(end: -1),
             SizedBox(height: 50),
             SpinKitFadingCube(
               color: Colors.white,
               size: 100.0,
             ),
+            SizedBox(height: 50),
+            Text(
+                PackageInformation.packageInfo.version +
+                    " (${PackageInformation.packageInfo.buildNumber})",
+                style: kListTitleStyleWhite),
           ],
         ),
       ),
@@ -111,18 +119,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
           builder: (_) => DisconnectScreen(),
         ),
       );
-
     } else {
-
-      if(await ApiEndpoint.bindEndpoints()){
+      if (await ApiEndpoint.bindEndpoints()) {
         await ApiEndpoint.checkNewMessage();
       }
 
       GoogleMessageSheet.init();
-      _initPackageInfo();
+      // _initPackageInfo();
 
       //스크린에 위젯 바인딩이 모두 끝나고나서 세팅을 로드해야 정상으로 반영됨.
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (context) {
           loadSettings();
         },

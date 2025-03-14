@@ -62,7 +62,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                     leading:
                         Icon(Icons.question_answer, color: kActiveIconColor),
                     title: Text(AppLocalizations.of(context)!.opinionTitle,
-                        style: kListTitleStyle),
+                        style: kListSubtitleStyle),
                     subtitle: Text(
                         AppLocalizations.of(context)!.opinionSubTitle,
                         style: kListSubtitleStyle),
