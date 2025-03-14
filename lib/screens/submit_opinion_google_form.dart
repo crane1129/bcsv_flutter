@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class SubmitOpinionViaGoogleFormScreen extends StatefulWidget {
   const SubmitOpinionViaGoogleFormScreen({Key? key}) : super(key: key);
@@ -76,7 +77,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
                           style: kLabelTextStyle),
                       subtitle: Text(
                         AppLocalizations.of(context)!.opinionSubTitle,
-                        style: TextStyle(color: Colors.white),
+                        style: kLabelTextStyle,
                       ),
                     ),
                     DropdownButtonFormField<String>(
@@ -171,6 +172,18 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
     );
   }
 
+  // Show confirmation message at top of the screen
+  // when submission button is pressed
+  void showMessage(message) {
+    showSimpleNotification(
+        Text(
+          message,
+        ),
+        leading: Icon(Icons.content_paste_outlined),
+        background: Colors.blueAccent,
+        elevation: 5);
+  }
+
 // Function to clear the data
   void clearData() {
     setState(() {
@@ -206,15 +219,17 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
       );
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Form submitted successfully!"),
-        ));
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //   content: Text("Form submitted successfully!"),
+        // ));
+        showMessage("Form submitted successfully");
         clearData();
 
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Failed to submit the form!"),
-        ));
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //   content: Text("Failed to submit the form!"),
+        // ));
+        showMessage("Failed to submit the form. Try again.");
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

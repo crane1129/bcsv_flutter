@@ -91,17 +91,17 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
       () {
         for (ServingTurn content in servingTurnList) {
           servingTurnTiles.add(
-            Card(
-              elevation: 3,
+            Card(margin: EdgeInsets.all(15.0),
+              elevation: 15,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              color: Colors.white10,
+                  borderRadius: BorderRadius.circular(15)),
+              color: kActiveCardColor,
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
                   ServingTurnTile(
                       content: content.date,
-                      leadingText: Icon(Icons.accessibility_new_outlined,
+                      leadingText: Icon(Icons.add_alert_sharp,
                           color: kActiveIconColor)),
                   ServingTurnTile(
                       content: content.prayer,
@@ -109,26 +109,26 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                   ServingTurnTile(
                       content: content.food,
                       leadingText: Text(AppLocalizations.of(context)!.foodPrep, style: kBodyTextStyle)),
-                  ListTile(
-                    leading: Text(AppLocalizations.of(context)!.babysitting, style: kBodyTextStyle),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          content.tuesdayPrayMeeting,
-                          style: kBodyTextStyle,
-                        ),
-                      ],
-                    ),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        content.babysitter.isEmpty
-                            ? Text('N/A')
-                            : Text(content.babysitter, style: kBodyTextStyle),
-                      ],
-                    ),
-                  ),
+                  // ListTile(
+                  //   leading: Text(AppLocalizations.of(context)!.babysitting, style: kBodyTextStyle),
+                  //   subtitle: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       Text(
+                  //         content.tuesdayPrayMeeting,
+                  //         style: kBodyTextStyle,
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   title: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       content.babysitter.isEmpty
+                  //           ? Text('N/A')
+                  //           : Text(content.babysitter, style: kBodyTextStyle),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),

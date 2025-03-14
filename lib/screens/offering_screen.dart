@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class OfferingScreen extends StatelessWidget {
@@ -38,7 +37,6 @@ class OfferingScreen extends StatelessWidget {
               children: <Widget>[
                 Image.asset('assets/images/offering_background.png'),
                 SizedBox(height: 20.0),
-                SizedBox(height: 40.0),
                 ListTile(
                   leading:
                       Icon(Icons.volunteer_activism, color: kActiveIconColor),
@@ -59,10 +57,10 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.sundayOffering,
-                            style: kBodyCardTitleStyle),
+                            style: kListTitleStyleBlack),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        padding: const EdgeInsets.only(left: 20, right: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -96,10 +94,10 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.benevolenceOffering,
-                            style: kBodyCardTitleStyle),
+                            style: kListTitleStyleBlack),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        padding: const EdgeInsets.only(left: 20, right: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

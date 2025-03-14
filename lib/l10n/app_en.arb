@@ -199,11 +199,11 @@
   "@restartNotice": {
     "description": "The current language"
   },
-  "sundayOffering": "Sunday Offering",
+  "sundayOffering": "Sunday Offering (Zelle® Only)",
   "@sundayOffering": {
     "description": "The current language"
   },
-  "benevolenceOffering": "Benevolence Offering",
+  "benevolenceOffering": "Benevolence Offering (Zelle® Only)",
   "@benevolenceOffering": {
     "description": "The current language"
   },

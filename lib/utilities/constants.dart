@@ -50,9 +50,14 @@ const kDialogBodyTextSmallStyle = TextStyle(
     color: Colors.black54,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
 
-const kListTitleStyle = TextStyle(
+const kListTitleStyleWhite = TextStyle(
     fontSize: 18.0,
     color: Colors.white,
+    fontFamily: kSystemWideFont, fontWeight: FontWeight.w700);
+
+const kListTitleStyleBlack = TextStyle(
+    fontSize: 18.0,
+    color: Colors.black54,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w700);
 
 const kListSubtitleStyle = TextStyle(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'dart:convert';
-import 'package:url_launcher/link.dart';
+// import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
@@ -13,7 +16,6 @@ import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
 
 class SundayBibleTextScreen extends StatefulWidget {
   const SundayBibleTextScreen({Key? key}) : super(key: key);
@@ -130,30 +132,45 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
         for (BibleText content in bibleTextList.reversed) {
           if (content.title.isEmpty && content.category == 'ReferenceText') {
             referenceText +=
-            "\n\n📚참고본문: ${content.bibleChapter}\n${content.bibleText}";
-          } else if(content.title.isEmpty && content.category == 'ReviewQuestion'){
+                "\n\n📚참고본문: ${content.bibleChapter}\n${content.bibleText}";
+          } else if (content.title.isEmpty &&
+              content.category == 'ReviewQuestion') {
             reviewQuestion +=
-            "\n\n✏️말씀 Review: ${content.bibleChapter}\n${content.bibleText}";
-          }
-          else {
+                "\n\n✏️말씀 Review: ${content.bibleChapter}\n${content.bibleText}";
+          } else {
             bibleTextTiles.add(
               ContentListTile(
                 icon: FontAwesomeIcons.bookBible,
                 headerText: Text('${content.date}\n${content.title}',
                     style: kBodyTextStyle),
                 contents: [
-                  SelectableText("📖본문: ${content.bibleText} $referenceText $reviewQuestion",
-                      style: kBodyTextStyle).animate().fade(duration: 500.ms),
+                  ElevatedButton(
+                    child: Text(AppLocalizations.of(context)!.copy),
+                    onPressed: () async {
+                      showMessage("Bible Text");
+                      Clipboard.setData(
+                          ClipboardData(text: "${content.bibleText}"));
+                    },
+                  ),
+                  SelectableText(
+                          "📖본문: ${content.bibleText} $referenceText $reviewQuestion",
+                          style: kBodyTextStyle)
+                      .animate()
+                      .fade(duration: 500.ms),
                   Center(
                     child: content.fileUrl.toString().isEmpty
                         ? null
-                        : Link(
-                            target: LinkTarget.blank,
-                            uri: Uri.parse(content.fileUrl),
-                            builder: (context, followLink) => ElevatedButton(
-                              child: const Text('Open PDF'),
-                              onPressed: followLink,
-                            ),
+                        : ElevatedButton(
+                            child: const Text('Open PDF'),
+                            onPressed: () async {
+                              final Uri url = Uri.parse(content.fileUrl);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
                           ),
                   ),
                 ],
@@ -167,5 +184,15 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
         isLoading = false;
       },
     );
+  }
+
+  void showMessage(title) {
+    showSimpleNotification(
+        Text(
+          title + " copied to clipboard",
+        ),
+        leading: Icon(Icons.content_paste_outlined),
+        background: Colors.blueAccent,
+        elevation: 5);
   }
 }
