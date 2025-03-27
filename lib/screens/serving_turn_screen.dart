@@ -101,7 +101,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                 children: [
                   ServingTurnTile(
                       content: content.date,
-                      leadingText: Icon(Icons.add_alert_sharp,
+                      leadingText: Icon(Icons.supervisor_account,
                           color: kActiveIconColor)),
                   ServingTurnTile(
                       content: content.prayer,

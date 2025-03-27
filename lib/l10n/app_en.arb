@@ -199,11 +199,11 @@
   "@restartNotice": {
     "description": "The current language"
   },
-  "sundayOffering": "Sunday Offering (Zelle® Only)",
+  "sundayOffering": "Sunday Offering Account",
   "@sundayOffering": {
     "description": "The current language"
   },
-  "benevolenceOffering": "Benevolence Offering (Zelle® Only)",
+  "benevolenceOffering": "Benevolence Offering Account",
   "@benevolenceOffering": {
     "description": "The current language"
   },
@@ -225,6 +225,18 @@
   },
   "copy": "Copy",
   "@copy": {
+    "description": "The current language"
+  },
+  "offering_direction": "Offering Direction",
+  "@offering_direction": {
+    "description": "The current language"
+  },
+  "offering_direction_text": "See detail information",
+  "@offering_direction_text": {
+    "description": "The current language"
+  },
+  "bible_reading_plan": "Bible Reading Plan",
+  "@bible_reading_plan": {
     "description": "The current language"
   }
 }

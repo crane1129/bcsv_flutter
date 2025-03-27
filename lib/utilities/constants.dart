@@ -36,7 +36,7 @@ const kAppBarTextStyleSmall = TextStyle(
 );
 
 const kBodyTextStyle = TextStyle(
-    fontSize: 18.0,
+    fontSize: 16.0,
     color: Colors.white,
     fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
 
@@ -96,7 +96,7 @@ const kMainTitleTextStyle = TextStyle(
     height: 0.0);
 
 const kTitleTextStyle = TextStyle(
-    fontSize: 30.0,
+    fontSize: 25.0,
     color: Colors.white,
     fontFamily: kSystemWideFont,
     letterSpacing: 1.0,

@@ -106,11 +106,11 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
       () {
         dailyBibleTiles.add(
           ListTile(
-            leading: Icon(FontAwesomeIcons.bible, color: kActiveIconColor),
+            leading: Icon(FontAwesomeIcons.bookBible, color: kActiveIconColor),
             title: Text(
                 "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
                 style: kBodyTextStyle),
-            subtitle: Text(jsonObj1['Base_de']),
+            subtitle: Text(jsonObj1['Base_de'],style: kBodyTextStyle),
           ),
         );
 

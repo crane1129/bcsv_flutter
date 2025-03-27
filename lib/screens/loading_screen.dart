@@ -15,7 +15,6 @@ import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:bcsv_flutter_project/utilities/package_information.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
@@ -101,7 +100,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void checkNetworkConnection() async {
-    bool hasInternet = await InternetConnectionChecker().hasConnection;
+    bool hasInternet = await await InternetConnectionChecker.instance.hasConnection;
     String message = hasInternet ? 'Internet' : 'No Internet';
 
     if (!hasInternet) {

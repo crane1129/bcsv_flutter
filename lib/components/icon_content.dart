@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-
 class IconContent extends StatelessWidget {
   IconContent({required this.cardIcon, required this.label});
 
@@ -22,15 +21,17 @@ class IconContent extends StatelessWidget {
             ).animate().fade(end: 1).scaleXY(end: 1.2, duration: 500.ms),
           ),
           const SizedBox(height: 15.0),
-          Text(label,
-              style: kLabelTextStyle,
-              )
+          Text(
+            label,
+            style: kLabelTextStyle,
+          )
         ]);
   }
 }
 
 class IconMsgContent extends StatelessWidget {
-  IconMsgContent({required this.cardIcon, required this.label, required this.msg_widget});
+  IconMsgContent(
+      {required this.cardIcon, required this.label, required this.msg_widget});
 
   final IconData cardIcon;
   final String label;
@@ -52,7 +53,8 @@ class IconMsgContent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(label,
+              Text(
+                label,
                 style: kLabelTextStyle,
               ),
               const SizedBox(width: 5.0),

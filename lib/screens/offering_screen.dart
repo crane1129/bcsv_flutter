@@ -5,6 +5,9 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
 
+import '../components/webview/webview_screen.dart';
+import '../services/api_endpoint.dart';
+
 class OfferingScreen extends StatelessWidget {
   final Uri url;
   final benevolence_account = "benevolence@bridgeway.online";
@@ -36,7 +39,7 @@ class OfferingScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Image.asset('assets/images/offering_background.png'),
-                SizedBox(height: 20.0),
+
                 ListTile(
                   leading:
                       Icon(Icons.volunteer_activism, color: kActiveIconColor),
@@ -53,7 +56,7 @@ class OfferingScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
-                        leading: Icon(Icons.verified_user_outlined,
+                        leading: Icon(Icons.favorite,
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.sundayOffering,
@@ -77,8 +80,7 @@ class OfferingScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(height: 30.0)
+                      )
                     ],
                   ),
                 ),
@@ -90,7 +92,7 @@ class OfferingScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
-                        leading: Icon(Icons.verified_user_outlined,
+                        leading: Icon(Icons.favorite,
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.benevolenceOffering,
@@ -114,8 +116,54 @@ class OfferingScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                      )
+                    ],
+                  ),
+                ),
+                Card(
+                  color: kInactiveIconColor,
+                  borderOnForeground: true,
+                  elevation: 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: Icon(Icons.info,
+                            color: Colors.red),
+                        title: Text(
+                            AppLocalizations.of(context)!.offering_direction,
+                            style: kListTitleStyleBlack),
                       ),
-                      SizedBox(height: 30.0)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${AppLocalizations.of(context)!.offering_direction_text}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16)),
+                            TextButton(
+                              child: Text(AppLocalizations.of(context)!.openButtonText),
+                              onPressed: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return WebViewApp(
+                                          url: ApiEndpoint
+                                              .apiMap['ONLINE_OFFERING_DIRECTION'] ??
+                                              kBaseUrl,
+                                          title1: AppLocalizations.of(context)!
+                                              .offering_direction,
+                                          title2: '');
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 )

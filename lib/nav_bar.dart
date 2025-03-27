@@ -10,7 +10,6 @@ import 'package:bcsv_flutter_project/screens/offering_screen.dart';
 import 'package:bcsv_flutter_project/screens/announcement_screen.dart';
 import 'package:bcsv_flutter_project/screens/serving_turn_screen.dart';
 import 'package:bcsv_flutter_project/screens/sunday_bible_text_screen.dart';
-import 'package:bcsv_flutter_project/screens/review_screen.dart';
 import 'package:bcsv_flutter_project/screens/about_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
@@ -134,20 +133,19 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => SundayBibleTextScreen()));
             },
           ),
+          // ListTile(
+          //   //contentPadding: EdgeInsets.only(left: 30.0),
+          //   leading:
+          //       Icon(Icons.create_sharp, color: kActiveIconColor, size: 20),
+          //   title: Text(AppLocalizations.of(context)!.sermonReview,
+          //       style: kDrawerMenuTextStyle),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (_) => SermonReviewScreen()));
+          //   },
+          // ),
           ListTile(
-            //contentPadding: EdgeInsets.only(left: 30.0),
-            leading:
-                Icon(Icons.create_sharp, color: kActiveIconColor, size: 20),
-            title: Text(AppLocalizations.of(context)!.sermonReview,
-                style: kDrawerMenuTextStyle),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => SermonReviewScreen()));
-            },
-          ),
-          const Divider(color: Colors.white30),
-          ListTile(
-            leading: Icon(Icons.article_outlined, color: kActiveIconColor),
+            leading: Icon(Icons.auto_stories, color: kActiveIconColor),
             title: Text(AppLocalizations.of(context)!.dailyBible,
                 style: kDrawerMenuTextStyle),
             onTap: () {
@@ -155,6 +153,12 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => DailyBibleTextScreen()));
             },
           ),
+          ListWebViewMenu(
+              myIcon: FontAwesomeIcons.calendarDays,
+              menuName: AppLocalizations.of(context)!.bible_reading_plan,
+              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN'],
+              trailing: emptyString),
+          const Divider(color: Colors.white30),
           ListTile(
             leading: Icon(Icons.volunteer_activism, color: kActiveIconColor),
             title: Text(AppLocalizations.of(context)!.offering,
@@ -163,7 +167,8 @@ class _NavBarState extends State<NavBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => OfferingScreen(url: ApiEndpoint.apiMap['OFFERING'])));
+                      builder: (_) =>
+                          OfferingScreen(url: ApiEndpoint.apiMap['OFFERING'])));
             },
           ),
           // ListWebViewMenu(
@@ -185,12 +190,14 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.share, color: kActiveIconColor),
+            leading: Icon(Icons.emoji_people, color: kActiveIconColor),
             title: Text(AppLocalizations.of(context)!.opinion,
                 style: kDrawerMenuTextStyle),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => SubmitOpinionViaGoogleFormScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => SubmitOpinionViaGoogleFormScreen()));
             },
           ),
           // ListWebViewMenu(
