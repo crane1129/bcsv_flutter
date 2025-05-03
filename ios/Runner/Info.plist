@@ -54,7 +54,10 @@
 	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>zelle</string>
+        <array>
+          <string>https</string>
+          <string>http</string>
+        </array>
 	</array>
 </dict>
 </plist>
