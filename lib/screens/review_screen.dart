@@ -36,7 +36,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -70,7 +70,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     return ExpansionPanelList.radio(
       children: SermonReviewTiles.map(
         (tile) => ExpansionPanelRadio(
-          backgroundColor: kActiveCardColor,
+          backgroundColor: Theme.of(context).colorScheme.onSurface,
           value: tile.headerText,
           canTapOnHeader: true,
           headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
@@ -84,7 +84,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
 
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
-        leading: tile.icon != null ? Icon(tile.icon, color: kActiveIconColor) : null,
+        leading: tile.icon != null ? Icon(tile.icon, color: kActiveIconColor(context)) : null,
         title: tile.headerText);
   }
 
@@ -120,7 +120,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
           DialogButton(
             child: Text(
               "OK",
-              style: kLabelTextStyle,
+              style: kLabelTextStyle(context),
             ),
             onPressed: () => Navigator.pop(context),
             width: 120,
@@ -160,11 +160,11 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
                 ContentListTile(
                   icon: FontAwesomeIcons.bible,
                   headerText: Text('${content.date}\n${content.title}',
-                      style: kBodyTextStyle),
+                      style: kBodyTextStyle(context)),
                   contents: [
                     SelectableText(
                         "📚복습질문: ${content.review}\n$reviewText\n💁‍♀️️적용질문: ${content.application}\n$applicationText\n🎓심화학습 질문: ${content.in_depth}\n$inDepthText",
-                        style: kBodyTextStyle),
+                        style: kBodyTextStyle(context)),
                   ],
                 ),
               );

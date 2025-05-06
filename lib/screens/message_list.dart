@@ -37,7 +37,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -118,13 +118,13 @@ class _MessageListScreenState extends State<MessageListScreen> {
                           myMessageItem.imageLink,
                         ),
                   ListTile(
-                    leading: Icon(Icons.event, color: kActiveIconColor),
+                    leading: Icon(Icons.event, color: kActiveIconColor(context)),
                     title: Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
                         myMessageItem.title,
                         overflow: TextOverflow.ellipsis,
-                        style: kCardTitleStyle,
+                        style: kCardTitleStyle(context),
                       ),
                     ),
                   ),
@@ -132,7 +132,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: SelectableText(
                       myMessageItem.message,
-                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                      style: kBodyTextStyle(context),
                     ),
                   ),
                   myMessageItem.externalLink.isNotEmpty

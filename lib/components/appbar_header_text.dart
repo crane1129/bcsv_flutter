@@ -15,9 +15,9 @@ class AppBarHeaderText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: <Widget>[
-        Text(text1, style: kAppBarTextStyle),
+        Text(text1, style: kAppBarTextStyle(context)),
         SizedBox(width: text2.isEmpty? 0 : 5.0),
-        Text(text2, style: kAppBarTextStyleSmall),
+        Text(text2, style: kAppBarTextStyleSmall(context)),
       ],
     );
   }

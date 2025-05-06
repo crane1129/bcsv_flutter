@@ -34,7 +34,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -96,12 +96,12 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
             ContentListTile(
               icon: Icons.calendar_today_outlined,
               headerText: Text('${content.date}  설교 ${content.preacher}',
-                  style: kBodyTextStyle),
+                  style: kBodyTextStyle(context)),
               contents: [
-                Text('기도 ${content.prayer}', style: kBodyTextStyle),
+                Text('기도 ${content.prayer}', style: kBodyTextStyle(context)),
                 SelectableText(
                     '광고내용\n${content.announcement}\n\n헌금: ${content.offering}',
-                    style: kBodyTextStyle).animate().fade(duration: 500.ms),
+                    style: kBodyTextStyle(context)).animate().fade(duration: 500.ms),
                 Center(
                   child: content.File_url.toString().isEmpty
                       ? null
@@ -130,7 +130,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
       children: announcementTiles
           .map(
             (tile) => ExpansionPanelRadio(
-              backgroundColor: kActiveCardColor,
+              //backgroundColor: Theme.of(context).colorScheme.onSurface,
               value: tile.headerText,
               canTapOnHeader: true,
               headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
@@ -147,8 +147,8 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     return ListTile(
       leading: tile.icon != null ? Icon(tile.icon) : null,
       title: tile.headerText,
-      iconColor: kActiveIconColor,
-      // tileColor: kActiveCardColor,
+      iconColor: Theme.of(context).colorScheme.surface,
+      //tileColor: Theme.of(context).colorScheme.onSurface,
       // selectedTileColor: Colors.indigo,
     );
   }

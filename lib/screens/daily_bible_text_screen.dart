@@ -36,7 +36,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -106,11 +106,11 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
       () {
         dailyBibleTiles.add(
           ListTile(
-            leading: Icon(FontAwesomeIcons.bookBible, color: kActiveIconColor),
+            leading: Icon(FontAwesomeIcons.bookBible, color: kActiveIconColor(context)),
             title: Text(
                 "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
-                style: kBodyTextStyle),
-            subtitle: Text(jsonObj1['Base_de'],style: kBodyTextStyle),
+                style: kBodyTextStyle(context)),
+            subtitle: Text(jsonObj1['Base_de'],style: kBodyTextStyle(context)),
           ),
         );
 
@@ -124,7 +124,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
           ListTile(
             title: SelectableText(
               bodyText,
-              style: kBodyTextStyle,
+              style: kBodyTextStyle(context),
             ).animate().fade(duration: 500.ms),
           ),
         );
@@ -168,7 +168,7 @@ class DailyBibleTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle),
+          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle(context)),
         ],
       ),
     );

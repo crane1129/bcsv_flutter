@@ -16,121 +16,195 @@ const String kOfferingUrl =
 const String kYoutubeLiveUrl =
     "https://www.youtube.com/channel/UCbCCXtoBmuJ6kYqHFrzPSxg";
 const kOpinionCardColor = Color(0xFF54636B);
-const kActiveCardColor = Color(0x84042B3F);
-const kActiveIconColor = Color(0xFFF68502);
+//const kActiveCardColor = Color(0x84042B3F);
 const kNavBackButtonColor = Color(0xFFFF9C02);
 const kInactiveIconColor = Color(0xFFB7C7CE);
 const kCardIconColor = Color(0xFFF9AA33);
 const kMainAppBarColor = Color(0xFF232F34);
 const kMainThemeColor = Color(0xFF0C1B21);
-const kDrawerBackgroundColor = Color(0xFF223841);
+//const kDrawerBackgroundColor = Color(0xFF223841);
 const kSystemWideFont = 'PoorStory';
 const kSystemWideFont2 = 'Dongle-Light';
-const kAppBarTextStyle = TextStyle(
-    fontSize: 30.0, fontFamily: kSystemWideFont, color: Color(0xFFF9AA33));
 
-const kAppBarTextStyleSmall = TextStyle(
-  fontSize: 20.0,
-  fontFamily: kSystemWideFont,
-  color: Color(0xFF854906),
-);
+Color kActiveIconColor(BuildContext context) {
+  return Theme.of(context).colorScheme.primary;
+}
 
-const kBodyTextStyle = TextStyle(
-    fontSize: 16.0,
-    color: Colors.white,
-    fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
-
-const kBodyTextSmallStyle = TextStyle(
-    fontSize: 15.0,
-    color: Colors.white38,
-    fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
-
-const kDialogBodyTextSmallStyle = TextStyle(
-    fontSize: 15.0,
-    color: Colors.black54,
-    fontFamily: kSystemWideFont, fontWeight: FontWeight.w400);
-
-const kListTitleStyleWhite = TextStyle(
-    fontSize: 18.0,
-    color: Colors.white,
-    fontFamily: kSystemWideFont, fontWeight: FontWeight.w700);
-
-const kListTitleStyleBlack = TextStyle(
-    fontSize: 18.0,
-    color: Colors.black54,
-    fontFamily: kSystemWideFont, fontWeight: FontWeight.w700);
-
-const kListSubtitleStyle = TextStyle(
-    fontSize: 15.0,
-    color: Colors.white,
-    fontFamily: kSystemWideFont);
-
-const kCardTitleStyle = TextStyle(
-    fontSize: 25.0,
-    color: Colors.black,
-    fontFamily: kSystemWideFont);
-
-const kBodyCardTitleStyle = TextStyle(
-    fontSize: 25.0,
-    color: Colors.black,
-    fontFamily: kSystemWideFont2);
-
-const kLabelTextStyle =
-    TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: kSystemWideFont);
-
-const kLargeButtonTextStyle = TextStyle(
-  fontSize: 25.0,
-  color: Colors.white, fontFamily: kSystemWideFont, fontWeight: FontWeight.w400
-);
-
-const kRegularButtonTextStyle = TextStyle(
-  fontSize: 12.0,
-  color: Colors.white
-);
-
-const kMainTitleTextStyle = TextStyle(
-    fontSize: 70.0,
-    color: Colors.white70,
+TextStyle kAppBarTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.headlineSmall!.copyWith(
+    fontSize: 30.0,
     fontFamily: kSystemWideFont,
-    letterSpacing: 1.0,
-    height: 0.0);
+    color: Theme.of(context).colorScheme.primary, // or custom override
+  );
+}
 
-const kTitleTextStyle = TextStyle(
-    fontSize: 25.0,
-    color: Colors.white,
-    fontFamily: kSystemWideFont,
-    letterSpacing: 1.0,
-    height: 0.0);
-
-const kSubTitleTextStyle = TextStyle(
-    fontSize: 25.0,
-    color: Colors.lightGreen,
-    fontFamily: kSystemWideFont,
-    textBaseline: TextBaseline.alphabetic);
-
-const kDrawerTitleMenuTextStyle = TextStyle(
+TextStyle kAppBarTextStyleSmall(BuildContext context) {
+  return Theme.of(context).textTheme.titleLarge!.copyWith(
     fontSize: 20.0,
-    color: Colors.white,
     fontFamily: kSystemWideFont,
-    textBaseline: TextBaseline.alphabetic);
+    color: Theme.of(context).colorScheme.secondary,
+  );
+}
 
-const kDrawerMenuTextStyle = TextStyle(
+TextStyle kBodyTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodyMedium!.copyWith(
+    fontSize: 14,
+    fontFamily: kSystemWideFont,
+    color: Theme.of(context).colorScheme.onSurface,
+  );
+}
+
+TextStyle kBodyTextSmallStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodySmall!.copyWith(
+    fontSize: 15.0,
+    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+    fontFamily: kSystemWideFont,
+    fontWeight: FontWeight.w400,
+  );
+}
+
+TextStyle kDialogBodyTextSmallStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodySmall!.copyWith(
+    fontSize: 15.0,
+    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+    fontFamily: kSystemWideFont,
+    fontWeight: FontWeight.w400,
+  );
+}
+
+TextStyle kListTitleStyle(BuildContext context, {bool dark = true}) {
+  return Theme.of(context).textTheme.titleMedium!.copyWith(
     fontSize: 18.0,
-    color: Colors.white70,
     fontFamily: kSystemWideFont,
-    textBaseline: TextBaseline.alphabetic);
+    color: dark
+        ? Theme.of(context).colorScheme.onSurface
+        : Theme.of(context).colorScheme.onPrimary,
+    fontWeight: FontWeight.w700,
+  );
+}
 
-const kTextFieldInputDecoration = InputDecoration(
-  filled: true,
-  fillColor: Colors.white,
-  counterStyle: kBodyTextStyle,
-  //icon: Icon(Icons.question_answer, color: Colors.white),
-  hintText: "Enter your opinion here...",
-  hintStyle: TextStyle(color: Colors.grey),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(
-      Radius.circular(10.0),
+TextStyle kListSubtitleStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodySmall!.copyWith(
+    fontSize: 15.0,
+    fontFamily: kSystemWideFont,
+    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.9),
+  );
+}
+
+TextStyle kCardTitleStyle(BuildContext context) {
+  return Theme.of(context).textTheme.titleLarge!.copyWith(
+    fontSize: 25.0,
+    color: Theme.of(context).colorScheme.onSurface,
+    fontFamily: kSystemWideFont,
+  );
+}
+
+TextStyle kBodyCardTitleStyle(BuildContext context) {
+  return Theme.of(context).textTheme.titleLarge!.copyWith(
+    fontSize: 25.0,
+    color: Theme.of(context).colorScheme.onSurface,
+    fontFamily: kSystemWideFont2,
+  );
+}
+
+TextStyle kLabelTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.labelLarge!.copyWith(
+    fontSize: 20.0,
+    color: Theme.of(context).colorScheme.onSurface,
+    fontFamily: kSystemWideFont,
+  );
+}
+
+TextStyle kLargeButtonTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.labelLarge!.copyWith(
+    fontSize: 25.0,
+    color: Theme.of(context).colorScheme.onSurface,
+    fontFamily: kSystemWideFont,
+    fontWeight: FontWeight.w400,
+  );
+}
+
+TextStyle kRegularButtonTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.labelSmall!.copyWith(
+    fontSize: 12.0,
+    color: Theme.of(context).colorScheme.onPrimary,
+  );
+}
+
+TextStyle kMainTitleTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.displaySmall!.copyWith(
+    fontSize: 70.0,
+    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+    fontFamily: kSystemWideFont,
+    letterSpacing: 1.0,
+    height: 0.0,
+  );
+}
+
+TextStyle kTitleTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.headlineMedium!.copyWith(
+    fontSize: 25.0,
+    color: Theme.of(context).colorScheme.onPrimary,
+    fontFamily: kSystemWideFont,
+    letterSpacing: 1.0,
+    height: 0.0,
+  );
+}
+
+TextStyle kSubTitleTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodyMedium!.copyWith(
+    fontSize: 25.0,
+    color: Colors.lightGreen, // You can replace this with a colorScheme value if needed
+    fontFamily: kSystemWideFont,
+    textBaseline: TextBaseline.alphabetic,
+  );
+}
+
+TextStyle kDrawerTitleMenuTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.titleMedium!.copyWith(
+    fontSize: 20.0,
+    color: Theme.of(context).colorScheme.onSurface,
+    fontFamily: kSystemWideFont,
+    textBaseline: TextBaseline.alphabetic,
+  );
+}
+
+TextStyle kListTitleStyleBlack(BuildContext context) {
+  return Theme.of(context).textTheme.titleMedium!.copyWith(
+    fontSize: 18.0,
+    fontWeight: FontWeight.w700,
+    fontFamily: kSystemWideFont,
+    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+  );
+}
+
+TextStyle kListTitleStyleWhite(BuildContext context) {
+  return Theme.of(context).textTheme.titleMedium!.copyWith(
+    fontSize: 18.0,
+    fontWeight: FontWeight.w700,
+    fontFamily: kSystemWideFont,
+    color: Theme.of(context).colorScheme.onPrimary,
+  );
+}
+
+TextStyle kDrawerMenuTextStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodyMedium!.copyWith(
+    fontSize: 18.0,
+    fontFamily: kSystemWideFont,
+    textBaseline: TextBaseline.alphabetic,
+    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+  );
+}
+
+InputDecoration kTextFieldInputDecoration(BuildContext context) {
+  return InputDecoration(
+    filled: true,
+    fillColor: Theme.of(context).colorScheme.surface,
+    hintText: "Enter your opinion here...",
+    hintStyle: TextStyle(color: Theme.of(context).hintColor),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide.none,
     ),
-    borderSide: BorderSide.none,
-  ),
-);
+  );
+}

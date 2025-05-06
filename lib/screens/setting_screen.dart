@@ -10,6 +10,9 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:bcsv_flutter_project/dialog/dialog.dart';
 
+import '../utilities/theme_notifier.dart';
+import '../utilities/themes.dart';
+
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -36,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.1),
+        backgroundColor: Colors.transparent.withValues(alpha:0.1),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -50,16 +53,16 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
-              color: kActiveCardColor.withOpacity(0.9),
+              //color: Theme.of(context).colorScheme.onSurface,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
               child: Column(
                 children: <Widget>[
                   ListTile(
                     leading:
-                        Icon(Icons.language_outlined, color: kActiveIconColor),
+                        Icon(Icons.language_outlined, color: kActiveIconColor(context)),
                     title: Text(AppLocalizations.of(context)!.languageSetting,
-                        style: kLargeButtonTextStyle),
+                        style: kLargeButtonTextStyle(context)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           });
                         },
                       ),
-                      Text('한국어', style: kBodyTextStyle),
+                      Text('한국어', style: kBodyTextStyle(context)),
                       SizedBox(width: 60.0),
                       Radio(
                         value: 2,
@@ -92,23 +95,76 @@ class _SettingsPageState extends State<SettingsPage> {
                           });
                         },
                       ),
-                      Text('English', style: kBodyTextStyle),
+                      Text('English', style: kBodyTextStyle(context)),
                     ],
                   ),
                 ],
               ),
             ),
             Card(
-              color: kActiveCardColor.withOpacity(0.9),
+              //color: Theme.of(context).colorScheme.onSurface,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.color_lens_outlined, color: kActiveIconColor(context)),
+                    title: Text('Theme',
+                        style: kLargeButtonTextStyle(context)),
+                  ),
+                  Consumer<ThemeNotifier>(
+                    builder: (context, themeNotifier, _) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RadioListTile<String>(
+                            title: Text('Light'),
+                            value: 'light',
+                            groupValue: themeNotifier.themeName,
+                            onChanged: (val) => themeNotifier.setTheme('light', lightTheme),
+                          ),
+                          RadioListTile<String>(
+                            title: Text('Dark'),
+                            value: 'dark',
+                            groupValue: themeNotifier.themeName,
+                            onChanged: (val) => themeNotifier.setTheme('dark', darkTheme),
+                          ),
+                          RadioListTile<String>(
+                            title: Text('Bible'),
+                            value: 'bible',
+                            groupValue: themeNotifier.themeName,
+                            onChanged: (val) => themeNotifier.setTheme('bible', bibleTheme),
+                          ),
+                          RadioListTile<String>(
+                            title: Text('Sepia'),
+                            value: 'sepia',
+                            groupValue: themeNotifier.themeName,
+                            onChanged: (val) => themeNotifier.setTheme('sepia', sepiaTheme),
+                          ),
+                          RadioListTile<String>(
+                            title: Text('Midnight Blue'),
+                            value: 'midnight',
+                            groupValue: themeNotifier.themeName,
+                            onChanged: (val) => themeNotifier.setTheme('midnight', midnightBlueTheme),
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+            Card(
+              //color: Theme.of(context).colorScheme.onSurface,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
               child: Column(
                 children: <Widget>[
                   ListTile(
                     leading:
-                    Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor),
+                    Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor(context)),
                     title: Text(AppLocalizations.of(context)!.initMessage,
-                        style: kLargeButtonTextStyle),
+                        style: kLargeButtonTextStyle(context)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       OutlinedButton(
                         child: Text(AppLocalizations.of(context)!.runButton,
-                            style: kLargeButtonTextStyle),
+                            style: kLargeButtonTextStyle(context)),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
                           side: BorderSide(

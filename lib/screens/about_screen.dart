@@ -19,7 +19,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -39,7 +39,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 accountEmail: Text(AppLocalizations.of(context)!.missionVerse,
                     style: TextStyle(fontSize: 10)),
                 currentAccountPicture: CircleAvatar(
-                  backgroundColor: kActiveCardColor,
+                  backgroundColor: Theme.of(context).colorScheme.onSurface,
                   backgroundImage: AssetImage('assets/images/app.png'),
                 ),
                 decoration: BoxDecoration(
@@ -76,9 +76,9 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _infoTile(String title, String subtitle) {
     return ListTile(
-      title: Text(title, style: kBodyTextStyle, textAlign: TextAlign.center),
+      title: Text(title, style: kBodyTextStyle(context), textAlign: TextAlign.center),
       subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle,
-          style: kBodyTextSmallStyle, textAlign: TextAlign.center,),
+          style: kBodyTextSmallStyle(context), textAlign: TextAlign.center,),
     );
   }
 }

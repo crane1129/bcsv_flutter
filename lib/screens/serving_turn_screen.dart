@@ -33,7 +33,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -95,20 +95,20 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
               elevation: 15,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              color: kActiveCardColor,
+              color: Theme.of(context).colorScheme.onSurface,
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
                   ServingTurnTile(
                       content: content.date,
                       leadingText: Icon(Icons.supervisor_account,
-                          color: kActiveIconColor)),
+                          color: Theme.of(context).colorScheme.onSurface)),
                   ServingTurnTile(
                       content: content.prayer,
-                      leadingText: Text(AppLocalizations.of(context)!.prayer, style: kBodyTextStyle)),
+                      leadingText: Text(AppLocalizations.of(context)!.prayer, style: kBodyTextStyle(context))),
                   ServingTurnTile(
                       content: content.food,
-                      leadingText: Text(AppLocalizations.of(context)!.foodPrep, style: kBodyTextStyle)),
+                      leadingText: Text(AppLocalizations.of(context)!.foodPrep, style: kBodyTextStyle(context))),
                   // ListTile(
                   //   leading: Text(AppLocalizations.of(context)!.babysitting, style: kBodyTextStyle),
                   //   subtitle: Row(
@@ -153,11 +153,12 @@ class ServingTurnTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: Theme.of(context).colorScheme.surface,
       leading: leadingText,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle),
+          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle(context)),
         ],
       ),
     );

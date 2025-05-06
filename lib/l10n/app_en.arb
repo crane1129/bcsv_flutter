@@ -238,5 +238,9 @@
   "bible_reading_plan": "Bible Reading Plan",
   "@bible_reading_plan": {
     "description": "The current language"
+  },
+  "bible_search": "Bible Verse Search",
+  "@bible_search": {
+    "description": "The current language"
   }
 }

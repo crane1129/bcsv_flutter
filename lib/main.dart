@@ -1,4 +1,5 @@
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
+import 'package:bcsv_flutter_project/utilities/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/screens/loading_screen.dart';
@@ -20,25 +21,28 @@ void main() async {
   kNotificationSlideDuration = const Duration(milliseconds: 500);
   await UserSharedPreferences.init();
 
-  runApp(MyBCSVApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: MyBCSVApp(),
+    ),
+  );
 }
 
 class MyBCSVApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     return ChangeNotifierProvider(
       create: (context) => LocaleProvider(),
       builder: (context, child) {
         final provider = Provider.of<LocaleProvider>(context);
         return OverlaySupport.global(
           child: MaterialApp(
+
             debugShowCheckedModeBanner: false,
-            theme: ThemeData.fallback().copyWith(
-              scaffoldBackgroundColor: kMainThemeColor,
-              colorScheme:
-                  ColorScheme.fromSwatch().copyWith(secondary: Colors.black),
-            ),
+            theme: themeNotifier.currentTheme,
             locale: provider.locale,
             supportedLocales: L10n.all,
             localizationsDelegates: [

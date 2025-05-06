@@ -17,13 +17,13 @@ class IconContent extends StatelessWidget {
             child: Icon(
               cardIcon,
               size: 40.0,
-              color: kCardIconColor,
+              color: Theme.of(context).colorScheme.onSurface,
             ).animate().fade(end: 1).scaleXY(end: 1.2, duration: 500.ms),
           ),
           const SizedBox(height: 15.0),
           Text(
             label,
-            style: kLabelTextStyle,
+            style: kLabelTextStyle(context),
           )
         ]);
   }
@@ -46,7 +46,7 @@ class IconMsgContent extends StatelessWidget {
             child: Icon(
               cardIcon,
               size: 40.0,
-              color: kCardIconColor,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 15.0),
@@ -55,7 +55,7 @@ class IconMsgContent extends StatelessWidget {
             children: <Widget>[
               Text(
                 label,
-                style: kLabelTextStyle,
+                style: kLabelTextStyle(context),
               ),
               const SizedBox(width: 5.0),
               msg_widget

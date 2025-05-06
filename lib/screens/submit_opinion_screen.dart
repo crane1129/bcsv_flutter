@@ -36,7 +36,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent.withOpacity(0.5),
+          backgroundColor: Colors.transparent.withValues(alpha:0.5),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: kNavBackButtonColor,
@@ -50,7 +50,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
             reverse: true,
             padding: EdgeInsets.all(10),
             child: Card(
-              color: kActiveCardColor,
+              color: Theme.of(context).colorScheme.onSurface,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -60,12 +60,12 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                   SizedBox(height: 20),
                   ListTile(
                     leading:
-                        Icon(Icons.question_answer, color: kActiveIconColor),
+                        Icon(Icons.question_answer, color: kActiveIconColor(context)),
                     title: Text(AppLocalizations.of(context)!.opinionTitle,
-                        style: kListSubtitleStyle),
+                        style: kListSubtitleStyle(context)),
                     subtitle: Text(
                         AppLocalizations.of(context)!.opinionSubTitle,
-                        style: kListSubtitleStyle),
+                        style: kListSubtitleStyle(context)),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -75,7 +75,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
                       maxLines: maxLines,
                       keyboardType: TextInputType.multiline,
                       maxLength: 200,
-                      decoration: kTextFieldInputDecoration,
+                      decoration: kTextFieldInputDecoration(context),
                       onChanged: (value) {
                         myMessage = value;
                       },

@@ -47,7 +47,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent.withOpacity(0.5),
+          backgroundColor: Colors.transparent.withValues(alpha:0.5),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: kNavBackButtonColor,
@@ -61,7 +61,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
             reverse: true,
             padding: EdgeInsets.all(10),
             child: Card(
-              color: kOpinionCardColor,
+              //color: kOpinionCardColor,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -71,18 +71,18 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
                 child: Column(
                   children: <Widget>[
                     ListTile(
-                      leading: Icon(Icons.question_answer, color: kActiveIconColor),
+                      leading: Icon(Icons.question_answer, color: kActiveIconColor(context)),
                       title: Text(
                           AppLocalizations.of(context)!.opinionTitle,
-                          style: kLabelTextStyle),
+                          style: kLabelTextStyle(context)),
                       subtitle: Text(
                         AppLocalizations.of(context)!.opinionSubTitle,
-                        style: kLabelTextStyle,
+                        style: kLabelTextStyle(context),
                       ),
                     ),
                     DropdownButtonFormField<String>(
-                      dropdownColor: kMainThemeColor,
-                      style: kBodyTextStyle,
+                      //dropdownColor: kMainThemeColor,
+                      style: kBodyTextStyle(context),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(10.0),
                           labelText: 'Category'
@@ -107,7 +107,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
                       },
                     ),
                     TextFormField(
-                      style: kBodyTextStyle,
+                      style: kBodyTextStyle(context),
                       maxLines:5,
                       controller: _messageController,
                       decoration: InputDecoration(
@@ -123,7 +123,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
                       },
                     ),
                     TextFormField(
-                      style: kBodyTextStyle,
+                      style: kBodyTextStyle(context),
                       controller: _nameController,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(10.0),
