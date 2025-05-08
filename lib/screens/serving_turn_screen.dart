@@ -51,7 +51,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return const DecoratedBox(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey,
                       ),
                     );
                   },
@@ -91,8 +91,8 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
       () {
         for (ServingTurn content in servingTurnList) {
           servingTurnTiles.add(
-            Card(margin: EdgeInsets.all(15.0),
-              elevation: 15,
+            Card(margin: EdgeInsets.all(10.0),
+              elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               color: Theme.of(context).colorScheme.onSurface,
@@ -153,12 +153,22 @@ class ServingTurnTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: Theme.of(context).colorScheme.surface,
+      tileColor: Colors.transparent.withValues(alpha:.9),
       leading: leadingText,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle(context)),
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                content.isEmpty ? 'N/A' : content,
+                style: kBodyTextStyle(context),
+                overflow: TextOverflow.ellipsis, // Optional
+                maxLines: 1, // Optional
+              ),
+            ),
+          ),
         ],
       ),
     );

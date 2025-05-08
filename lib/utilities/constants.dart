@@ -48,7 +48,7 @@ TextStyle kAppBarTextStyleSmall(BuildContext context) {
 
 TextStyle kBodyTextStyle(BuildContext context) {
   return Theme.of(context).textTheme.bodyMedium!.copyWith(
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: kSystemWideFont,
     color: Theme.of(context).colorScheme.onSurface,
   );

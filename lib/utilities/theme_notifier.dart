@@ -1,19 +1,33 @@
-// Assuming you've already added these imports:
-import 'package:bcsv_flutter_project/utilities/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
+import 'package:bcsv_flutter_project/utilities/themes.dart';
 
-// 1. Extend ThemeNotifier to include new themes
 class ThemeNotifier extends ChangeNotifier {
-  ThemeData _currentTheme = lightTheme;
-  String _themeName = 'light';
+  ThemeData _currentTheme;
+  int _themeIndex;
+
+  ThemeNotifier(this._currentTheme, this._themeIndex);
 
   ThemeData get currentTheme => _currentTheme;
-  String get themeName => _themeName;
+  int get currentIndex => _themeIndex;
 
-  void setTheme(String name, ThemeData theme) {
-    _themeName = name;
-    _currentTheme = theme;
+  void setThemeByIndex(int index) {
+    _themeIndex = index;
+    _currentTheme = getThemeByIndex(index);
+    UserSharedPreferences.setAppThemeSetting(index); // persist
     notifyListeners();
+  }
+
+  static ThemeData getThemeByIndex(int index) {
+    switch (index) {
+      case 1:
+        return darkTheme;
+      case 2:
+        return sepiaTheme;
+      case 3:
+        return midnightBlueTheme;
+      default:
+        return lightTheme;
+    }
   }
 }

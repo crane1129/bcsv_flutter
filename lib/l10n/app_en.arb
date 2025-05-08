@@ -242,5 +242,13 @@
   "bible_search": "Bible Verse Search",
   "@bible_search": {
     "description": "The current language"
+  },
+  "bible_old_testament": "Old Testament",
+  "@bible_old_testament": {
+    "description": "The current language"
+  },
+  "bible_new_testament": "New Testament",
+  "@bible_new_testament": {
+    "description": "The current language"
   }
 }

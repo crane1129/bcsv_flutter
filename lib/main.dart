@@ -21,16 +21,19 @@ void main() async {
   kNotificationSlideDuration = const Duration(milliseconds: 500);
   await UserSharedPreferences.init();
 
+  // Load saved theme setting
+  int themeIndex = await UserSharedPreferences.getAppThemeSetting() ?? 0;
+  ThemeData initialTheme = ThemeNotifier.getThemeByIndex(themeIndex);
+
   runApp(
     ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
+      create: (_) => ThemeNotifier(initialTheme, themeIndex),
       child: MyBCSVApp(),
     ),
   );
 }
 
 class MyBCSVApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
@@ -40,13 +43,12 @@ class MyBCSVApp extends StatelessWidget {
         final provider = Provider.of<LocaleProvider>(context);
         return OverlaySupport.global(
           child: MaterialApp(
-
             debugShowCheckedModeBanner: false,
             theme: themeNotifier.currentTheme,
             locale: provider.locale,
             supportedLocales: L10n.all,
             localizationsDelegates: [
-              AppLocalizations.delegate, // Add this line
+              AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

@@ -11,6 +11,7 @@ class UserSharedPreferences{
   static const _keyBibleReviewCache = 'bible_review_cache';
   static const _keyMessageListCache = 'message_list_cache';
   static const _keyMessageListCounter = 'message_list_counter';
+  static const _keyAppThemeSetting = 'app_theme_setting';
   
   static Future init() async {
     _peferences = await SharedPreferences.getInstance();
@@ -68,4 +69,9 @@ class UserSharedPreferences{
   }
   static getMessageListCounter() => _peferences.getInt(_keyMessageListCounter);
 
+  //App Theme Setting
+  static Future setAppThemeSetting(int count) async {
+    await _peferences.setInt(_keyAppThemeSetting, count);
+  }
+  static getAppThemeSetting() => _peferences.getInt(_keyAppThemeSetting);
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart'; // for Clipboard
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,6 +15,7 @@ class BibleSearchScreen extends StatefulWidget {
 }
 
 class _BibleSearchScreenState extends State<BibleSearchScreen> {
+  bool isLoading = false;
   // Dropdown values
   String selectedTestament = 'new';
   String? selectedBook;
@@ -107,202 +109,238 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withValues(alpha: 0.5),
+        backgroundColor: Colors.transparent.withAlpha(50),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
-            text1: AppLocalizations.of(context)!.bible_search, text2: ''),
+          text1: AppLocalizations.of(context)!.bible_search,
+          text2: '',
+        ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Testament toggle
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        children: [
+          // 🔹 Main content (always visible)
+          SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ChoiceChip(
-                  label: Text('New Testament'),
-                  selected: selectedTestament == 'new',
-                  onSelected: (_) {
-                    setState(() {
-                      selectedTestament = 'new';
-                      selectedBook = newTestamentBooks.first;
-                      clearInputs();
-                    });
-                  },
-                ),
-                SizedBox(width: 8),
-                ChoiceChip(
-                  label: Text('Old Testament'),
-                  selected: selectedTestament == 'old',
-                  onSelected: (_) {
-                    setState(() {
-                      selectedTestament = 'old';
-                      selectedBook = oldTestamentBooks.first;
-                      clearInputs();
-                    });
-                  },
-                ),
-              ],
-            ),
-
-            SizedBox(height: 16),
-
-            // Book dropdown
-            DropdownButton<String>(
-              value: selectedBook,
-              //dropdownColor: Theme.of(context).colorScheme.onSurface,
-              hint: Text("Select Book", style: kBodyTextStyle(context)),
-              style: kBodyTextStyle(context),
-              isExpanded: true,
-              items: books
-                  .map((b) => DropdownMenuItem(value: b, child: Text(b)))
-                  .toList(),
-              onChanged: (val) => setState(() {
-                selectedBook = val;
-                clearInputs();
-              }),
-            ),
-
-            SizedBox(height: 16),
-
-            // Input fields
-            Row(children: [
-              Expanded(child: _numberField("Start Chapter", startChapCtrl)),
-              SizedBox(width: 8),
-              Expanded(child: _numberField("Start Verse", startVerseCtrl)),
-            ]),
-            Row(children: [
-              Expanded(
-                  child: _numberField("End Chapter (optional)", endChapCtrl)),
-              SizedBox(width: 8),
-              Expanded(
-                  child: _numberField("End Verse (optional)", endVerseCtrl)),
-            ]),
-
-            SizedBox(height: 16),
-
-            Center(
-                child: ElevatedButton(
-              onPressed: fetchVerses,
-              child: Text('Search'),
-            )),
-
-            SizedBox(height: 24),
-
-            // Search Results
-            if (results.isEmpty)
-              Center(
-                child: Text(
-                  'No results',
-                  style: kBodyTextStyle(context),
-                ),
-              )
-            else
-              ...results.asMap().entries.map((entry) {
-                final i = entry.key;
-                final verse = entry.value;
-                final isSelected = selectedIndexes.contains(i);
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (isSelected) {
-                        selectedIndexes.remove(i);
-                      } else {
-                        selectedIndexes.add(i);
-                      }
-                    });
-                  },
-                  onLongPress: () {
-                    setState(() {
-                      selectedIndexes.add(i);
-                    });
-                  },
-                  child: Container(
-                    color: isSelected
-                        ? Colors.blue.withValues(alpha:0.2)
-                        : Colors.transparent,
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${verse['chapterVerse']} ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            verse['text'],
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-
-            if (selectedIndexes.isNotEmpty) ...[
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: ElevatedButton.icon(
-                      onPressed: copySelectedVerses,
-                      icon: Icon(Icons.copy),
-                      label: Text(
-                        'Copy Selected (${selectedIndexes.length})',
-                        style: TextStyle(fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Flexible(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
+                // Testament toggle
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ChoiceChip(
+                      label: Text(AppLocalizations.of(context)!.bible_new_testament),
+                      selected: selectedTestament == 'new',
+                      onSelected: (_) {
                         setState(() {
-                          selectedIndexes.clear();
+                          selectedTestament = 'new';
+                          selectedBook = newTestamentBooks.first;
+                          clearInputs();
                         });
                       },
-                      icon: Icon(Icons.clear),
-                      label: Text(
-                        'Clear Selection',
-                        style: TextStyle(fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(width: 8),
+                    ChoiceChip(
+                      label: Text(AppLocalizations.of(context)!.bible_old_testament),
+                      selected: selectedTestament == 'old',
+                      onSelected: (_) {
+                        setState(() {
+                          selectedTestament = 'old';
+                          selectedBook = oldTestamentBooks.first;
+                          clearInputs();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+
+                // Book dropdown
+                DropdownButton<String>(
+                  value: selectedBook,
+                  hint: Text("Select Book", style: kBodyTextStyle(context)),
+                  style: kBodyTextStyle(context),
+                  isExpanded: true,
+                  items: books
+                      .map((b) => DropdownMenuItem(value: b, child: Text(b)))
+                      .toList(),
+                  onChanged: (val) => setState(() {
+                    selectedBook = val;
+                    clearInputs();
+                  }),
+                ),
+
+                SizedBox(height: 16),
+
+                // Input fields
+                Row(children: [
+                  Expanded(child: _numberField("Start Chapter", startChapCtrl)),
+                  SizedBox(width: 8),
+                  Expanded(child: _numberField("Start Verse", startVerseCtrl)),
+                ]),
+                Row(children: [
+                  SizedBox(height: 8),
+                ]),
+                Row(children: [
+                  Expanded(child: _numberField("End Chapter (optional)", endChapCtrl)),
+                  SizedBox(width: 8),
+                  Expanded(child: _numberField("End Verse (optional)", endVerseCtrl)),
+                ]),
+
+                SizedBox(height: 16),
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : fetchVerses,
+                    child: Text('Search'),
+                  ),
+                ),
+
+                SizedBox(height: 24),
+
+                // Search Results
+                if (results.isEmpty)
+                  Center(
+                    child: Text(
+                      'No results',
+                      style: kBodyTextStyle(context),
+                    ),
+                  )
+                else
+                  ...results.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final verse = entry.value;
+                    final isSelected = selectedIndexes.contains(i);
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            selectedIndexes.remove(i);
+                          } else {
+                            selectedIndexes.add(i);
+                          }
+                        });
+                      },
+                      onLongPress: () {
+                        setState(() {
+                          selectedIndexes.add(i);
+                        });
+                      },
+                      child: Container(
+                        color: isSelected
+                            ? Colors.blue.withAlpha(50)
+                            : Colors.transparent,
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${verse['chapterVerse']} ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                verse['text'],
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.onSurface,
-                        side: BorderSide(color: Theme.of(context).colorScheme.onSurface),
+                    );
+                  }).toList(),
+
+                if (selectedIndexes.isNotEmpty) ...[
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: ElevatedButton.icon(
+                          onPressed: copySelectedVerses,
+                          icon: Icon(Icons.copy),
+                          label: Text(
+                            'Copy Selected (${selectedIndexes.length})',
+                            style: TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
+                      SizedBox(width: 8),
+                      Flexible(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              selectedIndexes.clear();
+                            });
+                          },
+                          icon: Icon(Icons.clear),
+                          label: Text(
+                            'Clear Selection',
+                            style: TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Theme.of(context).colorScheme.onSurface,
+                            side: BorderSide(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                if (results.isNotEmpty) ...[
+                  SizedBox(height: 8),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: copyAllResults,
+                      icon: Icon(Icons.copy),
+                      label: Text('Copy All'),
                     ),
                   ),
                 ],
-              )
-            ],
-            if (results.isNotEmpty) ...[
-              SizedBox(height: 8),
-              Center(
-                  child: ElevatedButton.icon(
-                onPressed: copyAllResults,
-                icon: Icon(Icons.copy),
-                label: Text('Copy All'),
-              )),
-            ],
+                SizedBox(height: 24),
+              ],
+            ),
+          ),
 
-            SizedBox(height: 24),
-          ],
-        ),
+          // 🔺 Loading overlay
+          if (isLoading)
+            IgnorePointer(
+              ignoring: false,
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
+                child: Center(
+                  child: SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: SpinKitFadingCube(
+                      itemBuilder: (BuildContext context, int index) {
+                        return const DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -377,7 +415,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   }
 
   Future<void> fetchVerses() async {
-    FocusScope.of(context).unfocus(); // ✅ Hide the keyboard first
+    FocusScope.of(context).unfocus(); // ✅ Hide the keyboard
     final book = selectedBook;
     final startChap = startChapCtrl.text;
     final startVerse = startVerseCtrl.text;
@@ -391,13 +429,18 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
       return;
     }
 
-    // Optional: If user fills only some verse fields but not all
     if (startVerse.isEmpty && (endChap.isNotEmpty || endVerse.isNotEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('시작 절이 없으면 범위 입력이 올바르지 않습니다.')),
       );
       return;
     }
+
+    // 🔄 Start loading
+    setState(() {
+      isLoading = true;
+      results.clear(); // Optionally clear old results
+    });
 
     final query = {
       'book': book,
@@ -409,14 +452,31 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
 
     final uri =
         Uri.https('www.bridgeway.online', '/_functions/bibleSearch', query);
-    final response = await http.get(uri);
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      setState(() => results = List<Map<String, dynamic>>.from(json['result']));
-    } else {
-      print("❌ Failed: ${response.body}");
-      setState(() => results = []);
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        setState(() {
+          results = List<Map<String, dynamic>>.from(json['result']);
+        });
+      } else {
+        print("❌ Failed: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('검색 중 오류가 발생했습니다.')),
+        );
+      }
+    } catch (e) {
+      print("❌ Exception: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('네트워크 오류 또는 서버 문제입니다.')),
+      );
+    } finally {
+      // ✅ Stop loading in all cases
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }

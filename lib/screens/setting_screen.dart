@@ -11,8 +11,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:bcsv_flutter_project/dialog/dialog.dart';
 
 import '../utilities/theme_notifier.dart';
-import '../utilities/themes.dart';
-
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -20,13 +18,16 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  @override
   var _groupValue;
   Dialogs dialog = new Dialogs();
-  void initState() {
-    // TODO: implement initState
-    super.initState();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguageSetting();
+  }
+
+  void _loadLanguageSetting() {
     setState(() {
       if (UserSharedPreferences.getLanguageOption() == 'ko') {
         _groupValue = 1;
@@ -36,31 +37,33 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withValues(alpha:0.1),
+        backgroundColor: Colors.transparent.withAlpha(25),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
-            text1: AppLocalizations.of(context)!.settings, text2: ''),
+          text1: AppLocalizations.of(context)!.settings,
+          text2: '',
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
-              //color: Theme.of(context).colorScheme.onSurface,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    leading:
-                        Icon(Icons.language_outlined, color: kActiveIconColor(context)),
+                    leading: Icon(Icons.language_outlined, color: kActiveIconColor(context)),
                     title: Text(AppLocalizations.of(context)!.languageSetting,
                         style: kLargeButtonTextStyle(context)),
                   ),
@@ -102,74 +105,65 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             Card(
-              //color: Theme.of(context).colorScheme.onSurface,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               child: Column(
                 children: <Widget>[
                   ListTile(
                     leading: Icon(Icons.color_lens_outlined, color: kActiveIconColor(context)),
-                    title: Text('Theme',
-                        style: kLargeButtonTextStyle(context)),
+                    title: Text('Theme', style: kLargeButtonTextStyle(context)),
                   ),
                   Consumer<ThemeNotifier>(
                     builder: (context, themeNotifier, _) {
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          RadioListTile<String>(
+                          RadioListTile<int>(
                             title: Text('Light'),
-                            value: 'light',
-                            groupValue: themeNotifier.themeName,
-                            onChanged: (val) => themeNotifier.setTheme('light', lightTheme),
+                            value: 0,
+                            groupValue: themeNotifier.currentIndex,
+                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
                           ),
-                          RadioListTile<String>(
+                          RadioListTile<int>(
                             title: Text('Dark'),
-                            value: 'dark',
-                            groupValue: themeNotifier.themeName,
-                            onChanged: (val) => themeNotifier.setTheme('dark', darkTheme),
+                            value: 1,
+                            groupValue: themeNotifier.currentIndex,
+                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
                           ),
-                          RadioListTile<String>(
-                            title: Text('Bible'),
-                            value: 'bible',
-                            groupValue: themeNotifier.themeName,
-                            onChanged: (val) => themeNotifier.setTheme('bible', bibleTheme),
-                          ),
-                          RadioListTile<String>(
+                          RadioListTile<int>(
                             title: Text('Sepia'),
-                            value: 'sepia',
-                            groupValue: themeNotifier.themeName,
-                            onChanged: (val) => themeNotifier.setTheme('sepia', sepiaTheme),
+                            value: 2,
+                            groupValue: themeNotifier.currentIndex,
+                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
                           ),
-                          RadioListTile<String>(
+                          RadioListTile<int>(
                             title: Text('Midnight Blue'),
-                            value: 'midnight',
-                            groupValue: themeNotifier.themeName,
-                            onChanged: (val) => themeNotifier.setTheme('midnight', midnightBlueTheme),
+                            value: 3,
+                            groupValue: themeNotifier.currentIndex,
+                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
                           ),
                         ],
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),
             Card(
-              //color: Theme.of(context).colorScheme.onSurface,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    leading:
-                    Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor(context)),
+                    leading: Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor(context)),
                     title: Text(AppLocalizations.of(context)!.initMessage,
                         style: kLargeButtonTextStyle(context)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-
                       OutlinedButton(
                         child: Text(AppLocalizations.of(context)!.runButton,
                             style: kLargeButtonTextStyle(context)),
@@ -181,9 +175,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         onPressed: () async {
                           resetCache(kPrayerListData);
-                          await dialog.confirm(context, AppLocalizations.of(context)!.noticeTitle, AppLocalizations.of(context)!.restartNotice);
-                          if (dialog.isPressedConfirm){
-                            //Terminate app
+                          await dialog.confirm(context,
+                              AppLocalizations.of(context)!.noticeTitle,
+                              AppLocalizations.of(context)!.restartNotice);
+                          if (dialog.isPressedConfirm) {
                             exit(0);
                           }
                         },
@@ -192,21 +187,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  void resetCache(String target_file) async{
+  void resetCache(String targetFile) async {
     var dir = await getTemporaryDirectory();
-    File file = File("${dir.path}/${target_file}");
-
-    file.writeAsStringSync("",
-        flush: true, mode: FileMode.write);
-
+    File file = File("${dir.path}/$targetFile");
+    file.writeAsStringSync("", flush: true, mode: FileMode.write);
     log("Reset Message cache file successfully.");
   }
 }
-

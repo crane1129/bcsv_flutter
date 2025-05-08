@@ -52,7 +52,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return const DecoratedBox(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey,
                       ),
                     );
                   },

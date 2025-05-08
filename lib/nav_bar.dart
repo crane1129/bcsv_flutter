@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_google_form.dart';
+import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
+import 'package:bcsv_flutter_project/screens/submit_opinion_screen2.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -212,7 +214,7 @@ class _NavBarState extends State<NavBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => SubmitOpinionViaGoogleFormScreen()));
+                      builder: (_) => SubmitOpinionScreen2()));
             },
           ),
           // ListWebViewMenu(
