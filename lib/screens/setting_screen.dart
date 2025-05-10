@@ -9,6 +9,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:bcsv_flutter_project/dialog/dialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../utilities/theme_notifier.dart';
 
@@ -19,12 +21,14 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   var _groupValue;
+  bool isStaffModeEnabled = false;
   Dialogs dialog = new Dialogs();
 
   @override
   void initState() {
     super.initState();
     _loadLanguageSetting();
+    _loadStaffModeSetting();
   }
 
   void _loadLanguageSetting() {
@@ -35,6 +39,52 @@ class _SettingsPageState extends State<SettingsPage> {
         _groupValue = 2;
       }
     });
+  }
+
+  void _loadStaffModeSetting() async {
+    bool enabled = await UserSharedPreferences.isStaffModeEnabled();
+    setState(() => isStaffModeEnabled = enabled);
+  }
+
+  void _promptForPassword() async {
+    String inputPassword = '';
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Enter Staff Password"),
+        content: TextField(
+          obscureText: true,
+          onChanged: (val) => inputPassword = val,
+          decoration: InputDecoration(labelText: "Password"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final res = await http.post(
+                Uri.https('www.bridgeway.online', '/_functions/verifyStaffPassword'),
+                headers: {'Content-Type': 'application/json'},
+                body: jsonEncode({ 'password': inputPassword }),
+              );
+              if (res.statusCode == 200 && res.body.contains('true')) {
+                await UserSharedPreferences.setStaffMode(true);
+                await UserSharedPreferences.setStaffPassword(inputPassword);
+                setState(() => isStaffModeEnabled = true);
+                Navigator.of(context).pop();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Incorrect password")),
+                );
+              }
+            },
+            child: Text("Submit"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -154,6 +204,24 @@ class _SettingsPageState extends State<SettingsPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              child: SwitchListTile(
+                title: Text('Turn on Staff Mode', style: kLargeButtonTextStyle(context)),
+                value: isStaffModeEnabled,
+                onChanged: (val) {
+                  if (val) {
+                    _promptForPassword();
+                  } else {
+                    UserSharedPreferences.setStaffMode(false);
+                    setState(() => isStaffModeEnabled = false);
+                  }
+                },
+                secondary: Icon(Icons.lock_outline, color: kActiveIconColor(context)),
+              ),
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               child: Column(
                 children: <Widget>[
                   ListTile(
@@ -199,5 +267,10 @@ class _SettingsPageState extends State<SettingsPage> {
     File file = File("${dir.path}/$targetFile");
     file.writeAsStringSync("", flush: true, mode: FileMode.write);
     log("Reset Message cache file successfully.");
+
+    // ✅ Clear staff mode and password from shared preferences
+    await UserSharedPreferences.setStaffMode(false);
+    await UserSharedPreferences.setStaffPassword("");
+    log("Cleared staff mode and password from preferences.");
   }
 }

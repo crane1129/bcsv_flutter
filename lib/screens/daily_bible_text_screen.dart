@@ -72,7 +72,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     //Show loading spinner
     isLoading = true;
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE1'],
+      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE1']!,
       tag: '',
       cacheFileName: kDailyBible1Data,
       getSharedReference: UserSharedPreferences.getDailyBibleText1Cache,
@@ -88,7 +88,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     String dailyBibleText1 = await myGoogleDocContent.getContent();
 
     ModelParam modelParam2 = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE2'],
+      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE2']!,
       tag: '',
       cacheFileName: kDailyBible2Data,
       getSharedReference: UserSharedPreferences.getDailyBibleText2Cache,

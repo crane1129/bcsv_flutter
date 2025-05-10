@@ -69,7 +69,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     //Show loading spinner
     isLoading = true;
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['ANNOUNCEMENT'],
+      apiEndpoint: ApiEndpoint.apiMap['ANNOUNCEMENT']!,
       tag: 'announcements',
       cacheFileName: kAnnouncementData,
       getSharedReference: UserSharedPreferences.getAnnouncementCache,

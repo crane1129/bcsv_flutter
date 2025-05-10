@@ -191,8 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return OfferingScreen(
-                                          url: ApiEndpoint.apiMap['OFFERING']);
+                                      return OfferingScreen();
                                     },
                                   ),
                                 );

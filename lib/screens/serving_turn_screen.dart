@@ -70,7 +70,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
     //Show loading spinner
     isLoading = true;
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['SERVING_TURN'],
+      apiEndpoint: ApiEndpoint.apiMap['SERVING_TURN']!,
       tag: 'servingTurns',
       cacheFileName: kServingTurnData,
       getSharedReference: UserSharedPreferences.getServingTurnCache,
@@ -95,7 +95,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
               elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              color: Theme.of(context).colorScheme.onSurface,
+              color: Theme.of(context).colorScheme.surface,
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
@@ -153,7 +153,7 @@ class ServingTurnTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: Colors.transparent.withValues(alpha:.9),
+      tileColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
       leading: leadingText,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,

@@ -60,7 +60,14 @@
     "offering_direction": "온라인 헌금 유의사항",
     "offering_direction_text": "자세한 내용을 꼭 확인 하세요",
     "bible_reading_plan": "성경 통독 계획",
-    "bible_search": "성경 구절 찾기",
+    "bible_search": "성경 검색",
     "bible_old_testament": "구약",
-    "bible_new_testament": "신약"
+    "bible_new_testament": "신약",
+    "start_chapter": "시작 장",
+    "start_verse": "시작 절 (옵션)",
+    "end_chapter": "끝 장 (옵션)",
+    "end_verse": "끝 절 (옵션)",
+    "staff_only_mode": "스텝 전용 메뉴",
+    "unconfirmed_opinion": "의견 접수 내용",
+    "search": "검색"
 }

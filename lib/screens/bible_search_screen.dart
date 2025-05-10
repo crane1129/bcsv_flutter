@@ -133,7 +133,8 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ChoiceChip(
-                      label: Text(AppLocalizations.of(context)!.bible_new_testament),
+                      label: Text(
+                          AppLocalizations.of(context)!.bible_new_testament),
                       selected: selectedTestament == 'new',
                       onSelected: (_) {
                         setState(() {
@@ -145,7 +146,8 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                     ),
                     SizedBox(width: 8),
                     ChoiceChip(
-                      label: Text(AppLocalizations.of(context)!.bible_old_testament),
+                      label: Text(
+                          AppLocalizations.of(context)!.bible_old_testament),
                       selected: selectedTestament == 'old',
                       onSelected: (_) {
                         setState(() {
@@ -178,17 +180,29 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
 
                 // Input fields
                 Row(children: [
-                  Expanded(child: _numberField("Start Chapter", startChapCtrl)),
+                  Expanded(
+                      child: _numberField(
+                          AppLocalizations.of(context)!.start_chapter,
+                          startChapCtrl)),
                   SizedBox(width: 8),
-                  Expanded(child: _numberField("Start Verse", startVerseCtrl)),
+                  Expanded(
+                      child: _numberField(
+                          AppLocalizations.of(context)!.start_verse,
+                          startVerseCtrl)),
                 ]),
                 Row(children: [
                   SizedBox(height: 8),
                 ]),
                 Row(children: [
-                  Expanded(child: _numberField("End Chapter (optional)", endChapCtrl)),
+                  Expanded(
+                      child: _numberField(
+                          AppLocalizations.of(context)!.end_chapter,
+                          endChapCtrl)),
                   SizedBox(width: 8),
-                  Expanded(child: _numberField("End Verse (optional)", endVerseCtrl)),
+                  Expanded(
+                      child: _numberField(
+                          AppLocalizations.of(context)!.end_verse,
+                          endVerseCtrl)),
                 ]),
 
                 SizedBox(height: 16),
@@ -196,7 +210,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: isLoading ? null : fetchVerses,
-                    child: Text('Search'),
+                    child: Text(AppLocalizations.of(context)!.search),
                   ),
                 ),
 
@@ -235,7 +249,8 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                         color: isSelected
                             ? Colors.blue.withAlpha(50)
                             : Colors.transparent,
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -251,7 +266,8 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                                 verse['text'],
                                 style: TextStyle(
                                   fontSize: 15,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ),
@@ -292,7 +308,8 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: Theme.of(context).colorScheme.onSurface,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onSurface,
                             side: BorderSide(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -322,7 +339,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
             IgnorePointer(
               ignoring: false,
               child: Container(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha:0.3),
                 child: Center(
                   child: SizedBox(
                     height: 200,

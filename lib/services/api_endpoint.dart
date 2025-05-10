@@ -7,43 +7,55 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 
 class ApiEndpoint {
-  static var apiMap = {};
+  static final ApiEndpoint _instance = ApiEndpoint._internal();
+  factory ApiEndpoint() => _instance;
+  ApiEndpoint._internal();
 
-  static Future<bool> bindEndpoints() async {
+  static final Map<String, Uri> apiMap = {};
+
+  Future<bool> bindEndpoints() async {
     try {
-      String endpointList = await _getApiEndpoints();
-      var jsonObj = jsonDecode(endpointList)['endpoints'] as List;
+      final data = await fetchEndpoints(); // your HTTP call
+
       List<Endpoint> endpointObjs =
-          jsonObj.map((tagJson) => Endpoint.fromJson(tagJson)).toList();
+      data.map((e) => Endpoint.fromJson(e)).toList();
 
       for (Endpoint e in endpointObjs) {
         apiMap[e.endpoint] = Uri.parse(e.url);
       }
 
-      stdout.writeln('Endpoint bind is complete');
+      print('✅ Endpoint bind is complete');
       return true;
     } catch (e) {
-      print(e.toString());
+      print("❌ bindEndpoints error: $e");
+      return false;
     }
-    return false;
   }
 
-  static Future<String> _getApiEndpoints() async {
-    http.Response response = await http.get(Uri.parse(kEndpointAPI));
+  Uri? get(String key) => apiMap[key];
 
-    if (response.statusCode == 200) {
-      String data = response.body;
-      return data;
-    } else {
-      stdout.writeln(response.statusCode);
+  Future<List<Map<String, dynamic>>> fetchEndpoints() async {
+    final uri = Uri.https('www.bridgeway.online', '/_functions/endpoints');
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        final List<dynamic> items = json['results'];
+        return items.cast<Map<String, dynamic>>();
+      } else {
+        throw Exception("Failed to load endpoints: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ Error fetching endpoints: $e");
+      return [];
     }
-
-    return "";
   }
 
-  static Future<void> checkNewMessage() async {
+  Future<void> checkNewMessage() async {
     // Get messages from the google doc
-    http.Response response = await http.get(apiMap['MESSAGE']);
+    http.Response response = await http.get(apiMap['MESSAGE']!);
     var dir = await getTemporaryDirectory();
     File file = File("${dir.path}/${kPrayerListData}");
 

@@ -43,7 +43,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
         backgroundColor: Colors.transparent.withValues(alpha: 0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          //color: kNavBackButtonColor,
+          color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
@@ -110,7 +110,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     isLoading = true;
 
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['BIBLE_TEXT'],
+      apiEndpoint: ApiEndpoint.apiMap['BIBLE_TEXT']!,
       tag: 'bibleText',
       cacheFileName: kBibleTextData,
       getSharedReference: UserSharedPreferences.getBibleTextCache,

@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
-import 'package:bcsv_flutter_project/screens/submit_opinion_google_form.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
-import 'package:bcsv_flutter_project/screens/submit_opinion_screen2.dart';
+import 'package:bcsv_flutter_project/screens/unconfirmed_opinion_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -68,12 +67,12 @@ class _NavBarState extends State<NavBar> {
           ListWebViewMenu(
               myIcon: Icons.voice_chat_outlined,
               menuName: AppLocalizations.of(context)!.sermonArchives,
-              url: ApiEndpoint.apiMap['SERMON_YOUTUBE'],
+              url: ApiEndpoint.apiMap['SERMON_YOUTUBE']!,
               trailing: emptyString),
           ListWebViewMenu(
               myIcon: FontAwesomeIcons.youtube,
               menuName: AppLocalizations.of(context)!.youtubeLive,
-              url: ApiEndpoint.apiMap['YOUTUBE_LIVE'],
+              url: ApiEndpoint.apiMap['YOUTUBE_LIVE']!,
               trailing: emptyString),
           const Divider(color: Colors.grey),
           ListTile(
@@ -127,8 +126,8 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
-            leading:
-                Icon(Icons.book_outlined, color: kActiveIconColor(context), size: 20),
+            leading: Icon(Icons.book_outlined,
+                color: kActiveIconColor(context), size: 20),
             title: Text(AppLocalizations.of(context)!.sermonBibleText,
                 style: kDrawerMenuTextStyle(context)),
             onTap: () {
@@ -159,7 +158,7 @@ class _NavBarState extends State<NavBar> {
           ListWebViewMenu(
               myIcon: FontAwesomeIcons.calendarDays,
               menuName: AppLocalizations.of(context)!.bible_reading_plan,
-              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN'],
+              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN']!,
               trailing: emptyString),
           ListTile(
             leading: Icon(Icons.search, color: kActiveIconColor(context)),
@@ -177,7 +176,8 @@ class _NavBarState extends State<NavBar> {
           //     trailing: emptyString),
           const Divider(color: Colors.grey),
           ListTile(
-            leading: Icon(Icons.volunteer_activism, color: kActiveIconColor(context)),
+            leading: Icon(Icons.volunteer_activism,
+                color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.offering,
                 style: kDrawerMenuTextStyle(context)),
             onTap: () {
@@ -185,7 +185,7 @@ class _NavBarState extends State<NavBar> {
                   context,
                   MaterialPageRoute(
                       builder: (_) =>
-                          OfferingScreen(url: ApiEndpoint.apiMap['OFFERING'])));
+                          OfferingScreen()));
             },
           ),
           // ListWebViewMenu(
@@ -194,8 +194,8 @@ class _NavBarState extends State<NavBar> {
           //     url: ApiEndpoint.apiMap['REIMBURSEMENT'],
           //     trailing: emptyString),
           ListTile(
-            leading:
-                Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor(context)),
+            leading: Icon(Icons.add_shopping_cart_rounded,
+                color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.reimbursement,
                 style: kDrawerMenuTextStyle(context)),
             onTap: () {
@@ -203,7 +203,7 @@ class _NavBarState extends State<NavBar> {
                   context,
                   MaterialPageRoute(
                       builder: (_) => ReimbursementScreen(
-                          url: ApiEndpoint.apiMap['REIMBURSEMENT'])));
+                          url: ApiEndpoint.apiMap['REIMBURSEMENT']!)));
             },
           ),
           ListTile(
@@ -211,10 +211,8 @@ class _NavBarState extends State<NavBar> {
             title: Text(AppLocalizations.of(context)!.opinion,
                 style: kDrawerMenuTextStyle(context)),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => SubmitOpinionScreen2()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
             },
           ),
           // ListWebViewMenu(
@@ -239,6 +237,39 @@ class _NavBarState extends State<NavBar> {
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => SettingsPage()));
+            },
+          ),
+          FutureBuilder<bool>(
+            future: UserSharedPreferences.isStaffModeEnabled(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || !snapshot.data!) {
+                return SizedBox(); // or return alternative UI
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(),
+                  ListTile(
+                    //leading: Icon(Icons.admin_panel_settings),
+                    title: Text(AppLocalizations.of(context)!.staff_only_mode,
+                        style: kDrawerMenuTextStyle(context)),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.admin_panel_settings,
+                        color: kActiveIconColorAdmin(context)),
+                    title: Text(
+                        AppLocalizations.of(context)!.unconfirmed_opinion,
+                        style: kDrawerMenuTextStyle(context)),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => UnconfirmedOpinionsScreen()));
+                    },
+                  ),
+                ],
+              );
             },
           ),
           const Divider(color: Colors.grey),

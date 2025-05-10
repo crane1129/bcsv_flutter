@@ -43,6 +43,7 @@ class MyBCSVApp extends StatelessWidget {
         final provider = Provider.of<LocaleProvider>(context);
         return OverlaySupport.global(
           child: MaterialApp(
+            color: Theme.of(context).colorScheme.surface,
             debugShowCheckedModeBanner: false,
             theme: themeNotifier.currentTheme,
             locale: provider.locale,

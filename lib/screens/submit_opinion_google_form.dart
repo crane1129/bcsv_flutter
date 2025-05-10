@@ -200,7 +200,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
     final name = _nameController.text;
 
     // Replace this with your Google Form action URL and entry IDs
-    final Uri googleFormUrl = ApiEndpoint.apiMap['FEEDBACK'];
+    final Uri googleFormUrl = ApiEndpoint.apiMap['FEEDBACK']!;
 
     // Add the required hidden fields
     final Map<String, String> formData = {
@@ -224,6 +224,7 @@ class _SubmitOpinionViaGoogleFormScreenState extends State<SubmitOpinionViaGoogl
         // ));
         showMessage("Form submitted successfully");
         clearData();
+        FocusScope.of(context).unfocus(); // ✅ Hide the keyboard
 
       } else {
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(

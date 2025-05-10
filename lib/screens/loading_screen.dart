@@ -100,7 +100,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void checkNetworkConnection() async {
-    bool hasInternet = await await InternetConnectionChecker.instance.hasConnection;
+    bool hasInternet =
+        await await InternetConnectionChecker.instance.hasConnection;
     String message = hasInternet ? 'Internet' : 'No Internet';
 
     if (!hasInternet) {
@@ -119,8 +120,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ),
       );
     } else {
-      if (await ApiEndpoint.bindEndpoints()) {
-        await ApiEndpoint.checkNewMessage();
+      final endpointService = ApiEndpoint();
+      if (await endpointService.bindEndpoints()) {
+        await endpointService.checkNewMessage();
       }
 
       GoogleMessageSheet.init();

@@ -5,10 +5,10 @@ class Endpoint {
 
   Endpoint({required this.endpoint, required this.url});
 
-  factory Endpoint.fromJson(dynamic json) {
+  factory Endpoint.fromJson(Map<String, dynamic> json) {
     return Endpoint(
-      endpoint: json['endpoint'],
-      url: json['url'],
+      endpoint: json['title'],
+      url: json['endpoint'],
     );
   }
 }

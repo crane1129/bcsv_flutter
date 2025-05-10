@@ -9,11 +9,10 @@ import '../components/webview/webview_screen.dart';
 import '../services/api_endpoint.dart';
 
 class OfferingScreen extends StatelessWidget {
-  final Uri url;
   final benevolence_account = "benevolence@bridgeway.online";
   final offering_account = "offering@bridgeway.online";
 
-  OfferingScreen({required this.url});
+  OfferingScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -149,8 +148,7 @@ class OfferingScreen extends StatelessWidget {
                                     builder: (context) {
                                       return WebViewApp(
                                           url: ApiEndpoint
-                                              .apiMap['ONLINE_OFFERING_DIRECTION'] ??
-                                              kBaseUrl,
+                                              .apiMap['ONLINE_OFFERING_DIRECTION']!,
                                           title1: AppLocalizations.of(context)!
                                               .offering_direction,
                                           title2: '');

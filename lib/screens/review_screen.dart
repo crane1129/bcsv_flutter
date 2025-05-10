@@ -99,7 +99,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     isLoading = true;
 
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['BIBLE_REVIEW'],
+      apiEndpoint: ApiEndpoint.apiMap['BIBLE_REVIEW']!,
       tag: 'sundayReview',
       cacheFileName: kBibleReviewData,
       getSharedReference: UserSharedPreferences.getBibleReviewCache,

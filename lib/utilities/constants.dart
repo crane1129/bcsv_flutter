@@ -30,6 +30,10 @@ Color kActiveIconColor(BuildContext context) {
   return Theme.of(context).colorScheme.primary;
 }
 
+Color kActiveIconColorAdmin(BuildContext context) {
+  return Theme.of(context).colorScheme.secondary;
+}
+
 TextStyle kAppBarTextStyle(BuildContext context) {
   return Theme.of(context).textTheme.headlineSmall!.copyWith(
     fontSize: 30.0,
