@@ -42,7 +42,7 @@ class Announcement {
       prayer: json['prayer'],
       tuesday_pray_meeting: json['tuesday_pray_meeting'],
       babysitter: json['babysitter'],
-      offering: json['offering'],
+      offering: json['offering']!.toString(),
       File_url: json['File_url'],
     );
   }
