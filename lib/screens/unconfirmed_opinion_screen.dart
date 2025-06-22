@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../components/appbar_header_text.dart';
 import '../utilities/constants.dart';
+import 'package:flutter/services.dart';
 
 class UnconfirmedOpinionsScreen extends StatefulWidget {
   const UnconfirmedOpinionsScreen({Key? key}) : super(key: key);
@@ -141,8 +142,25 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
                             label: Text("Confirm"),
                             onPressed: () => confirmOpinion(item['id']),
                           ),
+                          SizedBox(width: 12), // spacing between buttons
+                          ElevatedButton.icon(
+                            icon: Icon(Icons.copy),
+                            label: Text("Copy"),
+                            onPressed: () {
+                              final buffer = StringBuffer();
+                              buffer.writeln("Category: ${item['category'] ?? ''}");
+                              buffer.writeln("Message: ${item['message'] ?? ''}");
+                              if ((item['name'] ?? '').isNotEmpty) buffer.writeln("Name: ${item['name']}");
+                              if ((item['email'] ?? '').isNotEmpty) buffer.writeln("Email: ${item['email']}");
+                              buffer.writeln("Date: $formattedDate");
+                              Clipboard.setData(ClipboardData(text: buffer.toString()));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('📋 Copied to clipboard')),
+                              );
+                            },
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                   isThreeLine: true,
