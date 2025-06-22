@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart'; // for Clipboard
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
@@ -26,7 +25,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   final startVerseCtrl = TextEditingController();
   final endChapCtrl = TextEditingController();
   final endVerseCtrl = TextEditingController();
-
+  double _fontSize = 16.0;
   final oldTestamentBooks = [
     "창세기",
     "출애굽기",
@@ -119,6 +118,26 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
           text1: AppLocalizations.of(context)!.bible_search,
           text2: '',
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.font_download_outlined),
+            onPressed: () {
+              setState(() {
+                _fontSize += 2;
+              });
+            },
+            tooltip: 'Increase Font Size',
+          ),
+          IconButton(
+            icon: Icon(Icons.font_download),
+            onPressed: () {
+              setState(() {
+                _fontSize = (_fontSize - 2).clamp(10.0, 30.0);
+              });
+            },
+            tooltip: 'Decrease Font Size',
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -221,7 +240,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                   Center(
                     child: Text(
                       'No results',
-                      style: kBodyTextStyle(context),
+                      style: kBodyTextStyle(context, fontSize: _fontSize),
                     ),
                   )
                 else
@@ -249,8 +268,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                         color: isSelected
                             ? Colors.blue.withAlpha(50)
                             : Colors.transparent,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -258,6 +276,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                               '${verse['chapterVerse']} ',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: _fontSize, // 🔹 make dynamic
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
@@ -265,9 +284,8 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                               child: Text(
                                 verse['text'],
                                 style: TextStyle(
-                                  fontSize: 15,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  fontSize: _fontSize, // 🔹 make dynamic
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ),
