@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+double _fontSize = 16.0;
 
 class DailyBibleTextScreen extends StatefulWidget {
   const DailyBibleTextScreen({Key? key}) : super(key: key);
@@ -30,41 +31,83 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     getDailyBibleText();
   }
 
-  var dailyBibleTiles = <Widget>[];
+  Map<String, dynamic>? _headerData;
+  String _bodyText = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha: 0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.dailyBible, text2: ''),
+        title: AppBarHeaderText(
+            text1: AppLocalizations.of(context)!.dailyBible, text2: ''),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.font_download_outlined),
+            onPressed: () {
+              setState(() {
+                _fontSize += 2;
+              });
+            },
+            tooltip: 'Increase Font Size',
+          ),
+          IconButton(
+            icon: Icon(Icons.font_download),
+            onPressed: () {
+              setState(() {
+                _fontSize = (_fontSize - 2).clamp(10.0, 30.0);
+              });
+            },
+            tooltip: 'Decrease Font Size',
+          ),
+        ],
       ),
       body: isLoading
           ? Center(
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: SpinKitFadingCube(
-                  itemBuilder: (BuildContext context, int index) {
-                    return const DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                    );
-                  },
+        child: SizedBox(
+          height: 200,
+          width: 200,
+          child: SpinKitFadingCube(
+            itemBuilder: (BuildContext context, int index) {
+              return const DecoratedBox(
+                decoration: BoxDecoration(color: Colors.grey),
+              );
+            },
+          ),
+        ),
+      )
+          : SingleChildScrollView(
+        child: Column(
+          children: [
+            if (_headerData != null)
+              ListTile(
+                leading: Icon(FontAwesomeIcons.bookBible,
+                    color: kActiveIconColor(context)),
+                title: Text(
+                  _headerData!['title'],
+                  style: kBodyTextStyle(context, fontSize: _fontSize),
+                ),
+                subtitle: Text(
+                  _headerData!['subtitle'],
+                  style: kBodyTextStyle(context, fontSize: _fontSize),
                 ),
               ),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                children: dailyBibleTiles,
+            if (_bodyText.isNotEmpty)
+              ListTile(
+                title: SelectableText(
+                  _bodyText,
+                  style: kBodyTextStyle(context, fontSize: _fontSize),
+                ).animate().fade(duration: 500.ms),
               ),
-            ),
+          ],
+        ),
+      ),
+
     );
   }
 
@@ -72,7 +115,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     //Show loading spinner
     isLoading = true;
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE1'],
+      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE1']!,
       tag: '',
       cacheFileName: kDailyBible1Data,
       getSharedReference: UserSharedPreferences.getDailyBibleText1Cache,
@@ -88,7 +131,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     String dailyBibleText1 = await myGoogleDocContent.getContent();
 
     ModelParam modelParam2 = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE2'],
+      apiEndpoint: ApiEndpoint.apiMap['DAILY_BIBLE2']!,
       tag: '',
       cacheFileName: kDailyBible2Data,
       getSharedReference: UserSharedPreferences.getDailyBibleText2Cache,
@@ -102,50 +145,19 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     var jsonObj1 = jsonDecode(dailyBibleText1);
     var jsonObj2 = jsonDecode(dailyBibleText2);
 
-    setState(
-      () {
-        dailyBibleTiles.add(
-          ListTile(
-            leading: Icon(FontAwesomeIcons.bookBible, color: kActiveIconColor),
-            title: Text(
-                "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
-                style: kBodyTextStyle),
-            subtitle: Text(jsonObj1['Base_de'],style: kBodyTextStyle),
-          ),
-        );
+    setState(() {
+      _headerData = {
+        'title': "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
+        'subtitle': jsonObj1['Base_de'],
+      };
 
-        String bodyText = '';
+      _bodyText = '';
+      for (var word in jsonObj2) {
+        _bodyText += "${word['Verse'].toString()} ${word['Bible_Cn']}\n\n";
+      }
 
-        for (var word in jsonObj2) {
-          bodyText += "${word['Verse'].toString()} ${word['Bible_Cn']}\n\n";
-        }
-
-        dailyBibleTiles.add(
-          ListTile(
-            title: SelectableText(
-              bodyText,
-              style: kBodyTextStyle,
-            ).animate().fade(duration: 500.ms),
-          ),
-        );
-
-        // for (var word in jsonObj2) {
-        //   dailyBibleTiles.add(
-        //     ListTile(
-        //       leading: Text(
-        //         word['Chapter'].toString(),
-        //       ),
-        //       title: SelectableText(
-        //         "${word['Verse'].toString()} ${word['Bible_Cn']}",
-        //         style: kBodyTextStyle,
-        //       ),
-        //     ),
-        //   );
-        // }
-        //Hide loading spinner
-        isLoading = false;
-      },
-    );
+      isLoading = false;
+    });
   }
 }
 
@@ -168,7 +180,10 @@ class DailyBibleTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle),
+          content.isEmpty
+              ? Text('N/A')
+              : Text(content,
+                  style: kBodyTextStyle(context, fontSize: _fontSize)),
         ],
       ),
     );

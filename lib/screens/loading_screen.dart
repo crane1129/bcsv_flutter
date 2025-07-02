@@ -52,7 +52,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
                   Text(AppLocalizations.of(context)!.bridgeway,
-                          style: kMainTitleTextStyle)
+                          style: kMainTitleTextStyle(context))
                       .animate()
                       .fadeIn() // uses `Animate.defaultDuration`
                       .scale() // inherits duration from fadeIn
@@ -60,20 +60,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 ]),
             SizedBox(height: 50),
             Text(AppLocalizations.of(context)!.baptistChurch,
-                    style: kSubTitleTextStyle)
+                    style: kSubTitleTextStyle(context))
                 .animate()
                 .fadeIn(duration: 1000.ms)
                 .slideY(end: -1),
             SizedBox(height: 50),
             SpinKitFadingCube(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
               size: 100.0,
             ),
             SizedBox(height: 50),
             Text(
                 PackageInformation.packageInfo.version +
                     " (${PackageInformation.packageInfo.buildNumber})",
-                style: kListTitleStyleWhite),
+                style: kListTitleStyleWhite(context)),
           ],
         ),
       ),
@@ -100,7 +100,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void checkNetworkConnection() async {
-    bool hasInternet = await await InternetConnectionChecker.instance.hasConnection;
+    bool hasInternet =
+        await await InternetConnectionChecker.instance.hasConnection;
     String message = hasInternet ? 'Internet' : 'No Internet';
 
     if (!hasInternet) {
@@ -119,8 +120,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ),
       );
     } else {
-      if (await ApiEndpoint.bindEndpoints()) {
-        await ApiEndpoint.checkNewMessage();
+      final endpointService = ApiEndpoint();
+      if (await endpointService.bindEndpoints()) {
+        await endpointService.checkNewMessage();
       }
 
       GoogleMessageSheet.init();

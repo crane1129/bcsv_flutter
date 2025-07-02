@@ -40,7 +40,7 @@
     "offeringVerse": "각각 그 마음에 정한 대로 할 것이요\n인색함으로나 억지로 하지 말지니\n하나님은 즐겨 내는 자를 사랑 하시느니라.\n(고후9:7)",
     "submit": "제출",
     "opinionTitle": "하나님의 은혜와 사랑의 공동체를\n여러분과 함께 만들어갑니다.",
-    "opinionSubTitle": "교회 운영에 관한 의견, 개선이 필요한 부분 등,\n교회 공동체의 미래를 위한 귀한 의견을\n보내 주십시오.",
+    "opinionSubTitle": "교회 사역에 관한 의견 등,\n교회 공동체의 미래를 위한 귀한 의견을\n보내 주십시오.",
     "openButtonText": "열기",
     "reimbursementDesc": "교회 행사관련 비용을 환급신청 하세요.",
     "missionStatement": "우리의 사명",
@@ -59,5 +59,15 @@
     "copy": "복사",
     "offering_direction": "온라인 헌금 유의사항",
     "offering_direction_text": "자세한 내용을 꼭 확인 하세요",
-    "bible_reading_plan": "성경 통독 계획"
+    "bible_reading_plan": "성경 통독 계획",
+    "bible_search": "성경 검색",
+    "bible_old_testament": "구약",
+    "bible_new_testament": "신약",
+    "start_chapter": "시작 장",
+    "start_verse": "시작 절 (옵션)",
+    "end_chapter": "끝 장 (옵션)",
+    "end_verse": "끝 절 (옵션)",
+    "staff_only_mode": "스텝 전용 메뉴",
+    "unconfirmed_opinion": "의견 접수 내용",
+    "search": "검색"
 }

@@ -1,5 +1,7 @@
 import 'dart:io';
-import 'package:bcsv_flutter_project/screens/submit_opinion_google_form.dart';
+import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
+import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
+import 'package:bcsv_flutter_project/screens/unconfirmed_opinion_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,7 +40,7 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: kDrawerBackgroundColor,
+      //backgroundColor: Theme.of(context).colorScheme.onSurface,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -47,7 +49,7 @@ class _NavBarState extends State<NavBar> {
             accountEmail: Text(AppLocalizations.of(context)!.missionVerse,
                 style: TextStyle(fontSize: 10)),
             currentAccountPicture: CircleAvatar(
-              backgroundColor: kActiveCardColor,
+              backgroundColor: Theme.of(context).colorScheme.onSurface,
               backgroundImage: AssetImage('assets/images/app.png'),
             ),
             decoration: BoxDecoration(
@@ -60,30 +62,30 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             //leading: Icon(FontAwesomeIcons.church, color: kInactiveIconColor),
             title: Text(AppLocalizations.of(context)!.sundaySermons,
-                style: kDrawerTitleMenuTextStyle),
+                style: kDrawerTitleMenuTextStyle(context)),
           ),
           ListWebViewMenu(
               myIcon: Icons.voice_chat_outlined,
               menuName: AppLocalizations.of(context)!.sermonArchives,
-              url: ApiEndpoint.apiMap['SERMON_YOUTUBE'],
+              url: ApiEndpoint.apiMap['SERMON_YOUTUBE']!,
               trailing: emptyString),
           ListWebViewMenu(
               myIcon: FontAwesomeIcons.youtube,
               menuName: AppLocalizations.of(context)!.youtubeLive,
-              url: ApiEndpoint.apiMap['YOUTUBE_LIVE'],
+              url: ApiEndpoint.apiMap['YOUTUBE_LIVE']!,
               trailing: emptyString),
-          const Divider(color: Colors.white30),
+          const Divider(color: Colors.grey),
           ListTile(
             //leading: Icon(Icons.speaker_notes, color: kInactiveIconColor),
             title: Text(AppLocalizations.of(context)!.notification,
-                style: kDrawerTitleMenuTextStyle),
+                style: kDrawerTitleMenuTextStyle(context)),
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading: Icon(Icons.accessibility_new_outlined,
-                color: kActiveIconColor, size: 20),
+                color: kActiveIconColor(context), size: 20),
             title: Text(AppLocalizations.of(context)!.servingTurn,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => ServingTurnPage()));
@@ -92,9 +94,9 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
             leading: Icon(Icons.notifications_none,
-                color: kActiveIconColor, size: 20),
+                color: kActiveIconColor(context), size: 20),
             title: Text(AppLocalizations.of(context)!.announcement,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => AnnouncementPage()));
@@ -103,9 +105,9 @@ class _NavBarState extends State<NavBar> {
           // ListTile(
           //   //contentPadding: EdgeInsets.only(left: 30.0),
           //   leading:
-          //       Icon(Icons.mail_outline, color: kActiveIconColor, size: 20),
+          //       Icon(Icons.mail_outline, color: kActiveIconColor(context), size: 20),
           //   title: Text(AppLocalizations.of(context)!.newMessage,
-          //       style: kDrawerMenuTextStyle),
+          //       style: kDrawerMenuTextStyle(context)),
           //   onTap: () {
           //     Navigator.push(context,
           //         MaterialPageRoute(builder: (_) => MessageListScreen())).then(
@@ -116,18 +118,18 @@ class _NavBarState extends State<NavBar> {
           //   },
           //   trailing: displayMsgCounter(),
           // ),
-          const Divider(color: Colors.white30),
+          const Divider(color: Colors.grey),
           ListTile(
             //leading: Icon(FontAwesomeIcons.bible, color: kInactiveIconColor),
             title: Text(AppLocalizations.of(context)!.bibleText,
-                style: kDrawerTitleMenuTextStyle),
+                style: kDrawerTitleMenuTextStyle(context)),
           ),
           ListTile(
             //contentPadding: EdgeInsets.only(left: 30.0),
-            leading:
-                Icon(Icons.book_outlined, color: kActiveIconColor, size: 20),
+            leading: Icon(Icons.book_outlined,
+                color: kActiveIconColor(context), size: 20),
             title: Text(AppLocalizations.of(context)!.sermonBibleText,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => SundayBibleTextScreen()));
@@ -136,18 +138,18 @@ class _NavBarState extends State<NavBar> {
           // ListTile(
           //   //contentPadding: EdgeInsets.only(left: 30.0),
           //   leading:
-          //       Icon(Icons.create_sharp, color: kActiveIconColor, size: 20),
+          //       Icon(Icons.create_sharp, color: kActiveIconColor(context), size: 20),
           //   title: Text(AppLocalizations.of(context)!.sermonReview,
-          //       style: kDrawerMenuTextStyle),
+          //       style: kDrawerMenuTextStyle(context)),
           //   onTap: () {
           //     Navigator.push(context,
           //         MaterialPageRoute(builder: (_) => SermonReviewScreen()));
           //   },
           // ),
           ListTile(
-            leading: Icon(Icons.auto_stories, color: kActiveIconColor),
+            leading: Icon(Icons.auto_stories, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.dailyBible,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => DailyBibleTextScreen()));
@@ -156,19 +158,34 @@ class _NavBarState extends State<NavBar> {
           ListWebViewMenu(
               myIcon: FontAwesomeIcons.calendarDays,
               menuName: AppLocalizations.of(context)!.bible_reading_plan,
-              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN'],
+              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN']!,
               trailing: emptyString),
-          const Divider(color: Colors.white30),
           ListTile(
-            leading: Icon(Icons.volunteer_activism, color: kActiveIconColor),
+            leading: Icon(Icons.search, color: kActiveIconColor(context)),
+            title: Text(AppLocalizations.of(context)!.bible_search,
+                style: kDrawerMenuTextStyle(context)),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => BibleSearchScreen()));
+            },
+          ),
+          // ListWebViewMenu(
+          //     myIcon: FontAwesomeIcons.magnifyingGlass,
+          //     menuName: AppLocalizations.of(context)!.bible_search,
+          //     url: ApiEndpoint.apiMap['BIBLE_SEARCH'],
+          //     trailing: emptyString),
+          const Divider(color: Colors.grey),
+          ListTile(
+            leading: Icon(Icons.volunteer_activism,
+                color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.offering,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) =>
-                          OfferingScreen(url: ApiEndpoint.apiMap['OFFERING'])));
+                          OfferingScreen()));
             },
           ),
           // ListWebViewMenu(
@@ -177,27 +194,25 @@ class _NavBarState extends State<NavBar> {
           //     url: ApiEndpoint.apiMap['REIMBURSEMENT'],
           //     trailing: emptyString),
           ListTile(
-            leading:
-                Icon(Icons.add_shopping_cart_rounded, color: kActiveIconColor),
+            leading: Icon(Icons.add_shopping_cart_rounded,
+                color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.reimbursement,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => ReimbursementScreen(
-                          url: ApiEndpoint.apiMap['REIMBURSEMENT'])));
+                          url: ApiEndpoint.apiMap['REIMBURSEMENT']!)));
             },
           ),
           ListTile(
-            leading: Icon(Icons.emoji_people, color: kActiveIconColor),
+            leading: Icon(Icons.emoji_people, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.opinion,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => SubmitOpinionViaGoogleFormScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => SubmitOpinionScreen()));
             },
           ),
           // ListWebViewMenu(
@@ -205,30 +220,63 @@ class _NavBarState extends State<NavBar> {
           //     menuName: AppLocalizations.of(context)!.opinion,
           //     url: ApiEndpoint.apiMap['FEEDBACK'],
           //     trailing: emptyString),
-          const Divider(color: Colors.white30),
+          const Divider(color: Colors.grey),
           ListTile(
-            leading: Icon(Icons.info_outline, color: kActiveIconColor),
+            leading: Icon(Icons.info_outline, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.about,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => AboutScreen()));
             },
           ),
           ListTile(
-            leading: Icon(Icons.settings, color: kActiveIconColor),
+            leading: Icon(Icons.settings, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.settings,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => SettingsPage()));
             },
           ),
-          const Divider(color: Colors.white30),
+          FutureBuilder<bool>(
+            future: UserSharedPreferences.isStaffModeEnabled(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || !snapshot.data!) {
+                return SizedBox(); // or return alternative UI
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(),
+                  ListTile(
+                    //leading: Icon(Icons.admin_panel_settings),
+                    title: Text(AppLocalizations.of(context)!.staff_only_mode,
+                        style: kDrawerMenuTextStyle(context)),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.admin_panel_settings,
+                        color: kActiveIconColorAdmin(context)),
+                    title: Text(
+                        AppLocalizations.of(context)!.unconfirmed_opinion,
+                        style: kDrawerMenuTextStyle(context)),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => UnconfirmedOpinionsScreen()));
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          const Divider(color: Colors.grey),
           ListTile(
-            leading: Icon(Icons.exit_to_app, color: kActiveIconColor),
+            leading: Icon(Icons.exit_to_app, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.exit,
-                style: kDrawerMenuTextStyle),
+                style: kDrawerMenuTextStyle(context)),
             onTap: () {
               exit(0);
             },
@@ -279,8 +327,8 @@ class ListWebViewMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         //contentPadding: EdgeInsets.only(left: 20.0),
-        leading: Icon(myIcon, color: kActiveIconColor, size: 20),
-        title: Text(menuName, style: kDrawerMenuTextStyle),
+        leading: Icon(myIcon, color: kActiveIconColor(context), size: 20),
+        title: Text(menuName, style: kDrawerMenuTextStyle(context)),
         onTap: () {
           Navigator.push(
             context,

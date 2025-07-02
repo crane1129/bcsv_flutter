@@ -13,7 +13,7 @@ Future<void> checkForUpdate(BuildContext context) async {
   final currentVersion = packageInfo.version;
 
   try {
-    final response = await http.get(ApiEndpoint.apiMap['APP_VERSION']);
+    final response = await http.get(ApiEndpoint.apiMap['APP_VERSION']!);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

@@ -14,7 +14,7 @@ class WebviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         title: AppBarHeaderText(
             text1: title1, text2: title2),
       ),

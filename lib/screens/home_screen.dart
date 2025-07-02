@@ -1,3 +1,4 @@
+import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/message_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
             key: _scaffoldKey,
             drawer: NavBar(),
             appBar: AppBar(
-              backgroundColor: Colors.transparent.withOpacity(0.5),
+              backgroundColor: Colors.transparent.withValues(alpha: 0.5),
               leading: IconButton(
                 icon: Icon(Icons.menu),
                 color: Colors.white70,
@@ -70,30 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         Expanded(
                           child: ReusableCard2(
                               onPress: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return WebViewApp(
-                                          url: ApiEndpoint
-                                                  .apiMap['SERMON_YOUTUBE'] ??
-                                              kBaseUrl,
-                                          title1: AppLocalizations.of(context)!
-                                              .sermonArchives,
-                                          title2: '');
-                                    },
-                                  ),
-                                );
-                              },
-                              color: kActiveCardColor,
-                              cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.solidFileVideo,
-                                  label: AppLocalizations.of(context)!
-                                      .sermonArchives)),
-                        ),
-                        Expanded(
-                          child: ReusableCard2(
-                              onPress: () {
                                 //AnnouncementPage
                                 Navigator.push(
                                   context,
@@ -104,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 );
                               },
-                              color: kActiveCardColor,
+                              color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
                                   cardIcon: FontAwesomeIcons.bullhorn,
                                   label: AppLocalizations.of(context)!
@@ -129,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 );
                               },
-                              color: kActiveCardColor,
+                              color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
                                   cardIcon: FontAwesomeIcons.peopleCarryBox,
                                   label: AppLocalizations.of(context)!
@@ -149,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   },
                                 );
                               },
-                              color: kActiveCardColor,
+                              color: Theme.of(context).colorScheme.surface,
                               cardChild: IconMsgContent(
                                 cardIcon: FontAwesomeIcons.message,
                                 label: AppLocalizations.of(context)!.newMessage,
@@ -175,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 );
                               },
-                              color: kActiveCardColor,
+                              color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
                                   cardIcon: FontAwesomeIcons.bookBible,
                                   label:
@@ -194,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 );
                               },
-                              color: kActiveCardColor,
+                              color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
                                   cardIcon: FontAwesomeIcons.calendarDays,
                                   label: AppLocalizations.of(context)!
@@ -214,18 +191,36 @@ class _MyHomePageState extends State<MyHomePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return OfferingScreen(
-                                          url: ApiEndpoint.apiMap['OFFERING']);
+                                      return OfferingScreen();
                                     },
                                   ),
                                 );
                               },
-                              color: kActiveCardColor,
+                              color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
                                   cardIcon: FontAwesomeIcons.handHoldingHeart,
                                   label:
-                                      AppLocalizations.of(context)!.offering)),
-                        )
+                                  AppLocalizations.of(context)!.offering)),
+                        ),
+                        Expanded(
+                          child: ReusableCard2(
+                              onPress: () {
+                                //DailyBibleTextPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return BibleSearchScreen();
+                                    },
+                                  ),
+                                );
+                              },
+                              color: Theme.of(context).colorScheme.surface,
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.magnifyingGlass,
+                                  label: AppLocalizations.of(context)!
+                                      .bible_search)),
+                        ),
                       ],
                     ),
                   ),

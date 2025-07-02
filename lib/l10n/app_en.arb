@@ -238,5 +238,45 @@
   "bible_reading_plan": "Bible Reading Plan",
   "@bible_reading_plan": {
     "description": "The current language"
+  },
+  "bible_search": "Bible Search",
+  "@bible_search": {
+    "description": "The current language"
+  },
+  "bible_old_testament": "Old Testament",
+  "@bible_old_testament": {
+    "description": "The current language"
+  },
+  "bible_new_testament": "New Testament",
+  "@bible_new_testament": {
+    "description": "The current language"
+  },
+  "staff_only_mode": "Staff Only Menu",
+  "@staff_only_mode": {
+    "description": "The current language"
+  },
+  "unconfirmed_opinion": "Unconfirmed Requests",
+  "@unconfirmed_opinion": {
+    "description": "The current language"
+  },
+  "start_chapter": "Start Chapter",
+  "@start_chapter": {
+    "description": "The current language"
+  },
+  "start_verse": "Start Verse (optional)",
+  "@start_verse": {
+    "description": "The current language"
+  },
+  "end_chapter": "End Chapter (optional)",
+  "@end_chapter": {
+    "description": "The current language"
+  },
+  "end_verse": "End Verse (optional)",
+  "@end_verse": {
+    "description": "The current language"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "The current language"
   }
 }

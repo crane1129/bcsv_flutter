@@ -9,17 +9,16 @@ import '../components/webview/webview_screen.dart';
 import '../services/api_endpoint.dart';
 
 class OfferingScreen extends StatelessWidget {
-  final Uri url;
   final benevolence_account = "benevolence@bridgeway.online";
   final offering_account = "offering@bridgeway.online";
 
-  OfferingScreen({required this.url});
+  OfferingScreen();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -35,21 +34,22 @@ class OfferingScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             clipBehavior: Clip.antiAlias,
-            color: kActiveCardColor,
+            color: Theme.of(context).colorScheme.surface,
             child: Column(
               children: <Widget>[
                 Image.asset('assets/images/offering_background.png'),
 
                 ListTile(
+                  //tileColor: Theme.of(context).colorScheme.onSurface,
                   leading:
-                      Icon(Icons.volunteer_activism, color: kActiveIconColor),
+                      Icon(Icons.volunteer_activism, color: kActiveIconColor(context)),
                   title: Text(AppLocalizations.of(context)!.offering,
-                      style: kTitleTextStyle),
+                      style: kTitleTextStyle(context)),
                   subtitle: Text(AppLocalizations.of(context)!.offeringVerse,
-                      style: kBodyTextStyle),
+                      style: kBodyTextStyle(context)),
                 ),
                 Card(
-                  color: kInactiveIconColor,
+                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 1.5),
                   borderOnForeground: true,
                   elevation: 3,
                   child: Column(
@@ -60,7 +60,7 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.sundayOffering,
-                            style: kListTitleStyleBlack),
+                            style: kListTitleStyleBlack(context)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -68,8 +68,7 @@ class OfferingScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("${offering_account}",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16)),
+                                style: kListTitleStyleBlack(context)),
                             TextButton(
                               child: Text(AppLocalizations.of(context)!.copy),
                               onPressed: () async {
@@ -85,7 +84,7 @@ class OfferingScreen extends StatelessWidget {
                   ),
                 ),
                 Card(
-                  color: kInactiveIconColor,
+                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 1.5),
                   borderOnForeground: true,
                   elevation: 3,
                   child: Column(
@@ -96,7 +95,7 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.green),
                         title: Text(
                             AppLocalizations.of(context)!.benevolenceOffering,
-                            style: kListTitleStyleBlack),
+                            style: kListTitleStyleBlack(context)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -104,8 +103,7 @@ class OfferingScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("${benevolence_account}",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16)),
+                                style: kListTitleStyleBlack(context)),
                             TextButton(
                               child: Text(AppLocalizations.of(context)!.copy),
                               onPressed: () async {
@@ -121,7 +119,7 @@ class OfferingScreen extends StatelessWidget {
                   ),
                 ),
                 Card(
-                  color: kInactiveIconColor,
+                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 1.5),
                   borderOnForeground: true,
                   elevation: 3,
                   child: Column(
@@ -132,7 +130,7 @@ class OfferingScreen extends StatelessWidget {
                             color: Colors.red),
                         title: Text(
                             AppLocalizations.of(context)!.offering_direction,
-                            style: kListTitleStyleBlack),
+                            style: kListTitleStyleBlack(context)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -140,8 +138,7 @@ class OfferingScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("${AppLocalizations.of(context)!.offering_direction_text}",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16)),
+                                style: kListTitleStyleBlack(context)),
                             TextButton(
                               child: Text(AppLocalizations.of(context)!.openButtonText),
                               onPressed: () async {
@@ -151,8 +148,7 @@ class OfferingScreen extends StatelessWidget {
                                     builder: (context) {
                                       return WebViewApp(
                                           url: ApiEndpoint
-                                              .apiMap['ONLINE_OFFERING_DIRECTION'] ??
-                                              kBaseUrl,
+                                              .apiMap['ONLINE_OFFERING_DIRECTION']!,
                                           title1: AppLocalizations.of(context)!
                                               .offering_direction,
                                           title2: '');

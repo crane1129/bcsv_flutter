@@ -33,7 +33,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -51,7 +51,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return const DecoratedBox(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey,
                       ),
                     );
                   },
@@ -70,7 +70,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
     //Show loading spinner
     isLoading = true;
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['SERVING_TURN'],
+      apiEndpoint: ApiEndpoint.apiMap['SERVING_TURN']!,
       tag: 'servingTurns',
       cacheFileName: kServingTurnData,
       getSharedReference: UserSharedPreferences.getServingTurnCache,
@@ -91,24 +91,24 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
       () {
         for (ServingTurn content in servingTurnList) {
           servingTurnTiles.add(
-            Card(margin: EdgeInsets.all(15.0),
-              elevation: 15,
+            Card(margin: EdgeInsets.all(10.0),
+              elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              color: kActiveCardColor,
+              color: Theme.of(context).colorScheme.surface,
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
                   ServingTurnTile(
                       content: content.date,
                       leadingText: Icon(Icons.supervisor_account,
-                          color: kActiveIconColor)),
+                          color: Theme.of(context).colorScheme.onSurface)),
                   ServingTurnTile(
                       content: content.prayer,
-                      leadingText: Text(AppLocalizations.of(context)!.prayer, style: kBodyTextStyle)),
+                      leadingText: Text(AppLocalizations.of(context)!.prayer, style: kBodyTextStyle(context))),
                   ServingTurnTile(
                       content: content.food,
-                      leadingText: Text(AppLocalizations.of(context)!.foodPrep, style: kBodyTextStyle)),
+                      leadingText: Text(AppLocalizations.of(context)!.foodPrep, style: kBodyTextStyle(context))),
                   // ListTile(
                   //   leading: Text(AppLocalizations.of(context)!.babysitting, style: kBodyTextStyle),
                   //   subtitle: Row(
@@ -153,11 +153,22 @@ class ServingTurnTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
       leading: leadingText,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle),
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                content.isEmpty ? 'N/A' : content,
+                style: kBodyTextStyle(context),
+                overflow: TextOverflow.ellipsis, // Optional
+                maxLines: 1, // Optional
+              ),
+            ),
+          ),
         ],
       ),
     );

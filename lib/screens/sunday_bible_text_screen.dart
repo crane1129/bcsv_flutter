@@ -40,7 +40,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha: 0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -58,7 +58,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
                   itemBuilder: (BuildContext context, int index) {
                     return const DecoratedBox(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey,
                       ),
                     );
                   },
@@ -76,7 +76,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
       children: bibleTextTiles
           .map(
             (tile) => ExpansionPanelRadio(
-              backgroundColor: kActiveCardColor,
+              //backgroundColor: Theme.of(context).colorScheme.onSurface,
               value: tile.headerText,
               canTapOnHeader: true,
               headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
@@ -91,13 +91,16 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
 
   Widget buildHeaderTile(ContentListTile tile) {
     return ListTile(
-        leading:
-            tile.icon != null ? Icon(tile.icon, color: kActiveIconColor) : null,
+      tileColor: Theme.of(context).colorScheme.surface,
+        leading: tile.icon != null
+            ? Icon(tile.icon, color: Theme.of(context).colorScheme.surface)
+            : null,
         title: tile.headerText);
   }
 
   Widget buildContentTile(Widget content) {
     return ListTile(
+      tileColor: Theme.of(context).colorScheme.surface,
       title: content,
     );
   }
@@ -107,7 +110,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     isLoading = true;
 
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['BIBLE_TEXT'],
+      apiEndpoint: ApiEndpoint.apiMap['BIBLE_TEXT']!,
       tag: 'bibleText',
       cacheFileName: kBibleTextData,
       getSharedReference: UserSharedPreferences.getBibleTextCache,
@@ -142,19 +145,20 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
               ContentListTile(
                 icon: FontAwesomeIcons.bookBible,
                 headerText: Text('${content.date}\n${content.title}',
-                    style: kBodyTextStyle),
+                    style: kBodyTextStyle(context)),
                 contents: [
                   ElevatedButton(
                     child: Text(AppLocalizations.of(context)!.copy),
                     onPressed: () async {
                       showMessage("Bible Text");
-                      Clipboard.setData(
-                          ClipboardData(text: "${content.bibleText}"));
+                      Clipboard.setData(ClipboardData(
+                          text:
+                              "${content.bibleText} $referenceText $reviewQuestion"));
                     },
                   ),
                   SelectableText(
                           "📖본문: ${content.bibleText} $referenceText $reviewQuestion",
-                          style: kBodyTextStyle)
+                          style: kBodyTextStyle(context))
                       .animate()
                       .fade(duration: 500.ms),
                   Center(
@@ -180,6 +184,7 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
             reviewQuestion = '';
           }
         }
+
         //Hide loading spinner
         isLoading = false;
       },

@@ -13,7 +13,7 @@ class ReimbursementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
@@ -38,7 +38,7 @@ class ReimbursementScreen extends StatelessWidget {
                       SizedBox(height: 20.0),
                       ListTile(
                         leading: Icon(Icons.add_shopping_cart_rounded,
-                            color: kActiveIconColor),
+                            color: kActiveIconColor(context)),
                         title: Text(
                             AppLocalizations.of(context)!.churchReimbursement),
                         subtitle: Text(
