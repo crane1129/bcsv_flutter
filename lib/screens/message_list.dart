@@ -72,8 +72,6 @@ class _MessageListScreenState extends State<MessageListScreen> {
   void getMessageListFromGoogleSheet() async {
     //Show loading spinner
     isLoading = true;
-    var todayDate = DateTime.now();
-
     ModelParam modelParam = ModelParam(
       apiEndpoint: ApiEndpoint.apiMap['MESSAGE']!,
       tag: '',

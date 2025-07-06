@@ -1,7 +1,6 @@
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:bcsv_flutter_project/utilities/theme_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/screens/loading_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
