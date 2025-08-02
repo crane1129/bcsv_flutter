@@ -69,5 +69,13 @@
     "end_verse": "끝 절 (옵션)",
     "staff_only_mode": "스텝 전용 메뉴",
     "unconfirmed_opinion": "의견 접수 내용",
-    "search": "검색"
+    "search": "검색",
+    "key_verse": "중심 구절",
+    "mission_statement_verse": "새 계명을 너희에게 주노니 서로 사랑하라 \n내가 너희를 사랑한것 같이 너희도 서로 사랑하라\n너희가 서로 사랑하면 이로써 모든 사람이 너희가 내 제자인줄 알리라",
+    "networkErrorMessage": "인터넷 연결이 없습니다. 네트워크 연결 상태를 확인해 주세요.",
+    "retryNetworkMessage": "네트워크가 연결되면 자동으로 연결되거나 다시 시도해 보세요.",
+    "checkingConnection": "연결 확인 중...",
+    "tryAgain": "다시 시도",
+    "autoRetryMessage": "자동 재시도 활성화",
+    "dataLoading": "데이터 로딩 중..."
 }

@@ -7,6 +7,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
+import 'dart:developer';
 
 class BibleSearchScreen extends StatefulWidget {
   @override
@@ -19,6 +23,57 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   String selectedTestament = 'new';
   String? selectedBook;
   Set<int> selectedIndexes = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // Check network connectivity when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkNetworkConnectivity();
+    });
+  }
+
+  /// Check network connectivity
+  Future<void> _checkNetworkConnectivity() async {
+    try {
+      log('🔍 Checking network connectivity for bible search...');
+
+      final hasConnection = await InternetConnectionChecker
+          .instance.hasConnection
+          .timeout(Duration(seconds: 10));
+
+      if (!hasConnection) {
+        log('❌ No network connection detected on bible search screen');
+        _navigateToDisconnectScreen();
+        return;
+      }
+
+      log('✅ Network available on bible search screen');
+    } catch (e) {
+      log('❌ Network check failed on bible search screen: $e');
+      _navigateToDisconnectScreen();
+    }
+  }
+
+    /// Navigate to disconnect screen when network is unavailable
+  void _navigateToDisconnectScreen() {
+    if (!mounted) return;
+    
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DisconnectScreen(
+          returnScreen: BibleSearchScreen(),
+        ),
+      ),
+    );
+  }
+
+  /// Refresh data when user pulls down
+  Future<void> _refreshData() async {
+    log('🔄 User initiated refresh for bible search');
+    await _checkNetworkConnectivity();
+  }
 
   // Text input controllers
   final startChapCtrl = TextEditingController();
@@ -105,31 +160,63 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   Widget build(BuildContext context) {
     final books =
         selectedTestament == 'new' ? newTestamentBooks : oldTestamentBooks;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withAlpha(50),
-        leading: IconButton(
+        backgroundColor: Colors.transparent.withValues(alpha: 0.5),
+        elevation: 0,
+        leading: Container(
+          margin: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
+        ).animate().fadeIn(delay: 200.ms).scale(begin: Offset(0.8, 0.8)),
         title: AppBarHeaderText(
           text1: AppLocalizations.of(context)!.bible_search,
           text2: '',
-        ),
+        ).animate().fade().scale(duration: 500.ms),
         actions: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
           IconButton(
-            icon: Icon(Icons.font_download_outlined),
+                  icon: Icon(Icons.text_increase_rounded),
+                  color: theme.colorScheme.primary,
             onPressed: () {
               setState(() {
-                _fontSize += 2;
+                      _fontSize = (_fontSize + 2).clamp(10.0, 30.0);
               });
             },
             tooltip: 'Increase Font Size',
           ),
+                Container(
+                  width: 1,
+                  height: 20,
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                ),
           IconButton(
-            icon: Icon(Icons.font_download),
+                  icon: Icon(Icons.text_decrease_rounded),
+                  color: theme.colorScheme.primary,
             onPressed: () {
               setState(() {
                 _fontSize = (_fontSize - 2).clamp(10.0, 30.0);
@@ -139,123 +226,544 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
           ),
         ],
       ),
-      body: Stack(
+          ).animate().fadeIn(delay: 400.ms),
+        ],
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface,
+              theme.colorScheme.surface.withValues(alpha: 0.95),
+              theme.colorScheme.surface.withValues(alpha: 0.9),
+            ],
+            stops: [0.0, 0.7, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
         children: [
-          // 🔹 Main content (always visible)
-          SingleChildScrollView(
-            padding: EdgeInsets.all(16),
+              // Main content with modern design
+              RefreshIndicator(
+                onRefresh: _refreshData,
+                child: CustomScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Testament toggle
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                            // Modern search form section
+                            Container(
+                              margin: EdgeInsets.only(bottom: 24),
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.primaryContainer
+                                        .withValues(alpha: 0.1),
+                                    theme.colorScheme.surface,
+                                    theme.colorScheme.secondaryContainer
+                                        .withValues(alpha: 0.05),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: theme.colorScheme.outline
+                                      .withValues(alpha: 0.1),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.08),
+                                    blurRadius: 16,
+                                    offset: Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Header with search icon
+                                  Row(
                   children: [
-                    ChoiceChip(
+                                      Container(
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        child: Icon(
+                                          Icons.search_rounded,
+                                          size: 24,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .bible_search,
+                                              style: theme.textTheme.titleLarge
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    theme.colorScheme.onSurface,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'Search through scripture verses',
+                                              style: theme.textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                color: theme
+                                                    .colorScheme.onSurface
+                                                    .withValues(alpha: 0.7),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      // Font size indicator
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: theme
+                                              .colorScheme.primaryContainer
+                                              .withValues(alpha: 0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '${_fontSize.toInt()}pt',
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                            color: theme.colorScheme.primary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 24),
+
+                                  // Testament toggle with modern styling
+                                  Container(
+                                    padding: EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.surface
+                                          .withValues(alpha: 0.7),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: theme.colorScheme.outline
+                                            .withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: ChoiceChip(
                       label: Text(
-                          AppLocalizations.of(context)!.bible_new_testament),
-                      selected: selectedTestament == 'new',
+                                                AppLocalizations.of(context)!
+                                                    .bible_new_testament),
+                                            selected:
+                                                selectedTestament == 'new',
                       onSelected: (_) {
                         setState(() {
                           selectedTestament = 'new';
-                          selectedBook = newTestamentBooks.first;
+                                                selectedBook =
+                                                    newTestamentBooks.first;
                           clearInputs();
                         });
                       },
+                                          ),
                     ),
                     SizedBox(width: 8),
-                    ChoiceChip(
+                                        Expanded(
+                                          child: ChoiceChip(
                       label: Text(
-                          AppLocalizations.of(context)!.bible_old_testament),
-                      selected: selectedTestament == 'old',
+                                                AppLocalizations.of(context)!
+                                                    .bible_old_testament),
+                                            selected:
+                                                selectedTestament == 'old',
                       onSelected: (_) {
                         setState(() {
                           selectedTestament = 'old';
-                          selectedBook = oldTestamentBooks.first;
+                                                selectedBook =
+                                                    oldTestamentBooks.first;
                           clearInputs();
                         });
                       },
+                                          ),
                     ),
                   ],
+                                    ),
                 ),
                 SizedBox(height: 16),
 
-                // Book dropdown
-                DropdownButton<String>(
+                                  // Book dropdown with modern container
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.surface
+                                          .withValues(alpha: 0.7),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: theme.colorScheme.outline
+                                            .withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                    child: DropdownButton<String>(
                   value: selectedBook,
-                  hint: Text("Select Book", style: kBodyTextStyle(context)),
+                                      hint: Text("Select Book",
+                                          style: kBodyTextStyle(context)),
                   style: kBodyTextStyle(context),
                   isExpanded: true,
+                                      underline: SizedBox.shrink(),
                   items: books
-                      .map((b) => DropdownMenuItem(value: b, child: Text(b)))
+                                          .map((b) => DropdownMenuItem(
+                                              value: b, child: Text(b)))
                       .toList(),
                   onChanged: (val) => setState(() {
                     selectedBook = val;
                     clearInputs();
                   }),
                 ),
-
+                                  ),
                 SizedBox(height: 16),
 
-                // Input fields
+                                  // Input fields with modern styling
+                                  Container(
+                                    padding: EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.surface
+                                          .withValues(alpha: 0.7),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: theme.colorScheme.outline
+                                            .withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
                 Row(children: [
                   Expanded(
                       child: _numberField(
-                          AppLocalizations.of(context)!.start_chapter,
+                                                  AppLocalizations.of(context)!
+                                                      .start_chapter,
                           startChapCtrl)),
-                  SizedBox(width: 8),
+                                          SizedBox(width: 12),
                   Expanded(
                       child: _numberField(
-                          AppLocalizations.of(context)!.start_verse,
+                                                  AppLocalizations.of(context)!
+                                                      .start_verse,
                           startVerseCtrl)),
                 ]),
-                Row(children: [
-                  SizedBox(height: 8),
-                ]),
+                                        SizedBox(height: 16),
                 Row(children: [
                   Expanded(
                       child: _numberField(
-                          AppLocalizations.of(context)!.end_chapter,
+                                                  AppLocalizations.of(context)!
+                                                      .end_chapter,
                           endChapCtrl)),
-                  SizedBox(width: 8),
+                                          SizedBox(width: 12),
                   Expanded(
                       child: _numberField(
-                          AppLocalizations.of(context)!.end_verse,
+                                                  AppLocalizations.of(context)!
+                                                      .end_verse,
                           endVerseCtrl)),
                 ]),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
 
-                SizedBox(height: 16),
+                                  // Modern search button
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: isLoading
+                                            ? theme.colorScheme.primary
+                                                .withValues(alpha: 0.5)
+                                            : theme.colorScheme.primary,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: theme.colorScheme.primary
+                                                .withValues(alpha: 0.3),
+                                            blurRadius: 8,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          onTap: isLoading ? null : fetchVerses,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 16, horizontal: 20),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                if (isLoading) ...[
+                                                  SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                              Color>(
+                                                        theme.colorScheme
+                                                            .onPrimary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 12),
+                                                ] else ...[
+                                                  Icon(
+                                                    Icons.search_rounded,
+                                                    color: theme
+                                                        .colorScheme.onPrimary,
+                                                    size: 20,
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                ],
+                                                Text(
+                                                  isLoading
+                                                      ? 'Searching...'
+                                                      : AppLocalizations.of(
+                                                              context)!
+                                                          .search,
+                                                  style: theme
+                                                      .textTheme.titleMedium
+                                                      ?.copyWith(
+                                                    color: theme
+                                                        .colorScheme.onPrimary,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                                .animate()
+                                .fadeIn(duration: 600.ms)
+                                .slideY(begin: -0.2, end: 0),
 
-                Center(
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : fetchVerses,
-                    child: Text(AppLocalizations.of(context)!.search),
-                  ),
-                ),
+                            // Modern Search Results section
+                            if (results.isNotEmpty ||
+                                selectedIndexes.isNotEmpty)
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: theme.colorScheme.outline
+                                        .withValues(alpha: 0.1),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: theme.colorScheme.shadow
+                                          .withValues(alpha: 0.08),
+                                      blurRadius: 12,
+                                      offset: Offset(0, 4),
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Results header
+                                    Container(
+                                      padding: EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: theme
+                                            .colorScheme.secondaryContainer
+                                            .withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20),
+                                        ),
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: theme.colorScheme.outline
+                                                .withValues(alpha: 0.08),
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: theme.colorScheme.secondary
+                                                  .withValues(alpha: 0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Icon(
+                                              Icons.list_alt_rounded,
+                                              size: 20,
+                                              color:
+                                                  theme.colorScheme.secondary,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              results.isEmpty
+                                                  ? 'No Results'
+                                                  : 'Search Results (${results.length})',
+                                              style: theme.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    theme.colorScheme.onSurface,
+                                              ),
+                                            ),
+                                          ),
+                                          if (selectedIndexes.isNotEmpty)
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8, vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: theme.colorScheme.primary
+                                                    .withValues(alpha: 0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                '${selectedIndexes.length} selected',
+                                                style: theme
+                                                    .textTheme.labelSmall
+                                                    ?.copyWith(
+                                                  color:
+                                                      theme.colorScheme.primary,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
 
-                SizedBox(height: 24),
-
-                // Search Results
+                                    // Results content
+                                    Container(
+                                      padding: EdgeInsets.all(20),
+                                      child: Column(
+                                        children: [
                 if (results.isEmpty)
-                  Center(
-                    child: Text(
-                      'No results',
-                      style: kBodyTextStyle(context, fontSize: _fontSize),
+                                            Container(
+                                              width: double.infinity,
+                                              padding: EdgeInsets.all(32),
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.search_off_rounded,
+                                                    size: 48,
+                                                    color: theme
+                                                        .colorScheme.onSurface
+                                                        .withValues(alpha: 0.3),
+                                                  ),
+                                                  SizedBox(height: 16),
+                                                  Text(
+                                                    'No results found',
+                                                    style: kBodyTextStyle(
+                                                            context,
+                                                            fontSize: _fontSize)
+                                                        .copyWith(
+                                                      color: theme
+                                                          .colorScheme.onSurface
+                                                          .withValues(
+                                                              alpha: 0.6),
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
                     ),
                   )
                 else
-                  ...results.asMap().entries.map((entry) {
+                                            ...results
+                                                .asMap()
+                                                .entries
+                                                .map((entry) {
                     final i = entry.key;
                     final verse = entry.value;
-                    final isSelected = selectedIndexes.contains(i);
+                                              final isSelected =
+                                                  selectedIndexes.contains(i);
 
-                    return GestureDetector(
+                                              return Container(
+                                                margin:
+                                                    EdgeInsets.only(bottom: 8),
+                                                decoration: BoxDecoration(
+                                                  color: isSelected
+                                                      ? theme
+                                                          .colorScheme.primary
+                                                          .withValues(
+                                                              alpha: 0.1)
+                                                      : theme
+                                                          .colorScheme.surface
+                                                          .withValues(
+                                                              alpha: 0.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color: isSelected
+                                                        ? theme
+                                                            .colorScheme.primary
+                                                            .withValues(
+                                                                alpha: 0.3)
+                                                        : theme
+                                                            .colorScheme.outline
+                                                            .withValues(
+                                                                alpha: 0.1),
+                                                  ),
+                                                ),
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
                       onTap: () {
                         setState(() {
                           if (isSelected) {
-                            selectedIndexes.remove(i);
+                                                          selectedIndexes
+                                                              .remove(i);
                           } else {
-                            selectedIndexes.add(i);
+                                                          selectedIndexes
+                                                              .add(i);
                           }
                         });
                       },
@@ -265,129 +773,414 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                         });
                       },
                       child: Container(
-                        color: isSelected
-                            ? Colors.blue.withAlpha(50)
-                            : Colors.transparent,
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                                      padding:
+                                                          EdgeInsets.all(16),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                           children: [
-                            Text(
-                              '${verse['chapterVerse']} ',
+                                                          Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        8,
+                                                                    vertical:
+                                                                        4),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .primary
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.1),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          6),
+                                                            ),
+                                                            child: Text(
+                                                              '${verse['chapterVerse']}',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: _fontSize, // 🔹 make dynamic
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    _fontSize -
+                                                                        2,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .primary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 12),
                             Expanded(
                               child: Text(
                                 verse['text'],
                                 style: TextStyle(
-                                  fontSize: _fontSize, // 🔹 make dynamic
-                                  color: Theme.of(context).colorScheme.onSurface,
-                                ),
+                                                                fontSize:
+                                                                    _fontSize,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onSurface,
+                                                                height: 1.5,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          if (isSelected)
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: 8),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(4),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .primary,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            6),
+                                                              ),
+                                                              child: Icon(
+                                                                Icons.check,
+                                                                size: 16,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onPrimary,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    );
+                                                  ),
+                                                ),
+                                              )
+                                                  .animate()
+                                                  .fadeIn(
+                                                      delay: (i * 50).ms,
+                                                      duration: 400.ms)
+                                                  .slideX(begin: 0.3, end: 0);
                   }).toList(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  .animate()
+                                  .fadeIn(delay: 800.ms, duration: 600.ms)
+                                  .slideY(begin: 0.3, end: 0),
 
+                            // Modern action buttons section
+                            if (selectedIndexes.isNotEmpty ||
+                                results.isNotEmpty)
+                              Container(
+                                margin: EdgeInsets.only(top: 16),
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: theme.colorScheme.outline
+                                        .withValues(alpha: 0.1),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: theme.colorScheme.shadow
+                                          .withValues(alpha: 0.06),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
                 if (selectedIndexes.isNotEmpty) ...[
-                  SizedBox(height: 8),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    theme.colorScheme.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: theme
+                                                        .colorScheme.primary
+                                                        .withValues(alpha: 0.3),
+                                                    blurRadius: 6,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  onTap: copySelectedVerses,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 12,
+                                                            horizontal: 16),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.copy_rounded,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onPrimary,
+                                                          size: 18,
+                                                        ),
+                                                        SizedBox(width: 6),
                       Flexible(
-                        child: ElevatedButton.icon(
-                          onPressed: copySelectedVerses,
-                          icon: Icon(Icons.copy),
-                          label: Text(
-                            'Copy Selected (${selectedIndexes.length})',
-                            style: TextStyle(fontSize: 12),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Flexible(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
+                                                          child: Text(
+                                                            'Copy (${selectedIndexes.length})',
+                                                            style: theme
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onPrimary,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: theme
+                                                      .colorScheme.outline
+                                                      .withValues(alpha: 0.3),
+                                                ),
+                                              ),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  onTap: () {
                             setState(() {
                               selectedIndexes.clear();
                             });
                           },
-                          icon: Icon(Icons.clear),
-                          label: Text(
-                            'Clear Selection',
-                            style: TextStyle(fontSize: 12),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onSurface,
-                            side: BorderSide(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 12,
+                                                            horizontal: 16),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.clear_rounded,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface,
+                                                          size: 18,
+                                                        ),
+                                                        SizedBox(width: 6),
+                                                        Flexible(
+                                                          child: Text(
+                                                            'Clear',
+                                                            style: theme
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurface,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                ],
-                if (results.isNotEmpty) ...[
-                  SizedBox(height: 8),
-                  Center(
-                    child: ElevatedButton.icon(
-                      onPressed: copyAllResults,
-                      icon: Icon(Icons.copy),
-                      label: Text('Copy All'),
+                                      if (results.isNotEmpty)
+                                        SizedBox(height: 12),
+                                    ],
+                                    if (results.isNotEmpty)
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.secondary,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: theme
+                                                    .colorScheme.secondary
+                                                    .withValues(alpha: 0.3),
+                                                blurRadius: 6,
+                                                offset: Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              onTap: copyAllResults,
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 14,
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.copy_all_rounded,
+                                                      color: theme.colorScheme
+                                                          .onSecondary,
+                                                      size: 20,
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Flexible(
+                                                      child: Text(
+                                                        'Copy All (${results.length})',
+                                                        style: theme.textTheme
+                                                            .titleMedium
+                                                            ?.copyWith(
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSecondary,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                     ),
                   ),
                 ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              )
+                                  .animate()
+                                  .fadeIn(delay: 1000.ms, duration: 500.ms)
+                                  .slideY(begin: 0.3, end: 0),
+
                 SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
+                    ),
               ],
             ),
           ),
 
-          // 🔺 Loading overlay
+              // Modern loading overlay
           if (isLoading)
-            IgnorePointer(
-              ignoring: false,
-              child: Container(
-                color: Colors.black.withValues(alpha:0.3),
+                Container(
+                  color: Colors.black.withValues(alpha: 0.4),
                 child: Center(
-                  child: SizedBox(
-                    height: 200,
-                    width: 200,
+                    child: Container(
+                      padding: EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 20,
+                            offset: Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: 60,
+                            width: 60,
                     child: SpinKitFadingCube(
                       itemBuilder: (BuildContext context, int index) {
-                        return const DecoratedBox(
+                                return DecoratedBox(
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.6),
+                                    borderRadius: BorderRadius.circular(4),
                           ),
                         );
                       },
                     ),
                   ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Searching scripture...',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                 ),
               ),
             ),
         ],
+          ),
+        ),
       ),
     );
-  }
-
-  void showMessage(title) {
-    showSimpleNotification(
-        Text(
-          title + " copied to clipboard",
-        ),
-        leading: Icon(Icons.content_paste_outlined),
-        background: Colors.blueAccent,
-        elevation: 5);
   }
 
   void copyAllResults() {
@@ -400,18 +1193,55 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
     }
 
     Clipboard.setData(ClipboardData(text: buffer.toString())).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('📋 Copied ${results.length} verses')),
-      );
-    });
+      log('✅ Copied ${results.length} verses to clipboard');
 
-    //showMessage("Bible Text");
+      if (mounted) {
+        showSimpleNotification(
+          Text(
+            '📋 Copied ${results.length} verses to clipboard',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.check_rounded,
+              color: Colors.white,
+              size: 16,
+            ),
+          ),
+          background: Colors.green,
+          elevation: 8,
+          duration: Duration(seconds: 3),
+        );
+      }
+    }).catchError((error) {
+      log('❌ Failed to copy verses: $error');
+
+      if (mounted) {
+        showSimpleNotification(
+          Text(
+            'Failed to copy verses',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: Icon(Icons.error_rounded, color: Colors.white),
+          background: Colors.red,
+          elevation: 8,
+        );
+      }
+    });
   }
 
   void copySelectedVerses() {
+    if (selectedIndexes.isEmpty) return;
+
     final buffer = StringBuffer();
     final sortedIndexes = selectedIndexes.toList()..sort();
     final selected_verse_count = selectedIndexes.length;
+
     for (var i in sortedIndexes) {
       final verse = results[i];
       buffer.writeln(
@@ -419,15 +1249,53 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
     }
 
     Clipboard.setData(ClipboardData(text: buffer.toString())).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('📋 Copied ${selected_verse_count} verse(s)')),
-      );
-    });
+      log('✅ Copied ${selected_verse_count} selected verses to clipboard');
+
+      if (mounted) {
+        showSimpleNotification(
+          Text(
+            '📋 Copied ${selected_verse_count} selected verse${selected_verse_count > 1 ? 's' : ''} to clipboard',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.check_rounded,
+              color: Colors.white,
+              size: 16,
+            ),
+          ),
+          background: Colors.blue,
+          elevation: 8,
+          duration: Duration(seconds: 3),
+        );
 
     setState(() => selectedIndexes.clear());
+      }
+    }).catchError((error) {
+      log('❌ Failed to copy selected verses: $error');
+
+      if (mounted) {
+        showSimpleNotification(
+          Text(
+            'Failed to copy selected verses',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: Icon(Icons.error_rounded, color: Colors.white),
+          background: Colors.red,
+          elevation: 8,
+        );
+      }
+    });
   }
 
   Widget _numberField(String label, TextEditingController controller) {
+    final theme = Theme.of(context);
+
     return TextField(
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -436,7 +1304,39 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface, fontSize: 12),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
+            width: 2,
+          ),
+        ),
+        filled: true,
+        fillColor: theme.colorScheme.surface.withValues(alpha: 0.8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       ),
     );
   }
@@ -450,7 +1350,27 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   }
 
   Future<void> fetchVerses() async {
-    FocusScope.of(context).unfocus(); // ✅ Hide the keyboard
+    FocusScope.of(context).unfocus(); // Hide the keyboard
+
+    // Check network connectivity before searching
+    try {
+      log('🔍 Checking network connectivity before bible search...');
+
+      final hasConnection = await InternetConnectionChecker
+          .instance.hasConnection
+          .timeout(Duration(seconds: 5));
+
+      if (!hasConnection) {
+        log('❌ No network connection for bible search');
+        _navigateToDisconnectScreen();
+        return;
+      }
+    } catch (e) {
+      log('❌ Network check failed for bible search: $e');
+      _navigateToDisconnectScreen();
+      return;
+    }
+
     final book = selectedBook;
     final startChap = startChapCtrl.text;
     final startVerse = startVerseCtrl.text;
@@ -471,11 +1391,14 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
       return;
     }
 
-    // 🔄 Start loading
+    // Start loading
     setState(() {
       isLoading = true;
-      results.clear(); // Optionally clear old results
+      results.clear();
+      selectedIndexes.clear(); // Clear selections when starting new search
     });
+
+    log('🔍 Searching bible: $book $startChap:$startVerse - $endChap:$endVerse');
 
     final query = {
       'book': book,
@@ -489,29 +1412,73 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
         Uri.https('www.bridgeway.online', '/_functions/bibleSearch', query);
 
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri).timeout(Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         setState(() {
           results = List<Map<String, dynamic>>.from(json['result']);
         });
+
+        log('✅ Bible search completed: ${results.length} results found');
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('✅ Found ${results.length} verses'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       } else {
-        print("❌ Failed: ${response.body}");
+        log("❌ Bible search failed: ${response.statusCode} - ${response.body}");
+        if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('검색 중 오류가 발생했습니다.')),
         );
+        }
       }
     } catch (e) {
-      print("❌ Exception: $e");
+      log("❌ Bible search exception: $e");
+
+      // Check if it's a network-related error
+      if (e.toString().contains('connection') ||
+          e.toString().contains('network') ||
+          e.toString().contains('timeout')) {
+        // Double-check network connectivity
+        try {
+          final hasConnection = await InternetConnectionChecker
+              .instance.hasConnection
+              .timeout(Duration(seconds: 5));
+
+          if (!hasConnection) {
+            log('🌐 Network disconnection confirmed during search');
+            _navigateToDisconnectScreen();
+            return;
+          }
+        } catch (networkError) {
+          log('❌ Network verification failed during search: $networkError');
+          _navigateToDisconnectScreen();
+          return;
+        }
+      }
+
+      if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('네트워크 오류 또는 서버 문제입니다.')),
+          SnackBar(
+            content: Text('네트워크 오류 또는 서버 문제입니다.'),
+            backgroundColor: Colors.red,
+          ),
       );
+      }
     } finally {
-      // ✅ Stop loading in all cases
+      // Stop loading in all cases
+      if (mounted) {
       setState(() {
         isLoading = false;
       });
+      }
     }
   }
 }

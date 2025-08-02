@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
+import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:bcsv_flutter_project/screens/unconfirmed_opinion_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
@@ -167,6 +168,15 @@ class _NavBarState extends State<NavBar> {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => BibleSearchScreen()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.manage_search, color: kActiveIconColor(context)),
+            title: Text('Keyword Search',
+                style: kDrawerMenuTextStyle(context)),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => BibleKeywordSearchScreen()));
             },
           ),
           // ListWebViewMenu(

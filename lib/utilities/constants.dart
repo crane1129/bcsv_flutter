@@ -131,7 +131,8 @@ TextStyle kLargeButtonTextStyle(BuildContext context) {
 TextStyle kRegularButtonTextStyle(BuildContext context) {
   return Theme.of(context).textTheme.labelSmall!.copyWith(
     fontSize: 12.0,
-    color: Theme.of(context).colorScheme.onPrimary,
+    color: Theme.of(context).colorScheme.onSurface,
+    fontFamily: kSystemWideFont,
   );
 }
 

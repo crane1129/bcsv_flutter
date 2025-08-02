@@ -278,5 +278,37 @@
   "search": "Search",
   "@search": {
     "description": "The current language"
+  },
+  "key_verse": "Key Verse",
+  "@key_verse": {
+    "description": "The current language"
+  },
+  "mission_statement_verse": "A new command I give you: Love one another. As I have loved you, so you must love one another.\nBy this all men will know that you are my disciples, if you love one another.",
+  "@mission_statement_verse": {
+    "description": "The current language"
+  },
+  "networkErrorMessage": "No Internet connection. Please check your network connection.",
+  "@networkErrorMessage": {
+    "description": "Error message displayed when there is no internet connection"
+  },
+  "retryNetworkMessage": "We'll automatically connect when your network is available, or you can try again.",
+  "@retryNetworkMessage": {
+    "description": "Message explaining automatic reconnection on disconnect screen"
+  },
+  "checkingConnection": "Checking connection...",
+  "@checkingConnection": {
+    "description": "Loading message when checking network connection"
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Button text to retry network connection"
+  },
+  "autoRetryMessage": "Auto-retry active",
+  "@autoRetryMessage": {
+    "description": "Info message that automatic retry is enabled"
+  },
+  "dataLoading": "Loading data...",
+  "@dataLoading": {
+    "description": "Info message that automatic retry is enabled"
   }
 }

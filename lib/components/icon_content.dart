@@ -16,7 +16,7 @@ class IconContent extends StatelessWidget {
           Center(
             child: Icon(
               cardIcon,
-              size: 40.0,
+              size: 32.0,
               color: Theme.of(context).colorScheme.onSurface,
             ).animate().fade(end: 1).scaleXY(end: 1.2, duration: 500.ms),
           ),
@@ -45,7 +45,7 @@ class IconMsgContent extends StatelessWidget {
           Center(
             child: Icon(
               cardIcon,
-              size: 40.0,
+              size: 32.0,
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),

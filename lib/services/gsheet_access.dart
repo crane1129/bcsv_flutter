@@ -1,6 +1,7 @@
 import 'package:gsheets/gsheets.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'dart:async';
 
 
 class GoogleMessageSheet {
@@ -25,11 +26,22 @@ class GoogleMessageSheet {
   static final _gsheets = GSheets(_credentials);
   static Worksheet? _userSheet;
   static String sheetName = 'Request';
+  
+  // Timeout configuration
+  static const Duration _initTimeout = Duration(seconds: 20);
 
 
   static Future init() async {
-    final spreadsheet = await _gsheets.spreadsheet(_spreadsheetId);
-    _userSheet = await _getWorkSheet(spreadsheet, title: sheetName);
+    try {
+      final spreadsheet = await _gsheets.spreadsheet(_spreadsheetId).timeout(
+        _initTimeout,
+        onTimeout: () => throw TimeoutException('Google Sheets init timeout', _initTimeout),
+      );
+      _userSheet = await _getWorkSheet(spreadsheet, title: sheetName);
+    } catch (e) {
+      print('❌ Error initializing Google Sheets: $e');
+      // Don't throw - let the app continue without Google Sheets functionality
+    }
   }
 
   static Future<Worksheet> _getWorkSheet(
@@ -37,24 +49,51 @@ class GoogleMessageSheet {
     required String title,
   }) async {
     try{
-      return await spreadsheet.addWorksheet(title);
+      return await spreadsheet.addWorksheet(title).timeout(
+        Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Add worksheet timeout'),
+      );
     }
     catch(e){
-      return spreadsheet.worksheetByTitle(sheetName)!;
+      // If adding fails, try to get existing worksheet
+      final worksheet = spreadsheet.worksheetByTitle(sheetName);
+      if (worksheet == null) {
+        throw Exception('Failed to get or create worksheet: $e');
+      }
+      return worksheet;
     }
   }
 
   static Future insert(List<Map<String, dynamic>> rowList) async{
-    if(_userSheet == null) return;
-    _userSheet!.values.map.appendRows(rowList);
+    if(_userSheet == null) {
+      print('❌ Google Sheets not initialized, cannot insert data');
+      showSimpleNotification(
+          Text("Failed to submit opinion - service unavailable"),
+          leading: Icon(Icons.error),
+          background: Colors.orange,
+          elevation: 5);
+      return;
+    }
+    
+    try {
+      await _userSheet!.values.map.appendRows(rowList).timeout(
+        Duration(seconds: 15),
+        onTimeout: () => throw TimeoutException('Insert rows timeout'),
+      );
 
-    showSimpleNotification(
-        Text(
-          "Your opinion has successfully submitted",
-        ),
-        leading: Icon(Icons.send),
-        background: Colors.green,
-        elevation: 5);
+      showSimpleNotification(
+          Text("Your opinion has successfully submitted"),
+          leading: Icon(Icons.send),
+          background: Colors.green,
+          elevation: 5);
+    } catch (e) {
+      print('❌ Error inserting to Google Sheets: $e');
+      showSimpleNotification(
+          Text("Failed to submit opinion - please try again"),
+          leading: Icon(Icons.error),
+          background: Colors.red,
+          elevation: 5);
+    }
   }
 
 }

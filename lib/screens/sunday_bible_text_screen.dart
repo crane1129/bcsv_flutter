@@ -16,6 +16,7 @@ import 'package:bcsv_flutter_project/data_models/model_param.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:developer';
 
 class SundayBibleTextScreen extends StatefulWidget {
   const SundayBibleTextScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class SundayBibleTextScreen extends StatefulWidget {
 }
 
 class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
-  bool isLoading = false;
+  bool isLoading = true;  // Start with loading spinner
 
   @override
   void initState() {
@@ -50,23 +51,15 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
             text1: AppLocalizations.of(context)!.sermonBibleText, text2: ''),
       ),
       body: isLoading
-          ? Center(
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: SpinKitFadingCube(
-                  itemBuilder: (BuildContext context, int index) {
-                    return const DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            )
-          : SingleChildScrollView(
-              child: _buildListPanel(),
+          ? _buildLoadingState()
+          : RefreshIndicator(
+              onRefresh: _refreshData,
+              child: bibleTextTiles.isEmpty
+                  ? _buildEmptyState()
+                  : SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: _buildListPanel(),
+                    ),
             ),
     );
   }
@@ -105,9 +98,102 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     );
   }
 
-  void getBibleTextFromGoogleSheet() async {
+  /// Build modern loading state
+  Widget _buildLoadingState() {
+    final theme = Theme.of(context);
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 200,
+            width: 200,
+            child: SpinKitFadingCube(
+              itemBuilder: (BuildContext context, int index) {
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)?.dataLoading ?? 'Loading Bible text...',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build empty state when no bible texts are available
+  Widget _buildEmptyState() {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            FontAwesomeIcons.bookBible,
+            size: 80,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)?.sermonBibleText ?? 'No texts available',
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Pull down to refresh or check your connection',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: _refreshData,
+            icon: Icon(Icons.refresh),
+            label: Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Refresh data when user pulls down
+  Future<void> _refreshData() async {
+    log('🔄 User initiated refresh for Sunday bible text');
+    setState(() {
+      bibleTextTiles.clear();
+    });
+    await getBibleTextFromGoogleSheet();
+  }
+
+  Future<void> getBibleTextFromGoogleSheet() async {
     //Show loading spinner
-    isLoading = true;
+    setState(() {
+      isLoading = true;
+    });
 
     ModelParam modelParam = ModelParam(
       apiEndpoint: ApiEndpoint.apiMap['BIBLE_TEXT']!,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:bcsv_flutter_project/data_models/model_param.dart';
 
@@ -9,6 +10,9 @@ class ApiGoogleDocContent {
   final ModelParam modelParam;
   final Map body;
   final bool isBodyRequired;
+  
+  // Timeout configuration
+  static const Duration _defaultTimeout = Duration(seconds: 15);
 
   ApiGoogleDocContent(
       {required this.modelParam,
@@ -42,23 +46,33 @@ class ApiGoogleDocContent {
 
     http.Response response;
 
-    if(isBodyRequired) {
-      response = await http.post(
-          modelParam.apiEndpoint,
-          headers: {"Content-Type": "application/json"},
-          body: json.encode(body));
-    }else{
-      response = await http.get(
-          modelParam.apiEndpoint,
-          headers: {"Content-Type": "application/json"},
-      );
-    }
+    try {
+      if(isBodyRequired) {
+        response = await http.post(
+            modelParam.apiEndpoint,
+            headers: {"Content-Type": "application/json"},
+            body: json.encode(body)).timeout(
+          _defaultTimeout,
+          onTimeout: () => throw TimeoutException('Google Doc fetch timeout', _defaultTimeout),
+        );
+      }else{
+        response = await http.get(
+            modelParam.apiEndpoint,
+            headers: {"Content-Type": "application/json"},
+        ).timeout(
+          _defaultTimeout,
+          onTimeout: () => throw TimeoutException('Google Doc fetch timeout', _defaultTimeout),
+        );
+      }
 
-    if (response.statusCode == 200) {
-      String data = response.body;
-      return data;
-    } else {
-      print(response.statusCode);
+      if (response.statusCode == 200) {
+        String data = response.body;
+        return data;
+      } else {
+        print('HTTP Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('❌ Error fetching Google Doc content: $e');
     }
 
     return "";

@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-double _fontSize = 16.0;
 
 class DailyBibleTextScreen extends StatefulWidget {
   const DailyBibleTextScreen({Key? key}) : super(key: key);
@@ -31,41 +30,19 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     getDailyBibleText();
   }
 
-  Map<String, dynamic>? _headerData;
-  String _bodyText = '';
+  var dailyBibleTiles = <Widget>[];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withValues(alpha: 0.5),
+        backgroundColor: Colors.transparent.withValues(alpha:0.5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: AppBarHeaderText(
-            text1: AppLocalizations.of(context)!.dailyBible, text2: ''),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.font_download_outlined),
-            onPressed: () {
-              setState(() {
-                _fontSize += 2;
-              });
-            },
-            tooltip: 'Increase Font Size',
-          ),
-          IconButton(
-            icon: Icon(Icons.font_download),
-            onPressed: () {
-              setState(() {
-                _fontSize = (_fontSize - 2).clamp(10.0, 30.0);
-              });
-            },
-            tooltip: 'Decrease Font Size',
-          ),
-        ],
+        title: AppBarHeaderText(text1: AppLocalizations.of(context)!.dailyBible, text2: ''),
       ),
       body: isLoading
           ? Center(
@@ -75,7 +52,9 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
           child: SpinKitFadingCube(
             itemBuilder: (BuildContext context, int index) {
               return const DecoratedBox(
-                decoration: BoxDecoration(color: Colors.grey),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
               );
             },
           ),
@@ -83,31 +62,9 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
       )
           : SingleChildScrollView(
         child: Column(
-          children: [
-            if (_headerData != null)
-              ListTile(
-                leading: Icon(FontAwesomeIcons.bookBible,
-                    color: kActiveIconColor(context)),
-                title: Text(
-                  _headerData!['title'],
-                  style: kBodyTextStyle(context, fontSize: _fontSize),
-                ),
-                subtitle: Text(
-                  _headerData!['subtitle'],
-                  style: kBodyTextStyle(context, fontSize: _fontSize),
-                ),
-              ),
-            if (_bodyText.isNotEmpty)
-              ListTile(
-                title: SelectableText(
-                  _bodyText,
-                  style: kBodyTextStyle(context, fontSize: _fontSize),
-                ).animate().fade(duration: 500.ms),
-              ),
-          ],
+          children: dailyBibleTiles,
         ),
       ),
-
     );
   }
 
@@ -145,28 +102,59 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     var jsonObj1 = jsonDecode(dailyBibleText1);
     var jsonObj2 = jsonDecode(dailyBibleText2);
 
-    setState(() {
-      _headerData = {
-        'title': "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
-        'subtitle': jsonObj1['Base_de'],
-      };
+    setState(
+          () {
+        dailyBibleTiles.add(
+          ListTile(
+            leading: Icon(FontAwesomeIcons.bookBible, color: kActiveIconColor(context)),
+            title: Text(
+                "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}",
+                style: kBodyTextStyle(context)),
+            subtitle: Text(jsonObj1['Base_de'],style: kBodyTextStyle(context)),
+          ),
+        );
 
-      _bodyText = '';
-      for (var word in jsonObj2) {
-        _bodyText += "${word['Verse'].toString()} ${word['Bible_Cn']}\n\n";
-      }
+        String bodyText = '';
 
-      isLoading = false;
-    });
+        for (var word in jsonObj2) {
+          bodyText += "${word['Verse'].toString()} ${word['Bible_Cn']}\n\n";
+        }
+
+        dailyBibleTiles.add(
+          ListTile(
+            title: SelectableText(
+              bodyText,
+              style: kBodyTextStyle(context),
+            ).animate().fade(duration: 500.ms),
+          ),
+        );
+
+        // for (var word in jsonObj2) {
+        //   dailyBibleTiles.add(
+        //     ListTile(
+        //       leading: Text(
+        //         word['Chapter'].toString(),
+        //       ),
+        //       title: SelectableText(
+        //         "${word['Verse'].toString()} ${word['Bible_Cn']}",
+        //         style: kBodyTextStyle,
+        //       ),
+        //     ),
+        //   );
+        // }
+        //Hide loading spinner
+        isLoading = false;
+      },
+    );
   }
 }
 
 class DailyBibleTile extends StatelessWidget {
   const DailyBibleTile(
       {Key? key,
-      required this.content,
-      required this.leadingText,
-      required this.subTitle})
+        required this.content,
+        required this.leadingText,
+        required this.subTitle})
       : super(key: key);
 
   final Widget leadingText;
@@ -180,10 +168,7 @@ class DailyBibleTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          content.isEmpty
-              ? Text('N/A')
-              : Text(content,
-                  style: kBodyTextStyle(context, fontSize: _fontSize)),
+          content.isEmpty ? Text('N/A') : Text(content, style: kBodyTextStyle(context)),
         ],
       ),
     );
