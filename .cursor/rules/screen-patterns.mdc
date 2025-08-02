@@ -1,0 +1,101 @@
+---
+globs: lib/screens/*.dart
+---
+
+# Screen Patterns and Conventions
+
+## Naming Convention
+- All screen files end with `_screen.dart`
+- Class names use PascalCase ending with `Screen` (e.g., `HomeScreen`, `AnnouncementScreen`)
+- Main screens: `home_screen.dart`, `setting_screen.dart`
+
+## Common Screen Structure
+
+### Basic Screen Template
+```dart
+class MyScreen extends StatefulWidget {
+  const MyScreen({Key? key}) : super(key: key);
+
+  @override
+  _MyScreenState createState() => _MyScreenState();
+}
+
+class _MyScreenState extends State<MyScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize screen-specific logic
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(/* ... */),
+      body: SafeArea(/* ... */),
+    );
+  }
+}
+```
+
+## Required Imports for Screens
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/utilities/constants.dart'; // If using constants
+```
+
+## Common Patterns
+
+### 1. Internationalization
+- Always use `AppLocalizations.of(context)!.keyName` for text
+- Never hardcode English or Korean text in screens
+
+### 2. Theme Usage
+- Use `Theme.of(context).colorScheme` for colors
+- Respect user's theme preferences (light/dark mode)
+- Use theme-aware text styles: `Theme.of(context).textTheme`
+
+### 3. Navigation
+- Use `Navigator.push()` with `MaterialPageRoute`
+- Always handle navigation properly with context checks
+
+### 4. Animations
+- Use `flutter_animate` for entrance animations
+- Common pattern: `.animate().fadeIn().scale()`
+
+### 5. Error Handling
+- Always wrap network calls in try-catch blocks
+- Show user-friendly error messages
+- Handle offline scenarios gracefully
+
+## Screen Categories
+
+### Content Display Screens
+- `announcement_screen.dart` - Church announcements
+- `bible_search_screen.dart` - Bible search functionality
+- `daily_bible_text_screen.dart` - Daily Bible readings
+- `sunday_bible_text_screen.dart` - Sunday sermon text
+- `message_list.dart` - Message notifications
+
+### Interactive Screens
+- `offering_screen.dart` - Offering information and actions
+- `submit_opinion_screen.dart` - Opinion submission forms
+- `submit_opinion_google_form.dart` - Google Form integration
+- `serving_turn_screen.dart` - Serving schedule management
+
+### Utility Screens
+- `home_screen.dart` - Main dashboard with navigation cards
+- `setting_screen.dart` - App configuration and preferences
+- `about_screen.dart` - App information
+- `disconnect_screen.dart` - Network error handling
+- `webview_screen.dart` - Web content display
+
+## State Management
+- Use `setState()` for local screen state
+- Access global state via Provider: `Provider.of<ThemeNotifier>(context)`
+- Use SharedPreferences for persistent data: `UserSharedPreferences`
+
+## Background Services Integration
+- Initialize background services in `initState()` when needed
+- Use `BackgroundService().functionName()` for data operations
+- Handle loading states appropriately
