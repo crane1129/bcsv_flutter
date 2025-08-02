@@ -113,7 +113,7 @@ TextStyle kBodyCardTitleStyle(BuildContext context) {
 
 TextStyle kLabelTextStyle(BuildContext context) {
   return Theme.of(context).textTheme.labelLarge!.copyWith(
-    fontSize: 20.0,
+    fontSize: 16.0,
     color: Theme.of(context).colorScheme.onSurface,
     fontFamily: kSystemWideFont,
   );

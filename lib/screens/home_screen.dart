@@ -1,4 +1,5 @@
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
+import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/message_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
@@ -143,20 +144,24 @@ class _MyHomePageState extends State<MyHomePage> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                theme.colorScheme.primaryContainer.withValues(alpha: 0.08),
+                                theme.colorScheme.primaryContainer
+                                    .withValues(alpha: 0.08),
                                 theme.colorScheme.surface,
-                                theme.colorScheme.secondaryContainer.withValues(alpha: 0.03),
+                                theme.colorScheme.secondaryContainer
+                                    .withValues(alpha: 0.03),
                               ],
                               stops: [0.0, 0.5, 1.0],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: theme.colorScheme.outline.withValues(alpha: 0.08),
+                              color: theme.colorScheme.outline
+                                  .withValues(alpha: 0.08),
                               width: 1,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: theme.colorScheme.primary.withValues(alpha: 0.04),
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.04),
                                 blurRadius: 12,
                                 offset: Offset(0, 4),
                                 spreadRadius: 0,
@@ -176,8 +181,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Container(
                                         padding: EdgeInsets.all(6),
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(8),
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Icon(
                                           Icons.favorite_rounded,
@@ -186,68 +193,81 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                       SizedBox(width: 8),
-                                      
+
                                       // Mission statement
                                       Expanded(
                                         child: Text(
-                                          AppLocalizations.of(context)!.missionStatement,
-                                          style: theme.textTheme.titleMedium?.copyWith(
+                                          AppLocalizations.of(context)!
+                                              .missionStatement,
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: theme.colorScheme.onSurface,
                                           ),
-                                        ).animate()
-                                          .fadeIn(delay: 300.ms)
-                                          .slideX(begin: -0.3),
+                                        )
+                                            .animate()
+                                            .fadeIn(delay: 300.ms)
+                                            .slideX(begin: -0.3),
                                       ),
-                                      
+
                                       // Compact verse badge
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.3),
-                                          borderRadius: BorderRadius.circular(12),
+                                          color: theme
+                                              .colorScheme.secondaryContainer
+                                              .withValues(alpha: 0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         child: Text(
-                                          AppLocalizations.of(context)!.missionVerse,
-                                          style: theme.textTheme.labelSmall?.copyWith(
+                                          AppLocalizations.of(context)!
+                                              .missionVerse,
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
                                             color: theme.colorScheme.secondary,
                                             fontWeight: FontWeight.w600,
                                           ),
-                                        ).animate()
-                                          .fadeIn(delay: 500.ms)
-                                          .slideX(begin: 0.3),
+                                        )
+                                            .animate()
+                                            .fadeIn(delay: 500.ms)
+                                            .slideX(begin: 0.3),
                                       ),
                                     ],
                                   ),
-                                  
+
                                   SizedBox(height: 8),
-                                  
+
                                   // Full verse content
                                   Container(
                                     width: double.infinity,
-                                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 12),
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme.surface.withValues(alpha: 0.5),
+                                      color: theme.colorScheme.surface
+                                          .withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      AppLocalizations.of(context)!.mission_statement_verse,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                                      AppLocalizations.of(context)!
+                                          .mission_statement_verse,
+                                      style:
+                                          theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.8),
                                         height: 1.4,
                                         fontStyle: FontStyle.italic,
                                       ),
                                       textAlign: TextAlign.center,
-                                    ).animate()
-                                      .fadeIn(delay: 700.ms),
+                                    ).animate().fadeIn(delay: 700.ms),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                        ).animate()
-                          .fadeIn(duration: 400.ms)
-                          .scale(begin: Offset(0.98, 0.98), end: Offset(1.0, 1.0)),
+                        ).animate().fadeIn(duration: 400.ms).scale(
+                            begin: Offset(0.98, 0.98), end: Offset(1.0, 1.0)),
 
                         // Enhanced grid layout with modern spacing
                         Container(
@@ -257,36 +277,76 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           child: Column(
                             children: [
-                              // Row 1: Announcement (full width)
-                              Container(
-                                height: 110,
-                                margin: EdgeInsets.only(bottom: 12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: ReusableCard2(
-                                  onPress: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AnnouncementPage(),
+                              // Row 1: Announcement & New Message
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: 110,
+                                      margin:
+                                          EdgeInsets.only(right: 8, bottom: 12),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                    );
-                                  },
-                                  color: theme.colorScheme.surface,
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.bullhorn,
-                                    label: AppLocalizations.of(context)!
-                                        .announcement,
-                                  ),
-                                ),
-                              )
-                                  .animate()
-                                  .fadeIn(delay: 600.ms)
-                                  .slideY(begin: 0.3),
+                                      child: ReusableCard2(
+                                        onPress: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AnnouncementPage(),
+                                            ),
+                                          );
+                                        },
+                                        color: theme.colorScheme.surface,
+                                        cardChild: IconContent(
+                                          cardIcon: FontAwesomeIcons.bullhorn,
+                                          label: AppLocalizations.of(context)!
+                                              .announcement,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      .animate()
+                                      .fadeIn(delay: 600.ms)
+                                      .slideX(begin: -0.3),
+                                  Expanded(
+                                    child: Container(
+                                      height: 110,
+                                      margin:
+                                          EdgeInsets.only(left: 8, bottom: 12),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: ReusableCard2(
+                                        onPress: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  MessageListScreen(),
+                                            ),
+                                          ).then((onValue) {
+                                            updateMessageCounter();
+                                          });
+                                        },
+                                        color: theme.colorScheme.surface,
+                                        cardChild: IconMsgContent(
+                                          cardIcon: FontAwesomeIcons.message,
+                                          label: AppLocalizations.of(context)!
+                                              .newMessage,
+                                          msg_widget: displayMsgCounter(),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      .animate()
+                                      .fadeIn(delay: 800.ms)
+                                      .slideX(begin: 0.3),
+                                ],
+                              ),
 
-                              // Row 2: Serving Turn & New Message
+                              // Row 2: Serving Turn & Offering
                               Row(
                                 children: [
                                   Expanded(
@@ -324,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     child: Container(
                                       height: 110,
                                       margin:
-                                          EdgeInsets.only(left: 8, bottom: 12),
+                                          EdgeInsets.only(right: 8, bottom: 8),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -333,26 +393,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (_) =>
-                                                  MessageListScreen(),
+                                              builder: (context) =>
+                                                  OfferingScreen(),
                                             ),
-                                          ).then((onValue) {
-                                            updateMessageCounter();
-                                          });
+                                          );
                                         },
                                         color: theme.colorScheme.surface,
-                                        cardChild: IconMsgContent(
-                                          cardIcon: FontAwesomeIcons.message,
+                                        cardChild: IconContent(
+                                          cardIcon:
+                                              FontAwesomeIcons.handHoldingHeart,
                                           label: AppLocalizations.of(context)!
-                                              .newMessage,
-                                          msg_widget: displayMsgCounter(),
+                                              .offering,
                                         ),
                                       ),
                                     ),
                                   )
                                       .animate()
-                                      .fadeIn(delay: 800.ms)
-                                      .slideX(begin: 0.3),
+                                      .fadeIn(delay: 1100.ms)
+                                      .slideX(begin: -0.3),
                                 ],
                               ),
 
@@ -423,40 +481,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ],
                               ),
 
-                              // Row 4: Offering & Bible Search
+                              // Row 4: Bible Search &  Keyword Search
                               Row(
                                 children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(right: 8, bottom: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OfferingScreen(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon:
-                                              FontAwesomeIcons.handHoldingHeart,
-                                          label: AppLocalizations.of(context)!
-                                              .offering,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 1100.ms)
-                                      .slideX(begin: -0.3),
                                   Expanded(
                                     child: Container(
                                       height: 110,
@@ -487,6 +514,36 @@ class _MyHomePageState extends State<MyHomePage> {
                                   )
                                       .animate()
                                       .fadeIn(delay: 1200.ms)
+                                      .slideX(begin: 0.3),
+                                  Expanded(
+                                    child: Container(
+                                      height: 110,
+                                      margin:
+                                          EdgeInsets.only(left: 8, bottom: 12),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: ReusableCard2(
+                                        onPress: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BibleKeywordSearchScreen(),
+                                            ),
+                                          );
+                                        },
+                                        color: theme.colorScheme.surface,
+                                        cardChild: IconContent(
+                                          cardIcon:
+                                              FontAwesomeIcons.searchengin,
+                                          label: 'Bible Keyword Search',
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      .animate()
+                                      .fadeIn(delay: 700.ms)
                                       .slideX(begin: 0.3),
                                 ],
                               ),
