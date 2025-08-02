@@ -105,7 +105,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                   ),
                   SizedBox(height: 24),
                   Text(
-                    AppLocalizations.of(context)?.checkingConnection ?? 'Loading announcements...',
+                    AppLocalizations.of(context)?.dataLoading ?? 'Loading announcements...',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),

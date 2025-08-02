@@ -573,7 +573,7 @@ class ModernServingTurnTile extends StatelessWidget {
           
           // Leading text
           Expanded(
-            flex: 2,
+            flex: 1,
             child: leadingText,
           ),
           
