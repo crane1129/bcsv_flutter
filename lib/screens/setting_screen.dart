@@ -23,12 +23,23 @@ class _SettingsPageState extends State<SettingsPage> {
   var _groupValue;
   bool isStaffModeEnabled = false;
   Dialogs dialog = new Dialogs();
+  
+  // Card visibility states
+  bool showAnnouncementCard = true;
+  bool showMessageCard = true;
+  bool showServingTurnCard = true;
+  bool showOfferingCard = true;
+  bool showBibleTextCard = true;
+  bool showDailyBibleCard = true;
+  bool showBibleSearchCard = true;
+  bool showKeywordSearchCard = true;
 
   @override
   void initState() {
     super.initState();
     _loadLanguageSetting();
     _loadStaffModeSetting();
+    _loadCardVisibilitySettings();
   }
 
   void _loadLanguageSetting() {
@@ -44,6 +55,19 @@ class _SettingsPageState extends State<SettingsPage> {
   void _loadStaffModeSetting() async {
     bool enabled = await UserSharedPreferences.isStaffModeEnabled();
     setState(() => isStaffModeEnabled = enabled);
+  }
+  
+  void _loadCardVisibilitySettings() {
+    setState(() {
+      showAnnouncementCard = UserSharedPreferences.getShowAnnouncementCard();
+      showMessageCard = UserSharedPreferences.getShowMessageCard();
+      showServingTurnCard = UserSharedPreferences.getShowServingTurnCard();
+      showOfferingCard = UserSharedPreferences.getShowOfferingCard();
+      showBibleTextCard = UserSharedPreferences.getShowBibleTextCard();
+      showDailyBibleCard = UserSharedPreferences.getShowDailyBibleCard();
+      showBibleSearchCard = UserSharedPreferences.getShowBibleSearchCard();
+      showKeywordSearchCard = UserSharedPreferences.getShowKeywordSearchCard();
+    });
   }
 
   void _promptForPassword() async {
@@ -81,6 +105,47 @@ class _SettingsPageState extends State<SettingsPage> {
               }
             },
             child: Text("Submit"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRestartDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.restart_alt, color: Theme.of(context).colorScheme.primary),
+            SizedBox(width: 8),
+            Text(AppLocalizations.of(context)!.restartRequiredTitle),
+          ],
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.restartRequiredMessage,
+          style: kBodyTextStyle(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              AppLocalizations.of(context)!.restartLater,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Restart the app
+              exit(0);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            child: Text(AppLocalizations.of(context)!.restartNow),
           ),
         ],
       ),
@@ -216,6 +281,105 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 },
                 secondary: Icon(Icons.lock_outline, color: kActiveIconColor(context)),
+              ),
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: ExpansionTile(
+                leading: Icon(Icons.visibility_outlined, color: kActiveIconColor(context)),
+                title: Text(AppLocalizations.of(context)!.cardVisibilitySettings, style: kLargeButtonTextStyle(context)),
+                subtitle: Text(AppLocalizations.of(context)!.cardVisibilitySubtitle, style: kBodyTextStyle(context)),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Column(
+                      children: [
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.announcement, style: kBodyTextStyle(context)),
+                          value: showAnnouncementCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowAnnouncementCard(val);
+                            setState(() => showAnnouncementCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.newMessage, style: kBodyTextStyle(context)),
+                          value: showMessageCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowMessageCard(val);
+                            setState(() => showMessageCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.servingTurn, style: kBodyTextStyle(context)),
+                          value: showServingTurnCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowServingTurnCard(val);
+                            setState(() => showServingTurnCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.offering, style: kBodyTextStyle(context)),
+                          value: showOfferingCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowOfferingCard(val);
+                            setState(() => showOfferingCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.bibleText, style: kBodyTextStyle(context)),
+                          value: showBibleTextCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowBibleTextCard(val);
+                            setState(() => showBibleTextCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.dailyBible, style: kBodyTextStyle(context)),
+                          value: showDailyBibleCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowDailyBibleCard(val);
+                            setState(() => showDailyBibleCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text(AppLocalizations.of(context)!.bible_search, style: kBodyTextStyle(context)),
+                          value: showBibleSearchCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowBibleSearchCard(val);
+                            setState(() => showBibleSearchCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                        SwitchListTile(
+                          title: Text('Bible Keyword Search', style: kBodyTextStyle(context)),
+                          value: showKeywordSearchCard,
+                          onChanged: (val) async {
+                            await UserSharedPreferences.setShowKeywordSearchCard(val);
+                            setState(() => showKeywordSearchCard = val);
+                            _showRestartDialog();
+                          },
+                          dense: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Card(

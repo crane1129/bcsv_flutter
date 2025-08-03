@@ -15,6 +15,16 @@ class UserSharedPreferences{
   static const _keyStaffMode = 'staff_mode';
   static const _keyStaffPassword = 'staff_password';
   
+  // Card visibility settings
+  static const _keyShowAnnouncementCard = 'show_announcement_card';
+  static const _keyShowMessageCard = 'show_message_card';
+  static const _keyShowServingTurnCard = 'show_serving_turn_card';
+  static const _keyShowOfferingCard = 'show_offering_card';
+  static const _keyShowBibleTextCard = 'show_bible_text_card';
+  static const _keyShowDailyBibleCard = 'show_daily_bible_card';
+  static const _keyShowBibleSearchCard = 'show_bible_search_card';
+  static const _keyShowKeywordSearchCard = 'show_keyword_search_card';
+  
   static Future init() async {
     _peferences = await SharedPreferences.getInstance();
   }
@@ -89,4 +99,45 @@ class UserSharedPreferences{
   static Future setStaffPassword(String password) async {
     await _peferences.setString(_keyStaffPassword, password);
   }
+  
+  // Card visibility settings methods
+  static Future setShowAnnouncementCard(bool show) async {
+    await _peferences.setBool(_keyShowAnnouncementCard, show);
+  }
+  static getShowAnnouncementCard() => _peferences.getBool(_keyShowAnnouncementCard) ?? true;
+  
+  static Future setShowMessageCard(bool show) async {
+    await _peferences.setBool(_keyShowMessageCard, show);
+  }
+  static getShowMessageCard() => _peferences.getBool(_keyShowMessageCard) ?? true;
+  
+  static Future setShowServingTurnCard(bool show) async {
+    await _peferences.setBool(_keyShowServingTurnCard, show);
+  }
+  static getShowServingTurnCard() => _peferences.getBool(_keyShowServingTurnCard) ?? true;
+  
+  static Future setShowOfferingCard(bool show) async {
+    await _peferences.setBool(_keyShowOfferingCard, show);
+  }
+  static getShowOfferingCard() => _peferences.getBool(_keyShowOfferingCard) ?? true;
+  
+  static Future setShowBibleTextCard(bool show) async {
+    await _peferences.setBool(_keyShowBibleTextCard, show);
+  }
+  static getShowBibleTextCard() => _peferences.getBool(_keyShowBibleTextCard) ?? true;
+  
+  static Future setShowDailyBibleCard(bool show) async {
+    await _peferences.setBool(_keyShowDailyBibleCard, show);
+  }
+  static getShowDailyBibleCard() => _peferences.getBool(_keyShowDailyBibleCard) ?? true;
+  
+  static Future setShowBibleSearchCard(bool show) async {
+    await _peferences.setBool(_keyShowBibleSearchCard, show);
+  }
+  static getShowBibleSearchCard() => _peferences.getBool(_keyShowBibleSearchCard) ?? true;
+  
+  static Future setShowKeywordSearchCard(bool show) async {
+    await _peferences.setBool(_keyShowKeywordSearchCard, show);
+  }
+  static getShowKeywordSearchCard() => _peferences.getBool(_keyShowKeywordSearchCard) ?? true;
 }

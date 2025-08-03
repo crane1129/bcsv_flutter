@@ -32,15 +32,46 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget emptyString = Text('');
   late int messageCounter;
+  
+  // Card visibility states
+  bool showAnnouncementCard = true;
+  bool showMessageCard = true;
+  bool showServingTurnCard = true;
+  bool showOfferingCard = true;
+  bool showBibleTextCard = true;
+  bool showDailyBibleCard = true;
+  bool showBibleSearchCard = true;
+  bool showKeywordSearchCard = true;
 
   @override
   void initState() {
     super.initState();
+    _loadCardVisibilitySettings();
 
     // Initialize app services immediately when home screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeApp();
     });
+  }
+  
+  void _loadCardVisibilitySettings() {
+    setState(() {
+      showAnnouncementCard = UserSharedPreferences.getShowAnnouncementCard();
+      showMessageCard = UserSharedPreferences.getShowMessageCard();
+      showServingTurnCard = UserSharedPreferences.getShowServingTurnCard();
+      showOfferingCard = UserSharedPreferences.getShowOfferingCard();
+      showBibleTextCard = UserSharedPreferences.getShowBibleTextCard();
+      showDailyBibleCard = UserSharedPreferences.getShowDailyBibleCard();
+      showBibleSearchCard = UserSharedPreferences.getShowBibleSearchCard();
+      showKeywordSearchCard = UserSharedPreferences.getShowKeywordSearchCard();
+    });
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh card visibility when returning from settings
+    _loadCardVisibilitySettings();
   }
 
   Future<void> _initializeApp() async {
@@ -278,275 +309,93 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Column(
                             children: [
                               // Row 1: Announcement & New Message
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(right: 8, bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AnnouncementPage(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon: FontAwesomeIcons.bullhorn,
-                                          label: AppLocalizations.of(context)!
-                                              .announcement,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 600.ms)
-                                      .slideX(begin: -0.3),
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(left: 8, bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  MessageListScreen(),
-                                            ),
-                                          ).then((onValue) {
-                                            updateMessageCounter();
-                                          });
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconMsgContent(
-                                          cardIcon: FontAwesomeIcons.message,
-                                          label: AppLocalizations.of(context)!
-                                              .newMessage,
-                                          msg_widget: displayMsgCounter(),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 800.ms)
-                                      .slideX(begin: 0.3),
-                                ],
-                              ),
+                              _buildRow([
+                                if (showAnnouncementCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AnnouncementPage())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.bullhorn,
+                                    label: AppLocalizations.of(context)!.announcement,
+                                  ),
+                                  animationDelay: 600.ms,
+                                  slideDirection: -0.3,
+                                ),
+                                if (showMessageCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MessageListScreen())).then((onValue) => updateMessageCounter()),
+                                  cardChild: IconMsgContent(
+                                    cardIcon: FontAwesomeIcons.message,
+                                    label: AppLocalizations.of(context)!.newMessage,
+                                    msg_widget: displayMsgCounter(),
+                                  ),
+                                  animationDelay: 800.ms,
+                                  slideDirection: 0.3,
+                                ),
+                              ]),
 
                               // Row 2: Serving Turn & Offering
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(right: 8, bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ServingTurnPage(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon:
-                                              FontAwesomeIcons.peopleCarryBox,
-                                          label: AppLocalizations.of(context)!
-                                              .servingTurn,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 700.ms)
-                                      .slideX(begin: -0.3),
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(right: 8, bottom: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OfferingScreen(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon:
-                                              FontAwesomeIcons.handHoldingHeart,
-                                          label: AppLocalizations.of(context)!
-                                              .offering,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 1100.ms)
-                                      .slideX(begin: -0.3),
-                                ],
-                              ),
+                              _buildRow([
+                                if (showServingTurnCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ServingTurnPage())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.peopleCarryBox,
+                                    label: AppLocalizations.of(context)!.servingTurn,
+                                  ),
+                                  animationDelay: 700.ms,
+                                  slideDirection: -0.3,
+                                ),
+                                if (showOfferingCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => OfferingScreen())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.handHoldingHeart,
+                                    label: AppLocalizations.of(context)!.offering,
+                                  ),
+                                  animationDelay: 1100.ms,
+                                  slideDirection: 0.3,
+                                ),
+                              ]),
 
                               // Row 3: Bible Text & Daily Bible
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(right: 8, bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SundayBibleTextScreen(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon: FontAwesomeIcons.bookBible,
-                                          label: AppLocalizations.of(context)!
-                                              .bibleText,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 900.ms)
-                                      .slideX(begin: -0.3),
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(left: 8, bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DailyBibleTextScreen(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon:
-                                              FontAwesomeIcons.calendarDays,
-                                          label: AppLocalizations.of(context)!
-                                              .dailyBible,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 1000.ms)
-                                      .slideX(begin: 0.3),
-                                ],
-                              ),
+                              _buildRow([
+                                if (showBibleTextCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SundayBibleTextScreen())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.bookBible,
+                                    label: AppLocalizations.of(context)!.bibleText,
+                                  ),
+                                  animationDelay: 900.ms,
+                                  slideDirection: -0.3,
+                                ),
+                                if (showDailyBibleCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DailyBibleTextScreen())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.calendarDays,
+                                    label: AppLocalizations.of(context)!.dailyBible,
+                                  ),
+                                  animationDelay: 1000.ms,
+                                  slideDirection: 0.3,
+                                ),
+                              ]),
 
-                              // Row 4: Bible Search &  Keyword Search
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(left: 8, bottom: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BibleSearchScreen(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon:
-                                              FontAwesomeIcons.magnifyingGlass,
-                                          label: AppLocalizations.of(context)!
-                                              .bible_search,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 1200.ms)
-                                      .slideX(begin: 0.3),
-                                  Expanded(
-                                    child: Container(
-                                      height: 110,
-                                      margin:
-                                          EdgeInsets.only(left: 8, bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ReusableCard2(
-                                        onPress: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BibleKeywordSearchScreen(),
-                                            ),
-                                          );
-                                        },
-                                        color: theme.colorScheme.surface,
-                                        cardChild: IconContent(
-                                          cardIcon:
-                                              FontAwesomeIcons.searchengin,
-                                          label: 'Bible Keyword Search',
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(delay: 700.ms)
-                                      .slideX(begin: 0.3),
-                                ],
-                              ),
+                              // Row 4: Bible Search & Keyword Search
+                              _buildRow([
+                                if (showBibleSearchCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BibleSearchScreen())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.magnifyingGlass,
+                                    label: AppLocalizations.of(context)!.bible_search,
+                                  ),
+                                  animationDelay: 1200.ms,
+                                  slideDirection: -0.3,
+                                ),
+                                if (showKeywordSearchCard) _buildCard(
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BibleKeywordSearchScreen())),
+                                  cardChild: IconContent(
+                                    cardIcon: FontAwesomeIcons.searchengin,
+                                    label: 'Bible Keyword Search',
+                                  ),
+                                  animationDelay: 1300.ms,
+                                  slideDirection: 0.3,
+                                ),
+                              ]),
 
                               // Bottom spacing for modern feel
                               SizedBox(height: 16),
@@ -589,5 +438,51 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
+  }
+  
+  /// Helper method to build a row with dynamic card visibility
+  Widget _buildRow(List<Widget> cards) {
+    if (cards.isEmpty) return SizedBox.shrink();
+    
+    if (cards.length == 1) {
+      // Single card - make it full width
+      return Container(
+        margin: EdgeInsets.only(bottom: 12),
+        child: cards.first,
+      );
+    } else {
+      // Multiple cards - arrange in row
+      return Container(
+        margin: EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: cards.map((card) => Expanded(child: card)).toList(),
+        ),
+      );
+    }
+  }
+  
+  /// Helper method to build individual cards
+  Widget _buildCard({
+    required VoidCallback onPress,
+    required Widget cardChild,
+    required Duration animationDelay,
+    required double slideDirection,
+  }) {
+    final theme = Theme.of(context);
+    
+    return Container(
+      height: 110,
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: ReusableCard2(
+        onPress: onPress,
+        color: theme.colorScheme.surface,
+        cardChild: cardChild,
+      ),
+    ).animate()
+      .fadeIn(delay: animationDelay)
+      .slideX(begin: slideDirection);
   }
 }

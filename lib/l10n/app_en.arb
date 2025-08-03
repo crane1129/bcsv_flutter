@@ -310,5 +310,29 @@
   "dataLoading": "Loading data...",
   "@dataLoading": {
     "description": "Info message that automatic retry is enabled"
+  },
+  "cardVisibilitySettings": "Card Visibility Settings",
+  "@cardVisibilitySettings": {
+    "description": "Title for card visibility settings section"
+  },
+  "cardVisibilitySubtitle": "Show/Hide cards on home screen",
+  "@cardVisibilitySubtitle": {
+    "description": "Subtitle for card visibility settings section"
+  },
+  "restartRequiredTitle": "Restart Required",
+  "@restartRequiredTitle": {
+    "description": "Title for restart required dialog"
+  },
+  "restartRequiredMessage": "Please restart the app to apply home screen layout changes.",
+  "@restartRequiredMessage": {
+    "description": "Message for restart required dialog"
+  },
+  "restartNow": "Restart Now",
+  "@restartNow": {
+    "description": "Button text to restart the app immediately"
+  },
+  "restartLater": "Later",
+  "@restartLater": {
+    "description": "Button text to restart the app later"
   }
 }
