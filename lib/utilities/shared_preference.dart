@@ -25,6 +25,10 @@ class UserSharedPreferences{
   static const _keyShowBibleSearchCard = 'show_bible_search_card';
   static const _keyShowKeywordSearchCard = 'show_keyword_search_card';
   
+  // API Endpoints cache
+  static const _keyEndpointsCache = 'endpoints_cache';
+  static const _keyEndpointsCacheTimestamp = 'endpoints_cache_timestamp';
+  
   static Future init() async {
     _peferences = await SharedPreferences.getInstance();
   }
@@ -140,4 +144,23 @@ class UserSharedPreferences{
     await _peferences.setBool(_keyShowKeywordSearchCard, show);
   }
   static getShowKeywordSearchCard() => _peferences.getBool(_keyShowKeywordSearchCard) ?? true;
+  
+  // API Endpoints cache methods
+  static Future setEndpointsCache(String endpointsJson) async {
+    await _peferences.setString(_keyEndpointsCache, endpointsJson);
+    await _peferences.setInt(_keyEndpointsCacheTimestamp, DateTime.now().millisecondsSinceEpoch);
+  }
+  
+  static String? getEndpointsCache() => _peferences.getString(_keyEndpointsCache);
+  
+  static int? getEndpointsCacheTimestamp() => _peferences.getInt(_keyEndpointsCacheTimestamp);
+  
+  static bool isEndpointsCacheExpired({Duration maxAge = const Duration(hours: 24)}) {
+    final timestamp = getEndpointsCacheTimestamp();
+    if (timestamp == null) return true;
+    
+    final cacheDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    final now = DateTime.now();
+    return now.difference(cacheDate) > maxAge;
+  }
 }

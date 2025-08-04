@@ -310,15 +310,16 @@ class BackgroundService {
     try {
       final endpointService = ApiEndpoint();
       
-      // Try to bind endpoints first
-      final endpointsLoaded = await endpointService.bindEndpoints();
+      // Initialize endpoints with caching - loads cached data immediately
+      // and updates in background if needed
+      final endpointsAvailable = await endpointService.initializeEndpoints();
       
-      if (endpointsLoaded) {
-        // Only check messages if endpoints were successfully loaded
+      if (endpointsAvailable) {
+        // Only check messages if endpoints are available (cached or fresh)
         await endpointService.checkNewMessage();
         log('✅ API services initialized');
       } else {
-        log('⚠️ Endpoints failed to load, skipping message check');
+        log('⚠️ No endpoints available (no cache or network), skipping message check');
       }
     } catch (e) {
       log('❌ API services initialization failed: $e');

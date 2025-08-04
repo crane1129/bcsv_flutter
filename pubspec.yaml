@@ -82,54 +82,11 @@ dependencies:
   # Image picker with automatic HEIC conversion
   image_picker: ^1.0.7
 
-  # Flutter splash screen
-flutter_native_splash:
-  # Modern gradient background for contemporary apps
-  color: "#FFFFFF"
-  
-  # Church icon as main splash (gets scale + fade animations)
-  image: assets/images/bridgeway.png
-  
-  # Bottom branding with slide-up animation
-  branding: assets/images/app.png
-  branding_mode: bottom
-  branding_bottom_padding: 80
-  
-  # Dark mode support (modern requirement)
-  color_dark: "#0F172A"
-  image_dark: assets/images/bridgeway.png
-  branding_dark: assets/images/app.png
-  
-  # Android 12+ with Material Design 3 animations
-  android_12:
-    image: assets/images/bridgeway.png
-    color: "#FFFFFF"
-    icon_background_color: "#F8FAFC"
-    
-    # Dark mode for Android 12+
-    image_dark: assets/images/bridgeway.png
-    color_dark: "#0F172A"
-    icon_background_color_dark: "#1E293B"
-  
-  # Immersive fullscreen experience
-  fullscreen: true
-  
-  # Animation-optimized positioning
-  android_gravity: center
-  ios_content_mode: scaleAspectFit
-  web_image_mode: center
-  
-  android: true
-  ios: true
-  web: false
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_launcher_icons: ^0.14.3
-  flutter_native_splash: ^2.4.6
 
 flutter_icons:
   android: true

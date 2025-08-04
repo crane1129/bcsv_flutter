@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
@@ -16,6 +17,7 @@ import 'package:bcsv_flutter_project/screens/sunday_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/screens/about_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
+import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
@@ -30,12 +32,52 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   Widget emptyString = Text('');
   late int messageCounter;
+  Timer? _endpointCheckTimer;
+  bool _endpointsInitialized = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     updateMessageCounter();
+    _checkEndpointInitialization();
+  }
+
+  @override
+  void dispose() {
+    _endpointCheckTimer?.cancel();
+    super.dispose();
+  }
+
+  void _checkEndpointInitialization() {
+    // Check if endpoints are already initialized
+    if (ApiEndpoint().isInitialized) {
+      _onEndpointsReady();
+      return;
+    }
+
+    // Set up a timer to periodically check for endpoint initialization
+    _endpointCheckTimer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      if (ApiEndpoint().isInitialized && !_endpointsInitialized) {
+        _onEndpointsReady();
+        timer.cancel();
+      }
+    });
+
+    // Also listen for background service completion
+    BackgroundService().onInitializationComplete(() {
+      if (!_endpointsInitialized && mounted) {
+        _onEndpointsReady();
+      }
+    });
+  }
+
+  void _onEndpointsReady() {
+    if (mounted && !_endpointsInitialized) {
+      setState(() {
+        _endpointsInitialized = true;
+      });
+      _endpointCheckTimer?.cancel();
+    }
   }
 
   @override
@@ -68,12 +110,12 @@ class _NavBarState extends State<NavBar> {
           ListWebViewMenu(
               myIcon: Icons.voice_chat_outlined,
               menuName: AppLocalizations.of(context)!.sermonArchives,
-              url: ApiEndpoint.apiMap['SERMON_YOUTUBE']!,
+              url: ApiEndpoint.apiMap['SERMON_YOUTUBE'],
               trailing: emptyString),
           ListWebViewMenu(
               myIcon: FontAwesomeIcons.youtube,
               menuName: AppLocalizations.of(context)!.youtubeLive,
-              url: ApiEndpoint.apiMap['YOUTUBE_LIVE']!,
+              url: ApiEndpoint.apiMap['YOUTUBE_LIVE'],
               trailing: emptyString),
           const Divider(color: Colors.grey),
           ListTile(
@@ -159,7 +201,7 @@ class _NavBarState extends State<NavBar> {
           ListWebViewMenu(
               myIcon: FontAwesomeIcons.calendarDays,
               menuName: AppLocalizations.of(context)!.bible_reading_plan,
-              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN']!,
+              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN'],
               trailing: emptyString),
           ListTile(
             leading: Icon(Icons.search, color: kActiveIconColor(context)),
@@ -205,16 +247,20 @@ class _NavBarState extends State<NavBar> {
           //     trailing: emptyString),
           ListTile(
             leading: Icon(Icons.add_shopping_cart_rounded,
-                color: kActiveIconColor(context)),
+                color: ApiEndpoint.apiMap['REIMBURSEMENT'] != null 
+                    ? kActiveIconColor(context) 
+                    : Colors.grey),
             title: Text(AppLocalizations.of(context)!.reimbursement,
-                style: kDrawerMenuTextStyle(context)),
-            onTap: () {
+                style: ApiEndpoint.apiMap['REIMBURSEMENT'] != null
+                    ? kDrawerMenuTextStyle(context)
+                    : kDrawerMenuTextStyle(context).copyWith(color: Colors.grey)),
+            onTap: ApiEndpoint.apiMap['REIMBURSEMENT'] != null ? () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => ReimbursementScreen(
                           url: ApiEndpoint.apiMap['REIMBURSEMENT']!)));
-            },
+            } : null,
           ),
           ListTile(
             leading: Icon(Icons.emoji_people, color: kActiveIconColor(context)),
@@ -324,7 +370,7 @@ class _NavBarState extends State<NavBar> {
 class ListWebViewMenu extends StatelessWidget {
   final IconData myIcon;
   final String menuName;
-  final Uri url;
+  final Uri? url;
   final Widget trailing;
 
   ListWebViewMenu(
@@ -335,21 +381,28 @@ class ListWebViewMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isUrlAvailable = url != null;
+    
     return ListTile(
         //contentPadding: EdgeInsets.only(left: 20.0),
-        leading: Icon(myIcon, color: kActiveIconColor(context), size: 20),
-        title: Text(menuName, style: kDrawerMenuTextStyle(context)),
-        onTap: () {
+        leading: Icon(myIcon, 
+            color: isUrlAvailable ? kActiveIconColor(context) : Colors.grey, 
+            size: 20),
+        title: Text(menuName, 
+            style: isUrlAvailable 
+                ? kDrawerMenuTextStyle(context)
+                : kDrawerMenuTextStyle(context).copyWith(color: Colors.grey)),
+        onTap: isUrlAvailable ? () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) {
                 // return WebviewScreen(url: url, title1: menuName, title2: '');
-                return WebViewApp(url: url, title1: menuName, title2: '');
+                return WebViewApp(url: url!, title1: menuName, title2: '');
               },
             ),
           );
-        },
+        } : null,
         trailing: trailing);
   }
 }

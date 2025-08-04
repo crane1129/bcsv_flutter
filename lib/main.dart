@@ -1,7 +1,7 @@
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:bcsv_flutter_project/utilities/theme_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:bcsv_flutter_project/screens/home_screen.dart';
+import 'package:bcsv_flutter_project/screens/splash_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -65,7 +65,7 @@ class MyBCSVApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: const MyHomePage(),
+            home: const SplashScreen(),
           ),
         );
       },

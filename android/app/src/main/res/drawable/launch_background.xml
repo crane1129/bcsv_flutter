@@ -1,78 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Modern gradient background -->
+    <!-- Pure white background -->
     <item>
         <shape android:shape="rectangle">
-            <gradient
-                android:angle="135"
-                android:startColor="#FFFFFF"
-                android:centerColor="#F8FAFC"
-                android:endColor="#E2E8F0"
-                android:type="linear" />
+            <solid android:color="#FFFFFF" />
         </shape>
     </item>
     
-    <!-- Subtle depth overlay -->
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:angle="45"
-                android:startColor="#00000000"
-                android:centerColor="#05000000"
-                android:endColor="#0A000000"
-                android:type="linear" />
-        </shape>
-    </item>
-    
-    <!-- Church icon with modern circular background -->
+    <!-- Clean circular element (no image) -->
     <item android:gravity="center" android:top="120dp">
         <layer-list>
-            <!-- Animated shadow (pulse effect) -->
-            <item android:top="8dp" android:left="8dp">
+            <!-- Subtle shadow -->
+            <item android:top="4dp" android:left="4dp">
                 <shape android:shape="oval">
                     <size android:width="120dp" android:height="120dp" />
-                    <solid android:color="#20000000" />
+                    <solid android:color="#10000000" />
                 </shape>
             </item>
             
-            <!-- Main icon background with animation-ready styling -->
+            <!-- Main circular background -->
             <item>
                 <shape android:shape="oval">
                     <size android:width="120dp" android:height="120dp" />
                     <solid android:color="#FFFFFF" />
-                    <stroke android:width="3dp" android:color="#4F46E5" />
-                </shape>
-            </item>
-            
-            <!-- Church icon (will have built-in scale animation) -->
-            <item android:top="30dp" android:left="30dp" android:right="30dp" android:bottom="30dp">
-                <bitmap 
-                    android:src="@drawable/splash"
-                    android:gravity="center"
-                    android:tint="#4F46E5" />
-            </item>
-        </layer-list>
-    </item>
-    
-    <!-- App branding card with modern styling -->
-    <item android:gravity="center|bottom" android:bottom="120dp">
-        <layer-list>
-            <!-- Card shadow -->
-            <item android:top="4dp">
-                <shape android:shape="rectangle">
-                    <corners android:radius="24dp" />
-                    <solid android:color="#15000000" />
-                    <size android:width="320dp" android:height="80dp" />
-                </shape>
-            </item>
-            
-            <!-- Card background -->
-            <item>
-                <shape android:shape="rectangle">
-                    <corners android:radius="24dp" />
-                    <solid android:color="#FFFFFF" />
-                    <stroke android:width="1dp" android:color="#E2E8F0" />
-                    <size android:width="320dp" android:height="80dp" />
+                    <stroke android:width="2dp" android:color="#E5E7EB" />
                 </shape>
             </item>
         </layer-list>

@@ -76,9 +76,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _initializeApp() async {
     try {
-      log('🏠 Home screen initializing app services...');
+      log('🏠 Home screen checking app services...');
 
-      // Load user settings immediately (lightweight operation)
+      // Check if background services are already initialized (from splash screen)
+      if (BackgroundService().isInitialized) {
+        log('✅ Background services already initialized');
+        return;
+      }
+
+      // If not initialized, load user settings immediately (lightweight operation)
       BackgroundService().loadSettings(context);
 
       // Check network connectivity before starting background services
@@ -96,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return;
       }
 
-      // Start background initialization for heavy operations
+      // Start background initialization for heavy operations (fallback)
       BackgroundService().initializeInBackground();
 
       log('✅ Home screen app initialization completed');
@@ -316,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     cardIcon: FontAwesomeIcons.bullhorn,
                                     label: AppLocalizations.of(context)!.announcement,
                                   ),
-                                  animationDelay: 600.ms,
+                                  animationDelay: 800.ms,
                                   slideDirection: -0.3,
                                 ),
                                 if (showMessageCard) _buildCard(
@@ -326,7 +332,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     label: AppLocalizations.of(context)!.newMessage,
                                     msg_widget: displayMsgCounter(),
                                   ),
-                                  animationDelay: 800.ms,
+                                  animationDelay: 900.ms,
                                   slideDirection: 0.3,
                                 ),
                               ]),
@@ -339,7 +345,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     cardIcon: FontAwesomeIcons.peopleCarryBox,
                                     label: AppLocalizations.of(context)!.servingTurn,
                                   ),
-                                  animationDelay: 700.ms,
+                                  animationDelay: 1000.ms,
                                   slideDirection: -0.3,
                                 ),
                                 if (showOfferingCard) _buildCard(
@@ -361,7 +367,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     cardIcon: FontAwesomeIcons.bookBible,
                                     label: AppLocalizations.of(context)!.bibleText,
                                   ),
-                                  animationDelay: 900.ms,
+                                  animationDelay: 1200.ms,
                                   slideDirection: -0.3,
                                 ),
                                 if (showDailyBibleCard) _buildCard(
@@ -370,7 +376,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     cardIcon: FontAwesomeIcons.calendarDays,
                                     label: AppLocalizations.of(context)!.dailyBible,
                                   ),
-                                  animationDelay: 1000.ms,
+                                  animationDelay: 1300.ms,
                                   slideDirection: 0.3,
                                 ),
                               ]),
@@ -383,7 +389,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     cardIcon: FontAwesomeIcons.magnifyingGlass,
                                     label: AppLocalizations.of(context)!.bible_search,
                                   ),
-                                  animationDelay: 1200.ms,
+                                  animationDelay: 1400.ms,
                                   slideDirection: -0.3,
                                 ),
                                 if (showKeywordSearchCard) _buildCard(
@@ -392,7 +398,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     cardIcon: FontAwesomeIcons.searchengin,
                                     label: 'Bible Keyword Search',
                                   ),
-                                  animationDelay: 1300.ms,
+                                  animationDelay: 1500.ms,
                                   slideDirection: 0.3,
                                 ),
                               ]),
