@@ -22,7 +22,7 @@ class UnconfirmedOpinionsScreen extends StatefulWidget {
 }
 
 class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
-  late Future<List<Map<String, dynamic>>> _futureOpinions;
+  Future<List<Map<String, dynamic>>>? _futureOpinions;
 
   @override
   void initState() {
@@ -176,7 +176,8 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
             child: FutureBuilder<List<Map<String, dynamic>>>(
         future: _futureOpinions,
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+          // Show loading state if _futureOpinions is null or still loading
+          if (_futureOpinions == null || snapshot.connectionState != ConnectionState.done) {
                   return _buildLoadingState(theme);
           }
 
@@ -184,7 +185,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
                   return _buildErrorState(theme, snapshot.error.toString());
           }
 
-          final opinions = snapshot.data!;
+          final opinions = snapshot.data ?? [];
           if (opinions.isEmpty) {
                   return _buildEmptyState(theme);
                 }

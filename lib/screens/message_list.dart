@@ -71,9 +71,58 @@ class _MessageListScreenState extends State<MessageListScreen> {
 
   void getMessageListFromGoogleSheet() async {
     //Show loading spinner
-    isLoading = true;
+    setState(() {
+      isLoading = true;
+    });
+
+    // Check if MESSAGE endpoint is available
+    final messageEndpoint = ApiEndpoint.apiMap['MESSAGE'];
+    if (messageEndpoint == null) {
+      // Handle case where endpoint is not available
+      setState(() {
+        isLoading = false;
+        prayerListTiles.clear();
+        // Add an error message card
+        prayerListTiles.add(
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.cloud_off,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      AppLocalizations.of(context)!.networkErrorMessage,
+                      style: kCardTitleStyle(context),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      AppLocalizations.of(context)!.retryNetworkMessage,
+                      style: kBodyTextStyle(context),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      });
+      return;
+    }
+
     ModelParam modelParam = ModelParam(
-      apiEndpoint: ApiEndpoint.apiMap['MESSAGE']!,
+      apiEndpoint: messageEndpoint,
       tag: '',
       cacheFileName: kPrayerListData,
       getSharedReference: UserSharedPreferences.getMessageListTextCache,

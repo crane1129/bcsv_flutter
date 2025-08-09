@@ -214,7 +214,7 @@ class _NavBarState extends State<NavBar> {
           ),
           ListTile(
             leading: Icon(Icons.manage_search, color: kActiveIconColor(context)),
-            title: Text('Keyword Search',
+            title: Text(AppLocalizations.of(context)!.keywordSearch,
                 style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(context,

@@ -396,7 +396,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BibleKeywordSearchScreen())),
                                   cardChild: IconContent(
                                     cardIcon: FontAwesomeIcons.searchengin,
-                                    label: 'Bible Keyword Search',
+                                    label: AppLocalizations.of(context)!.keywordSearch,
                                   ),
                                   animationDelay: 1500.ms,
                                   slideDirection: 0.3,

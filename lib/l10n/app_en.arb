@@ -334,5 +334,9 @@
   "restartLater": "Later",
   "@restartLater": {
     "description": "Button text to restart the app later"
+  },
+  "keywordSearch": "Keyword Search",
+  "@keywordSearch": {
+    "description": "Bible Keyword Search Button Text"
   }
 }

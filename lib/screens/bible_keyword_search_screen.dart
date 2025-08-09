@@ -10,6 +10,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
 import 'dart:developer';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BibleKeywordSearchScreen extends StatefulWidget {
   @override
@@ -234,7 +235,7 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'Keyword Search',
+                                              AppLocalizations.of(context)!.keywordSearch,
                                               style: theme.textTheme.titleLarge
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -392,7 +393,7 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
                                                 Text(
                                                   isLoading
                                                       ? 'Searching...'
-                                                      : 'Search',
+                                                      : AppLocalizations.of(context)!.search,
                                                   style: theme
                                                       .textTheme.titleMedium
                                                       ?.copyWith(

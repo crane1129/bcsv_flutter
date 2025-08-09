@@ -42,42 +42,42 @@ class UserSharedPreferences{
   static Future setAnnouncementCache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyAnnouncementCache, isCacheAvailable);
   }
-  static getAnnouncementCache() => _peferences.getBool(_keyAnnouncementCache);
+  static getAnnouncementCache() => _peferences.getBool(_keyAnnouncementCache) ?? false;
 
   //Sunday Bible Text
   static Future setBibleTextCache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyBibleTextCache, isCacheAvailable);
   }
-  static getBibleTextCache() => _peferences.getBool(_keyBibleTextCache);
+  static getBibleTextCache() => _peferences.getBool(_keyBibleTextCache) ?? false;
 
   //Bible Review
   static Future setBibleReviewCache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyBibleReviewCache, isCacheAvailable);
   }
-  static getBibleReviewCache() => _peferences.getBool(_keyBibleReviewCache);
+  static getBibleReviewCache() => _peferences.getBool(_keyBibleReviewCache) ?? false;
 
   //Serving Turn
   static Future setServingTurnCache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyServingTurnCache, isCacheAvailable);
   }
-  static getServingTurnCache() => _peferences.getBool(_keyServingTurnCache);
+  static getServingTurnCache() => _peferences.getBool(_keyServingTurnCache) ?? false;
 
   //Daily Bible Text
   static Future setDailyBibleText1Cache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyDailyBibleText1Cache, isCacheAvailable);
   }
-  static getDailyBibleText1Cache() => _peferences.getBool(_keyDailyBibleText1Cache);
+  static getDailyBibleText1Cache() => _peferences.getBool(_keyDailyBibleText1Cache) ?? false;
 
   static Future setDailyBibleText2Cache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyDailyBibleText2Cache, isCacheAvailable);
   }
-  static getDailyBibleText2Cache() => _peferences.getBool(_keyDailyBibleText2Cache);
+  static getDailyBibleText2Cache() => _peferences.getBool(_keyDailyBibleText2Cache) ?? false;
 
   //Message List
   static Future setMessageListTextCache(bool isCacheAvailable) async {
     await _peferences.setBool(_keyMessageListCache, isCacheAvailable);
   }
-  static getMessageListTextCache() => _peferences.getBool(_keyMessageListCache);
+  static getMessageListTextCache() => _peferences.getBool(_keyMessageListCache) ?? false;
 
   //Message List counter
   static Future setMessageListCounter(int count) async {
