@@ -84,8 +84,9 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return Drawer(
       //backgroundColor: Theme.of(context).colorScheme.onSurface,
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
             accountName: Text(AppLocalizations.of(context)!.missionStatement),
@@ -338,6 +339,7 @@ class _NavBarState extends State<NavBar> {
             },
           ),
         ],
+        ),
       ),
     );
   }

@@ -518,6 +518,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
               leadingText: Text(
                 AppLocalizations.of(context)!.foodPrep,
                 style: kBodyTextStyle(context),
+                maxLines: 1,
               ),
               icon: Icons.restaurant_rounded,
             ),
@@ -545,7 +546,7 @@ class ModernServingTurnTile extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withValues(alpha: 0.7),
@@ -596,7 +597,7 @@ class ModernServingTurnTile extends StatelessWidget {
                 style: kBodyTextStyle(context),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 1,
               ),
             ),
           ),

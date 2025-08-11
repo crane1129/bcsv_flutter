@@ -45,27 +45,29 @@ class _MessageListScreenState extends State<MessageListScreen> {
         title: AppBarHeaderText(
             text1: AppLocalizations.of(context)!.newMessage, text2: ''),
       ),
-      body: isLoading
-          ? Center(
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: SpinKitFadingCube(
-                  itemBuilder: (BuildContext context, int index) {
-                    return const DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                      ),
-                    );
-                  },
+      body: SafeArea(
+        child: isLoading
+            ? Center(
+                child: SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: SpinKitFadingCube(
+                    itemBuilder: (BuildContext context, int index) {
+                      return const DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  children: prayerListTiles,
                 ),
               ),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                children: prayerListTiles,
-              ),
-            ),
+      ),
     );
   }
 

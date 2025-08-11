@@ -85,43 +85,45 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
         title: AppBarHeaderText(
             text1: AppLocalizations.of(context)!.announcement, text2: ''),
       ),
-      body: isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: SpinKitFadingCube(
-                      itemBuilder: (BuildContext context, int index) {
-                        return const DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                          ),
-                        );
-                      },
+      body: SafeArea(
+        child: isLoading
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: SpinKitFadingCube(
+                        itemBuilder: (BuildContext context, int index) {
+                          return const DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 24),
-                  Text(
-                    AppLocalizations.of(context)?.dataLoading ?? 'Loading announcements...',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    SizedBox(height: 24),
+                    Text(
+                      AppLocalizations.of(context)?.dataLoading ?? 'Loading announcements...',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: _refreshData,
+                child: announcementTiles.isEmpty
+                    ? _buildEmptyState()
+                    : SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: _buildListPanel(),
+                      ),
               ),
-            )
-          : RefreshIndicator(
-              onRefresh: _refreshData,
-              child: announcementTiles.isEmpty
-                  ? _buildEmptyState()
-                  : SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      child: _buildListPanel(),
-                    ),
-            ),
+      ),
     );
   }
 

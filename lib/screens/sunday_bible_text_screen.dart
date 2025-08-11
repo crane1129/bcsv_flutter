@@ -65,26 +65,28 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
         title: AppBarHeaderText(
             text1: AppLocalizations.of(context)!.sermonBibleText, text2: ''),
       ),
-      body: Column(
-        children: [
-          // Compact search filters section
-          _buildCompactSearchFilters(),
-          
-          // Content section
-          Expanded(
-            child: isLoading
-                ? _buildLoadingState()
-                : RefreshIndicator(
-                    onRefresh: _refreshData,
-                    child: bibleTextTiles.isEmpty
-                        ? _buildEmptyState()
-                        : SingleChildScrollView(
-                            physics: AlwaysScrollableScrollPhysics(),
-                            child: _buildListPanel(),
-                          ),
-                  ),
-          ),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Compact search filters section
+            _buildCompactSearchFilters(),
+            
+            // Content section
+            Expanded(
+              child: isLoading
+                  ? _buildLoadingState()
+                  : RefreshIndicator(
+                      onRefresh: _refreshData,
+                      child: bibleTextTiles.isEmpty
+                          ? _buildEmptyState()
+                          : SingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              child: _buildListPanel(),
+                            ),
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
