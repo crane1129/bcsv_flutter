@@ -121,11 +121,9 @@ class _OfferingScreenState extends State<OfferingScreen> {
           ),
         ),
         child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: _refreshData,
-            child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              slivers: [
+          child: CustomScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            slivers: [
                 SliverToBoxAdapter(
                   child: Container(
                     padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
@@ -270,8 +268,7 @@ class _OfferingScreenState extends State<OfferingScreen> {
                     ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

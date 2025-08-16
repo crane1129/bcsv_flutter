@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -167,9 +168,7 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
           child: Stack(
             children: [
               // Main content with modern design
-              RefreshIndicator(
-                onRefresh: _refreshData,
-                child: CustomScrollView(
+              CustomScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverToBoxAdapter(
@@ -962,7 +961,6 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
                     ),
                   ],
                 ),
-              ),
 
               // Modern loading overlay
               if (isLoading)
@@ -1133,25 +1131,6 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
   Future<void> searchKeyword() async {
     FocusScope.of(context).unfocus(); // Hide the keyboard
 
-    // Check network connectivity before searching
-    try {
-      log('🔍 Checking network connectivity before keyword search...');
-
-      final hasConnection = await InternetConnectionChecker
-          .instance.hasConnection
-          .timeout(Duration(seconds: 5));
-
-      if (!hasConnection) {
-        log('❌ No network connection for keyword search');
-        _navigateToDisconnectScreen();
-        return;
-      }
-    } catch (e) {
-      log('❌ Network check failed for keyword search: $e');
-      _navigateToDisconnectScreen();
-      return;
-    }
-
     final keyword = keywordCtrl.text.trim();
 
     if (keyword.isEmpty) {
@@ -1186,7 +1165,9 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
         Uri.https('www.bridgeway.online', '/_functions/bibleSearch', query);
 
     try {
-      final response = await http.get(uri).timeout(Duration(seconds: 30));
+      final response = await http
+          .get(uri)
+          .timeout(const Duration(seconds: 30), onTimeout: () => throw TimeoutException('Request timeout'));
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -1236,35 +1217,19 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
     } catch (e) {
       log("❌ Bible keyword search exception: $e");
 
-      // Check if it's a network-related error
-      if (e.toString().contains('connection') ||
-          e.toString().contains('network') ||
-          e.toString().contains('timeout')) {
-        // Double-check network connectivity
-        try {
-          final hasConnection = await InternetConnectionChecker
-              .instance.hasConnection
-              .timeout(Duration(seconds: 5));
+      if (!mounted) return;
 
-          if (!hasConnection) {
-            log('🌐 Network disconnection confirmed during keyword search');
-            _navigateToDisconnectScreen();
-            return;
-          }
-        } catch (networkError) {
-          log('❌ Network verification failed during keyword search: $networkError');
-          _navigateToDisconnectScreen();
-          return;
-        }
-      }
-
-      if (mounted) {
+      if (e is TimeoutException) {
         showSimpleNotification(
-          Text(
-            '⚠️ Network error or server issue. Please try again.',
-            style: TextStyle(color: Colors.white),
-          ),
-          leading: Icon(Icons.warning_rounded, color: Colors.white),
+          const Text('⏱️ Request timed out. Please try again.' , style: TextStyle(color: Colors.white)),
+          leading: const Icon(Icons.timer_off_rounded, color: Colors.white),
+          background: Colors.red,
+          elevation: 8,
+        );
+      } else {
+        showSimpleNotification(
+          const Text('⚠️ Network error or server issue. Please try again.', style: TextStyle(color: Colors.white)),
+          leading: const Icon(Icons.warning_rounded, color: Colors.white),
           background: Colors.orange,
           elevation: 8,
         );

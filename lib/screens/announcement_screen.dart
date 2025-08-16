@@ -114,15 +114,12 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                   ],
                 ),
               )
-            : RefreshIndicator(
-                onRefresh: _refreshData,
-                child: announcementTiles.isEmpty
-                    ? _buildEmptyState()
-                    : SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        child: _buildListPanel(),
-                      ),
-              ),
+            : (announcementTiles.isEmpty
+                ? _buildEmptyState()
+                : SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: _buildListPanel(),
+                  )),
       ),
     );
   }

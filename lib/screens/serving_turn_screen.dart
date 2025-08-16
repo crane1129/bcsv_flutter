@@ -120,19 +120,17 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
         child: SafeArea(
           child: isLoading
               ? _buildLoadingState(theme)
-              : RefreshIndicator(
-                  onRefresh: _refreshData,
-                  child: servingTurnTiles.isEmpty
-                      ? _buildEmptyState(theme)
-                      : CustomScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          slivers: [
-                            SliverToBoxAdapter(
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+              : (servingTurnTiles.isEmpty
+                  ? _buildEmptyState(theme)
+                  : CustomScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                     // Modern header section
                                     Container(
                                       margin: EdgeInsets.only(bottom: 24),
@@ -219,8 +217,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                               ),
                             ),
                           ],
-                        ),
-                ),
+                        )),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -246,9 +247,7 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
           child: Stack(
         children: [
               // Main content with modern design
-              RefreshIndicator(
-                onRefresh: _refreshData,
-                child: CustomScrollView(
+              CustomScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverToBoxAdapter(
@@ -1125,7 +1124,6 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
                     ),
               ],
             ),
-          ),
 
               // Modern loading overlay
           if (isLoading)
@@ -1352,24 +1350,6 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   Future<void> fetchVerses() async {
     FocusScope.of(context).unfocus(); // Hide the keyboard
 
-    // Check network connectivity before searching
-    try {
-      log('🔍 Checking network connectivity before bible search...');
-
-      final hasConnection = await InternetConnectionChecker
-          .instance.hasConnection
-          .timeout(Duration(seconds: 5));
-
-      if (!hasConnection) {
-        log('❌ No network connection for bible search');
-        _navigateToDisconnectScreen();
-        return;
-      }
-    } catch (e) {
-      log('❌ Network check failed for bible search: $e');
-      _navigateToDisconnectScreen();
-      return;
-    }
 
     final book = selectedBook;
     final startChap = startChapCtrl.text;
@@ -1412,7 +1392,10 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
         Uri.https('www.bridgeway.online', '/_functions/bibleSearch', query);
 
     try {
-      final response = await http.get(uri).timeout(Duration(seconds: 30));
+      // Enforce a strict network timeout for the request
+      final response = await http
+          .get(uri)
+          .timeout(const Duration(seconds: 30), onTimeout: () => throw TimeoutException('Request timeout'));
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -1442,35 +1425,22 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
     } catch (e) {
       log("❌ Bible search exception: $e");
 
-      // Check if it's a network-related error
-      if (e.toString().contains('connection') ||
-          e.toString().contains('network') ||
-          e.toString().contains('timeout')) {
-        // Double-check network connectivity
-        try {
-          final hasConnection = await InternetConnectionChecker
-              .instance.hasConnection
-              .timeout(Duration(seconds: 5));
+      if (!mounted) return;
 
-          if (!hasConnection) {
-            log('🌐 Network disconnection confirmed during search');
-            _navigateToDisconnectScreen();
-            return;
-          }
-        } catch (networkError) {
-          log('❌ Network verification failed during search: $networkError');
-          _navigateToDisconnectScreen();
-          return;
-        }
-      }
-
-      if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+      if (e is TimeoutException) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             content: Text('네트워크 오류 또는 서버 문제입니다.'),
             backgroundColor: Colors.red,
           ),
-      );
+        );
       }
     } finally {
       // Stop loading in all cases
