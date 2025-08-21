@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
@@ -21,6 +22,7 @@ import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -34,12 +36,14 @@ class _NavBarState extends State<NavBar> {
   late int messageCounter;
   Timer? _endpointCheckTimer;
   bool _endpointsInitialized = false;
+  int _unconfirmedCount = 0;
 
   @override
   void initState() {
     super.initState();
     updateMessageCounter();
     _checkEndpointInitialization();
+    _loadUnconfirmedCount();
   }
 
   @override
@@ -77,7 +81,59 @@ class _NavBarState extends State<NavBar> {
         _endpointsInitialized = true;
       });
       _endpointCheckTimer?.cancel();
+      // Refresh unconfirmed count when endpoints become available
+      _loadUnconfirmedCount();
     }
+  }
+
+  Future<void> _loadUnconfirmedCount() async {
+    try {
+      // If endpoints map has dedicated endpoint, prefer it; else fallback to fixed path
+      final Uri uri = ApiEndpoint.apiMap['UNCONFIRMED_OPINIONS_COUNT'] ??
+          Uri.https('www.bridgeway.online', '/_functions/unconfirmedOpinions');
+
+      final response = await http
+          .get(uri)
+          .timeout(const Duration(seconds: 20));
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        int count;
+        if (body is Map && body.containsKey('count')) {
+          count = (body['count'] as num).toInt();
+        } else if (body is Map && body.containsKey('result')) {
+          final list = body['result'];
+          count = (list is List) ? list.length : 0;
+        } else if (body is List) {
+          count = body.length;
+        } else {
+          count = 0;
+        }
+        if (mounted) {
+          setState(() {
+            _unconfirmedCount = count;
+          });
+        }
+      }
+    } catch (_) {
+      // Silent fail; keep last known count
+    }
+  }
+
+  Widget _buildBadge(int value) {
+    return ClipOval(
+      child: Container(
+        color: Colors.red,
+        width: 18,
+        height: 18,
+        child: Center(
+          child: Text(
+            value.toString(),
+            style: const TextStyle(color: Colors.white, fontSize: 11),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -315,14 +371,24 @@ class _NavBarState extends State<NavBar> {
                   ListTile(
                     leading: Icon(Icons.admin_panel_settings,
                         color: kActiveIconColorAdmin(context)),
-                    title: Text(
-                        AppLocalizations.of(context)!.unconfirmed_opinion,
-                        style: kDrawerMenuTextStyle(context)),
+                    title: Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.unconfirmed_opinion,
+                          style: kDrawerMenuTextStyle(context),
+                        ),
+                        const SizedBox(width: 6),
+                        if (_unconfirmedCount > 0)
+                          _buildBadge(_unconfirmedCount),
+                      ],
+                    ),
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => UnconfirmedOpinionsScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => UnconfirmedOpinionsScreen(),
+                        ),
+                      ).then((_) => _loadUnconfirmedCount());
                     },
                   ),
                 ],

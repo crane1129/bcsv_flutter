@@ -30,12 +30,17 @@ class IconContent extends StatelessWidget {
 }
 
 class IconMsgContent extends StatelessWidget {
-  IconMsgContent(
-      {required this.cardIcon, required this.label, required this.msg_widget});
+  IconMsgContent({
+    required this.cardIcon,
+    required this.label,
+    required this.msg_widget,
+    this.badgeDelay,
+  });
 
   final IconData cardIcon;
   final String label;
   final Widget msg_widget;
+  final Duration? badgeDelay;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +63,47 @@ class IconMsgContent extends StatelessWidget {
                 style: kLabelTextStyle(context),
               ),
               const SizedBox(width: 5.0),
-              msg_widget
+              DelayedChild(
+                delay: badgeDelay ?? Duration.zero,
+                child: msg_widget,
+              )
             ],
           )
         ]);
+  }
+}
+
+class DelayedChild extends StatefulWidget {
+  const DelayedChild({Key? key, required this.delay, required this.child}) : super(key: key);
+
+  final Duration delay;
+  final Widget child;
+
+  @override
+  State<DelayedChild> createState() => _DelayedChildState();
+}
+
+class _DelayedChildState extends State<DelayedChild> {
+  bool _show = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.delay == Duration.zero) {
+      _show = true;
+    } else {
+      Future.delayed(widget.delay, () {
+        if (mounted) {
+          setState(() {
+            _show = true;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _show ? widget.child : const SizedBox.shrink();
   }
 }

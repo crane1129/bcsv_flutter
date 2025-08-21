@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget emptyString = Text('');
   late int messageCounter;
-  
+
   // Card visibility states
   bool showAnnouncementCard = true;
   bool showMessageCard = true;
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _initializeApp();
     });
   }
-  
+
   void _loadCardVisibilitySettings() {
     setState(() {
       showAnnouncementCard = UserSharedPreferences.getShowAnnouncementCard();
@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       showKeywordSearchCard = UserSharedPreferences.getShowKeywordSearchCard();
     });
   }
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -306,101 +306,148 @@ class _MyHomePageState extends State<MyHomePage> {
                         ).animate().fadeIn(duration: 400.ms).scale(
                             begin: Offset(0.98, 0.98), end: Offset(1.0, 1.0)),
 
-                        // Enhanced grid layout with modern spacing
+                        // Enhanced grid layout with modern spacing (responsive for iPad)
                         Container(
-                          constraints: BoxConstraints(
-                            maxWidth:
-                                screenSize.width > 600 ? 600 : double.infinity,
-                          ),
                           child: Column(
                             children: [
                               // Row 1: Announcement & New Message
                               _buildRow([
-                                if (showAnnouncementCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AnnouncementPage())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.bullhorn,
-                                    label: AppLocalizations.of(context)!.announcement,
+                                if (showAnnouncementCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AnnouncementPage())),
+                                    cardChild: IconContent(
+                                      cardIcon: FontAwesomeIcons.bullhorn,
+                                      label: AppLocalizations.of(context)!
+                                          .announcement,
+                                    ),
+                                    animationDelay: 800.ms,
+                                    slideDirection: -0.3,
                                   ),
-                                  animationDelay: 800.ms,
-                                  slideDirection: -0.3,
-                                ),
-                                if (showMessageCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MessageListScreen())).then((onValue) => updateMessageCounter()),
-                                  cardChild: IconMsgContent(
-                                    cardIcon: FontAwesomeIcons.message,
-                                    label: AppLocalizations.of(context)!.newMessage,
-                                    msg_widget: displayMsgCounter(),
+                                if (showMessageCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                MessageListScreen())).then(
+                                        (onValue) => updateMessageCounter()),
+                                    cardChild: IconMsgContent(
+                                      cardIcon: FontAwesomeIcons.message,
+                                      label: AppLocalizations.of(context)!
+                                          .newMessage,
+                                      msg_widget: displayMsgCounter()
+                                    ),
+                                    animationDelay: 900.ms,
+                                    slideDirection: 0.3,
                                   ),
-                                  animationDelay: 900.ms,
-                                  slideDirection: 0.3,
-                                ),
                               ]),
 
                               // Row 2: Serving Turn & Offering
                               _buildRow([
-                                if (showServingTurnCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ServingTurnPage())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.peopleCarryBox,
-                                    label: AppLocalizations.of(context)!.servingTurn,
+                                if (showServingTurnCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ServingTurnPage())),
+                                    cardChild: IconContent(
+                                      cardIcon: FontAwesomeIcons.peopleCarryBox,
+                                      label: AppLocalizations.of(context)!
+                                          .servingTurn,
+                                    ),
+                                    animationDelay: 1000.ms,
+                                    slideDirection: -0.3,
                                   ),
-                                  animationDelay: 1000.ms,
-                                  slideDirection: -0.3,
-                                ),
-                                if (showOfferingCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => OfferingScreen())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.handHoldingHeart,
-                                    label: AppLocalizations.of(context)!.offering,
+                                if (showOfferingCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OfferingScreen())),
+                                    cardChild: IconContent(
+                                      cardIcon:
+                                          FontAwesomeIcons.handHoldingHeart,
+                                      label: AppLocalizations.of(context)!
+                                          .offering,
+                                    ),
+                                    animationDelay: 1100.ms,
+                                    slideDirection: 0.3,
                                   ),
-                                  animationDelay: 1100.ms,
-                                  slideDirection: 0.3,
-                                ),
                               ]),
 
                               // Row 3: Bible Text & Daily Bible
                               _buildRow([
-                                if (showBibleTextCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SundayBibleTextScreen())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.bookBible,
-                                    label: AppLocalizations.of(context)!.bibleText,
+                                if (showBibleTextCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SundayBibleTextScreen())),
+                                    cardChild: IconContent(
+                                      cardIcon: FontAwesomeIcons.bookBible,
+                                      label: AppLocalizations.of(context)!
+                                          .bibleText,
+                                    ),
+                                    animationDelay: 1200.ms,
+                                    slideDirection: -0.3,
                                   ),
-                                  animationDelay: 1200.ms,
-                                  slideDirection: -0.3,
-                                ),
-                                if (showDailyBibleCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DailyBibleTextScreen())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.calendarDays,
-                                    label: AppLocalizations.of(context)!.dailyBible,
+                                if (showDailyBibleCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DailyBibleTextScreen())),
+                                    cardChild: IconContent(
+                                      cardIcon: FontAwesomeIcons.calendarDays,
+                                      label: AppLocalizations.of(context)!
+                                          .dailyBible,
+                                    ),
+                                    animationDelay: 1300.ms,
+                                    slideDirection: 0.3,
                                   ),
-                                  animationDelay: 1300.ms,
-                                  slideDirection: 0.3,
-                                ),
                               ]),
 
                               // Row 4: Bible Search & Keyword Search
                               _buildRow([
-                                if (showBibleSearchCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BibleSearchScreen())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.magnifyingGlass,
-                                    label: AppLocalizations.of(context)!.bible_search,
+                                if (showBibleSearchCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BibleSearchScreen())),
+                                    cardChild: IconContent(
+                                      cardIcon:
+                                          FontAwesomeIcons.magnifyingGlass,
+                                      label: AppLocalizations.of(context)!
+                                          .bible_search,
+                                    ),
+                                    animationDelay: 1400.ms,
+                                    slideDirection: -0.3,
                                   ),
-                                  animationDelay: 1400.ms,
-                                  slideDirection: -0.3,
-                                ),
-                                if (showKeywordSearchCard) _buildCard(
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BibleKeywordSearchScreen())),
-                                  cardChild: IconContent(
-                                    cardIcon: FontAwesomeIcons.searchengin,
-                                    label: AppLocalizations.of(context)!.keywordSearch,
+                                if (showKeywordSearchCard)
+                                  _buildCard(
+                                    onPress: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BibleKeywordSearchScreen())),
+                                    cardChild: IconContent(
+                                      cardIcon: FontAwesomeIcons.searchengin,
+                                      label: AppLocalizations.of(context)!
+                                          .keywordSearch,
+                                    ),
+                                    animationDelay: 1500.ms,
+                                    slideDirection: 0.3,
                                   ),
-                                  animationDelay: 1500.ms,
-                                  slideDirection: 0.3,
-                                ),
                               ]),
 
                               // Bottom spacing for modern feel
@@ -445,28 +492,38 @@ class _MyHomePageState extends State<MyHomePage> {
       globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
   }
-  
+
   /// Helper method to build a row with dynamic card visibility
   Widget _buildRow(List<Widget> cards) {
     if (cards.isEmpty) return SizedBox.shrink();
-    
-    if (cards.length == 1) {
-      // Single card - make it full width
+
+    final double width = MediaQuery.of(context).size.width;
+    final bool isTablet = width >= 768; // iPad breakpoint
+
+    if (!isTablet) {
+      if (cards.length == 1) {
+        return Container(margin: EdgeInsets.only(bottom: 12), child: cards.first);
+      }
       return Container(
         margin: EdgeInsets.only(bottom: 12),
-        child: cards.first,
-      );
-    } else {
-      // Multiple cards - arrange in row
-      return Container(
-        margin: EdgeInsets.only(bottom: 12),
-        child: Row(
-          children: cards.map((card) => Expanded(child: card)).toList(),
-        ),
+        child: Row(children: cards.map((card) => Expanded(child: card)).toList()),
       );
     }
+
+    // Tablet layout: allow 3 cards per row when available, otherwise 2 or 1
+    final List<Widget> chunks = [];
+    for (int i = 0; i < cards.length; i += 3) {
+      final slice = cards.sublist(i, (i + 3).clamp(0, cards.length));
+      chunks.add(Container(
+        margin: EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: slice.map((card) => Expanded(child: card)).toList(),
+        ),
+      ));
+    }
+    return Column(children: chunks);
   }
-  
+
   /// Helper method to build individual cards
   Widget _buildCard({
     required VoidCallback onPress,
@@ -475,7 +532,7 @@ class _MyHomePageState extends State<MyHomePage> {
     required double slideDirection,
   }) {
     final theme = Theme.of(context);
-    
+
     return Container(
       height: 110,
       margin: EdgeInsets.symmetric(horizontal: 4),
@@ -487,8 +544,6 @@ class _MyHomePageState extends State<MyHomePage> {
         color: theme.colorScheme.surface,
         cardChild: cardChild,
       ),
-    ).animate()
-      .fadeIn(delay: animationDelay)
-      .slideX(begin: slideDirection);
+    ).animate().fadeIn(delay: animationDelay).slideX(begin: slideDirection);
   }
 }
