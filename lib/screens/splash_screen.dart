@@ -58,8 +58,10 @@ class _SplashScreenState extends State<SplashScreen>
       // Start the animation
       _animationController.forward();
       
-      // Load user settings immediately (lightweight operation)
-      BackgroundService().loadSettings(context);
+      // Defer settings loading to avoid build-time setState issues
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        BackgroundService().loadSettings(context);
+      });
       
       // Start background initialization during splash screen
       // This allows services to initialize while user sees the splash
