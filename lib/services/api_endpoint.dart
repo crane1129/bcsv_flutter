@@ -187,13 +187,13 @@ class ApiEndpoint {
           var messageIdWithViewStatus = <String, bool>{};
           
           for (dynamic message in storedJsonObjMsg) {
-            final messageId = message['MessageID'] as String;
+            final messageId = message['MessageID'].toString();
             messageIdSet.add(messageId);
             messageIdWithViewStatus[messageId] = message['viewed'] ?? false;
           }
 
           for (dynamic message in downloadedJsonObjMsg) {
-            final messageId = message['MessageID'] as String;
+            final messageId = message['MessageID'].toString();
             if (!messageIdSet.contains(messageId)) {
               // New message
               new_msg_id.add(messageId);
@@ -211,7 +211,7 @@ class ApiEndpoint {
 
           //Add 'viewed' element in message and save data to cache
           for (var i = 0; i < messages.length; i++) {
-            final messageId = messages[i]['MessageID'] as String;
+            final messageId = messages[i]['MessageID'];
             messages[i]['viewed'] = !new_msg_id.contains(messageId);
           }
         } else {

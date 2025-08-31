@@ -23,12 +23,48 @@ class DailyBibleTextScreen extends StatefulWidget {
 
 class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
   bool isLoading = false;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDailyBibleText();
+    getDailyBibleText(_selectedDate);
+  }
+
+  // Date navigation helpers
+  void _goToPreviousDate() {
+    final DateTime previous = _selectedDate.subtract(Duration(days: 1));
+    setState(() {
+      _selectedDate = previous;
+      _headerData = null;
+      _bodyText = '';
+    });
+    UserSharedPreferences.setDailyBibleText1Cache(false);
+    UserSharedPreferences.setDailyBibleText2Cache(false);
+    getDailyBibleText(previous);
+  }
+
+  void _goToNextDate() {
+    final DateTime today = DateTime.now();
+    _selectedDate = _selectedDate.add(Duration(days: 1));
+    final DateTime nextDateOnly = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final DateTime todayOnly = DateTime(today.year, today.month, today.day);
+    if (nextDateOnly.isAfter(todayOnly)) return;
+    setState(() {
+      _headerData = null;
+      _bodyText = '';
+    });
+    UserSharedPreferences.setDailyBibleText1Cache(false);
+    UserSharedPreferences.setDailyBibleText2Cache(false);
+    getDailyBibleText(nextDateOnly);
+  }
+
+  bool _isToday(DateTime date) {
+    final DateTime today = DateTime.now();
+    final DateTime dateOnly = DateTime(date.year, date.month, date.day);
+    final DateTime todayOnly = DateTime(today.year, today.month, today.day);
+    return dateOnly.isAtSameMomentAs(todayOnly);
   }
 
   Map<String, dynamic>? _headerData;
@@ -136,8 +172,8 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Modern header section
-                                    _buildModernHeader(),
+                                    // Date navigation section
+                                    _buildDateNavigation(),
 
                                     // Bible content card
                                     if (_headerData != null ||
@@ -155,9 +191,10 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     );
   }
 
-  void getDailyBibleText() async {
+  void getDailyBibleText(DateTime _targetDate) async {
     final stopwatch = Stopwatch()..start();
     print('🔄 [DEBUG] Starting getDailyBibleText() method');
+    print('🔄 [DEBUG] Target Date: ${DateFormat('yyyy-MM-dd').format(_targetDate)}');
 
     try {
       //Show loading spinner
@@ -188,19 +225,21 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
         setSharedReference: UserSharedPreferences.setDailyBibleText1Cache,
       );
 
-      DateTime now = DateTime.now();
-      String formattedCurrentDate = DateFormat('yyyy-MM-dd').format(now);
+      // Use selected date for requests
+      String formattedCurrentDate = DateFormat('yyyy-MM-dd').format(_targetDate);
       print('📅 [DEBUG] Request date: $formattedCurrentDate');
 
       Map data = {'qt_ty': 'QT1', 'Base_de': formattedCurrentDate};
       print('📤 [DEBUG] Request data: $data');
 
       // Check cache status before API call
-      final isCached1 = UserSharedPreferences.getDailyBibleText1Cache();
-      final isCached2 = UserSharedPreferences.getDailyBibleText2Cache();
-      print('💾 [DEBUG] Cache status:');
-      print('   - DAILY_BIBLE1 cache: ${isCached1 ? "✅ Available" : "❌ Empty"}');
-      print('   - DAILY_BIBLE2 cache: ${isCached2 ? "✅ Available" : "❌ Empty"}');
+      // final isCached1 = UserSharedPreferences.getDailyBibleText1Cache();
+      // final isCached2 = UserSharedPreferences.getDailyBibleText2Cache();
+      // final isCached1 = false;
+      // final isCached2 = false;
+      // print('💾 [DEBUG] Cache status:');
+      // print('   - DAILY_BIBLE1 cache: ${isCached1 ? "✅ Available" : "❌ Empty"}');
+      // print('   - DAILY_BIBLE2 cache: ${isCached2 ? "✅ Available" : "❌ Empty"}');
 
       print('🚀 [DEBUG] Fetching DAILY_BIBLE1 data...');
       final bible1Stopwatch = Stopwatch()..start();
@@ -255,6 +294,8 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
       // Build header data
       final title = "${jsonObj1['Bible_name']}  ${jsonObj1['Bible_chapter']}";
       final subtitle = jsonObj1['Base_de'];
+      _selectedDate = DateTime.parse(subtitle);
+
       print('📋 [DEBUG] Header data:');
       print('   - Title: $title');
       print('   - Subtitle: $subtitle');
@@ -310,7 +351,7 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
               textColor: Colors.white,
               onPressed: () {
                 print('🔁 [DEBUG] User requested retry');
-                getDailyBibleText();
+                getDailyBibleText(_targetDate);
               },
             ),
           ),
@@ -402,9 +443,10 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     );
   }
 
-  /// Build modern header section
-  Widget _buildModernHeader() {
+  /// Build date navigation section
+  Widget _buildDateNavigation() {
     final theme = Theme.of(context);
+    final bool isToday = _isToday(_selectedDate);
 
     return Container(
       margin: EdgeInsets.only(bottom: 24),
@@ -431,56 +473,89 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(
-              FontAwesomeIcons.bookOpen,
-              size: 28,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.dailyBible,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                  ),
+          // Date display
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  'Daily scripture and meditation',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
+                child: Icon(
+                  FontAwesomeIcons.calendar,
+                  size: 24,
+                  color: theme.colorScheme.primary,
                 ),
-              ],
-            ),
-          ),
-          // Font size indicator
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              '${_fontSize.toInt()}pt',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
               ),
-            ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      isToday ? 'Today\'s Reading' : 'Previous Reading',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          // Navigation buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _goToPreviousDate,
+                  icon: Icon(Icons.chevron_left_rounded),
+                  label: Text('Previous Day'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    foregroundColor: theme.colorScheme.onPrimaryContainer,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: isToday ? null : _goToNextDate,
+                  icon: Icon(Icons.chevron_right_rounded),
+                  label: Text('Next Day'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isToday 
+                        ? theme.colorScheme.surfaceVariant
+                        : theme.colorScheme.primaryContainer,
+                    foregroundColor: isToday 
+                        ? theme.colorScheme.onSurfaceVariant
+                        : theme.colorScheme.onPrimaryContainer,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -613,7 +688,9 @@ class _DailyBibleTextScreenState extends State<DailyBibleTextScreen> {
     });
 
     // Reload data
-    getDailyBibleText();
+    UserSharedPreferences.setDailyBibleText1Cache(false);
+    UserSharedPreferences.setDailyBibleText2Cache(false);
+    getDailyBibleText(_selectedDate);
   }
 }
 
