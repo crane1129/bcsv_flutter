@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/services/gsheet_access.dart';
+import 'package:bcsv_flutter_project/services/keyverse_service.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:flutter/material.dart';
@@ -166,6 +167,9 @@ class BackgroundService {
       // Initialize local data structures
       futures.add(_initializeLocalServices());
       
+      // Initialize keyverse service (can work offline with cached data)
+      futures.add(_initializeKeyVerseService());
+      
       await Future.wait(futures, eagerError: false);
       log('✅ Offline services initialized');
     } catch (e) {
@@ -221,6 +225,24 @@ class BackgroundService {
       log('✅ Local services initialized');
     } catch (e) {
       log('❌ Error initializing local services: $e');
+    }
+  }
+
+  /// Initialize keyverse service
+  Future<void> _initializeKeyVerseService() async {
+    try {
+      log('🔄 Initializing keyverse service...');
+      
+      // Pre-load current year's keyverse if available
+      final currentYear = DateTime.now().year;
+      final keyverseService = KeyVerseService();
+      
+      // Try to get keyverse for current year (will use cache if available)
+      await keyverseService.getKeyVerse(year: currentYear);
+      
+      log('✅ Keyverse service initialized');
+    } catch (e) {
+      log('❌ Error initializing keyverse service: $e');
     }
   }
 
@@ -343,6 +365,9 @@ class BackgroundService {
       UserSharedPreferences.setServingTurnCache(false);
       UserSharedPreferences.setDailyBibleText1Cache(false);
       UserSharedPreferences.setDailyBibleText2Cache(false);
+      
+      // Clear keyverse cache when settings are reloaded
+      KeyVerseService().clearCache();
       
       log('✅ Settings loaded');
     } catch (e) {

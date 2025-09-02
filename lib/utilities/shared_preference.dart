@@ -163,4 +163,21 @@ class UserSharedPreferences{
     final now = DateTime.now();
     return now.difference(cacheDate) > maxAge;
   }
+
+  // Generic methods for other data types
+  static Future setString(String key, String value) async {
+    await _peferences.setString(key, value);
+  }
+  
+  static String? getString(String key) => _peferences.getString(key);
+  
+  static Future setInt(String key, int value) async {
+    await _peferences.setInt(key, value);
+  }
+  
+  static int? getInt(String key) => _peferences.getInt(key);
+  
+  static Future remove(String key) async {
+    await _peferences.remove(key);
+  }
 }

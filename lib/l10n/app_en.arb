@@ -338,5 +338,17 @@
   "keywordSearch": "Keyword Search",
   "@keywordSearch": {
     "description": "Bible Keyword Search Button Text"
+  },
+  "keyVerse": "Key Verse",
+  "@keyVerse": {
+    "description": "Key Verse Text"
+  },
+  "vision_direction": "The Vision and Direction of Our Church",
+  "@vision_direction": {
+    "description": "vision and direction"
+  },
+  "vision_direction_content": "• Mnistry centered on the Word and disciple training\n• Evangelization of youth in Silicon Valley/campuses\n• A community that shares life together\n• Encouragement of personal faith growth and commitment",
+  "@vision_direction_content": {
+    "description": "description"
   }
 }

@@ -59,7 +59,7 @@ class _AboutScreenState extends State<AboutScreen> {
               // _infoTile('Build signature',
               //     PackageInformation.packageInfo.buildSignature),
               _infoTile('Developer',
-                  'Daniel Kim (dankim0822@gmail.com)\nHaksoo Kim(crane1129@gmail.com)'),
+                  'Haksoo Kim(crane1129@gmail.com)'),
               _infoTile('\n© ' + this_year + ' Bridgeway Baptist Church',
                   '     2490 Middlefield. Palo Alto, CA 94301'),
               ElevatedButton(

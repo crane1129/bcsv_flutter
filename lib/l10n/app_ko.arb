@@ -84,5 +84,8 @@
     "restartRequiredMessage": "홈 화면 레이아웃 변경 사항을 적용하려면 앱을 재시작해 주세요.",
     "restartNow": "지금 재시작",
     "restartLater": "나중에",
-    "keywordSearch": "성경 키워드 검색"
+    "keywordSearch": "성경 키워드 검색",
+    "keyVerse": "올해 Key Verse",
+    "vision_direction": "우리 교회의 비젼과 방향",
+    "vision_direction_content": "• 말씀 중심의 사역과 제자 양육 \n• 실리콘밸리/캠퍼스 청년 복음화\n•  나누는 공동체\n• 개인의 믿음 성장과 헌신 격려"
 }

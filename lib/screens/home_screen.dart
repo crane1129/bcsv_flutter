@@ -17,8 +17,11 @@ import 'package:bcsv_flutter_project/globals.dart' as globals;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
+import 'package:bcsv_flutter_project/services/keyverse_service.dart';
+import 'package:bcsv_flutter_project/data_models/keyverse_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'dart:developer';
+import '../utilities/constants.dart';
 import 'offering_screen.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -32,6 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget emptyString = Text('');
   late int messageCounter;
+
+  // Key verse state
+  KeyVerse? _currentKeyVerse;
+  bool _isLoadingKeyVerse = false;
 
   // Card visibility states
   bool showAnnouncementCard = true;
@@ -47,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _loadCardVisibilitySettings();
+    _loadCurrentYearKeyVerse();
 
     // Initialize app services immediately when home screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -208,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: EdgeInsets.all(10),
                               child: Column(
                                 children: [
                                   // Compact header row
@@ -216,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     children: [
                                       // Mission icon
                                       Container(
-                                        padding: EdgeInsets.all(6),
+                                        padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: theme.colorScheme.primary
                                               .withValues(alpha: 0.1),
@@ -233,9 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                       // Mission statement
                                       Expanded(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .missionStatement,
+                                        child: Text(_currentKeyVerse!.title,
                                           style: theme.textTheme.titleMedium
                                               ?.copyWith(
                                             fontWeight: FontWeight.bold,
@@ -259,8 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               BorderRadius.circular(12),
                                         ),
                                         child: Text(
-                                          AppLocalizations.of(context)!
-                                              .missionVerse,
+                                          _currentKeyVerse!.shortReference,
                                           style: theme.textTheme.labelSmall
                                               ?.copyWith(
                                             color: theme.colorScheme.secondary,
@@ -276,29 +281,90 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                   SizedBox(height: 8),
 
-                                  // Full verse content
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 12),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.surface
-                                          .withValues(alpha: 0.5),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .mission_statement_verse,
-                                      style:
-                                          theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.8),
-                                        height: 1.4,
-                                        fontStyle: FontStyle.italic,
+                                  // Key verse content
+                                  if (_isLoadingKeyVerse)
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 12),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.surface
+                                            .withValues(alpha: 0.5),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ).animate().fadeIn(delay: 700.ms),
-                                  ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Text(
+                                            'Loading key verse...',
+                                            style: theme.textTheme.bodySmall?.copyWith(
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  else if (_currentKeyVerse != null)
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 5),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.surface
+                                            .withValues(alpha: 0.5),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          // Key verse text
+                                          Text(
+                                            _currentKeyVerse!.verse,
+                                            style: theme.textTheme.bodySmall?.copyWith(
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: 0.8),
+                                              height: 1.5,
+                                              fontStyle: FontStyle.normal,
+                                              fontFamily: kSystemWideFont,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ).animate().fadeIn(delay: 700.ms),
+                                    )
+                                  else
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 12),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.surface
+                                            .withValues(alpha: 0.5),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .mission_statement_verse,
+                                        style:
+                                            theme.textTheme.bodySmall?.copyWith(
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.8),
+                                          height: 1.4,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ).animate().fadeIn(delay: 700.ms),
+                                    ),
                                 ],
                               ),
                             ),
@@ -491,6 +557,32 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
+  }
+
+  /// Load current year's key verse
+  Future<void> _loadCurrentYearKeyVerse() async {
+    setState(() {
+      _isLoadingKeyVerse = true;
+    });
+
+    try {
+      final keyVerse = await KeyVerseService().getCurrentYearKeyVerse();
+      setState(() {
+        _currentKeyVerse = keyVerse;
+        _isLoadingKeyVerse = false;
+      });
+      
+      if (keyVerse != null) {
+        log('✅ Key verse loaded: ${keyVerse.title}');
+      } else {
+        log('⚠️ No key verse found for current year');
+      }
+    } catch (e) {
+      log('❌ Error loading key verse: $e');
+      setState(() {
+        _isLoadingKeyVerse = false;
+      });
+    }
   }
 
   /// Helper method to build a row with dynamic card visibility

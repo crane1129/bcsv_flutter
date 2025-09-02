@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
+import 'package:bcsv_flutter_project/screens/keyverse_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:bcsv_flutter_project/screens/unconfirmed_opinion_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
@@ -160,6 +161,18 @@ class _NavBarState extends State<NavBar> {
                 )),
           ),
           ListTile(
+            //contentPadding: EdgeInsets.only(left: 30.0),
+            leading:
+            Icon(Icons.key, color: kActiveIconColor(context), size: 20),
+            title: Text(AppLocalizations.of(context)!.key_verse,
+                style: kDrawerMenuTextStyle(context)),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => KeyVerseScreen()));
+            },
+          ),
+          const Divider(color: Colors.grey),
+          ListTile(
             //leading: Icon(FontAwesomeIcons.church, color: kInactiveIconColor),
             title: Text(AppLocalizations.of(context)!.sundaySermons,
                 style: kDrawerTitleMenuTextStyle(context)),
@@ -235,17 +248,6 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => SundayBibleTextScreen()));
             },
           ),
-          // ListTile(
-          //   //contentPadding: EdgeInsets.only(left: 30.0),
-          //   leading:
-          //       Icon(Icons.create_sharp, color: kActiveIconColor(context), size: 20),
-          //   title: Text(AppLocalizations.of(context)!.sermonReview,
-          //       style: kDrawerMenuTextStyle(context)),
-          //   onTap: () {
-          //     Navigator.push(context,
-          //         MaterialPageRoute(builder: (_) => SermonReviewScreen()));
-          //   },
-          // ),
           ListTile(
             leading: Icon(Icons.auto_stories, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.dailyBible,
