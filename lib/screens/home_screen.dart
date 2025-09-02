@@ -241,16 +241,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                       // Mission statement
                                       Expanded(
-                                        child: Text(_currentKeyVerse!.title,
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: theme.colorScheme.onSurface,
-                                          ),
-                                        )
-                                            .animate()
-                                            .fadeIn(delay: 300.ms)
-                                            .slideX(begin: -0.3),
+                                        child: _currentKeyVerse != null
+                                            ? Text(
+                                                _currentKeyVerse!.title,
+                                                style: theme.textTheme.titleMedium
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: theme.colorScheme.onSurface,
+                                                ),
+                                              )
+                                                  .animate()
+                                                  .fadeIn(delay: 300.ms)
+                                                  .slideX(begin: -0.3)
+                                            : Text(
+                                                'Loading...',
+                                                style: theme.textTheme.titleMedium
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                                ),
+                                              ),
                                       ),
 
                                       // Compact verse badge
@@ -264,17 +274,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
-                                        child: Text(
-                                          _currentKeyVerse!.shortReference,
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                            color: theme.colorScheme.secondary,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        )
-                                            .animate()
-                                            .fadeIn(delay: 500.ms)
-                                            .slideX(begin: 0.3),
+                                        child: _currentKeyVerse != null
+                                            ? Text(
+                                                _currentKeyVerse!.shortReference,
+                                                style: theme.textTheme.labelSmall
+                                                    ?.copyWith(
+                                                  color: theme.colorScheme.secondary,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              )
+                                                  .animate()
+                                                  .fadeIn(delay: 500.ms)
+                                                  .slideX(begin: 0.3)
+                                            : Text(
+                                                '...',
+                                                style: theme.textTheme.labelSmall
+                                                    ?.copyWith(
+                                                  color: theme.colorScheme.secondary.withValues(alpha: 0.6),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
                                       ),
                                     ],
                                   ),
@@ -315,32 +334,37 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ),
                                     )
                                   else if (_currentKeyVerse != null)
-                                    Container(
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 5, horizontal: 5),
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.surface
-                                            .withValues(alpha: 0.5),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          // Key verse text
-                                          Text(
-                                            _currentKeyVerse!.verse,
-                                            style: theme.textTheme.bodySmall?.copyWith(
-                                              color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.8),
-                                              height: 1.5,
-                                              fontStyle: FontStyle.normal,
-                                              fontFamily: kSystemWideFont,
-                                            ),
-                                            textAlign: TextAlign.center,
+                                    Builder(
+                                      builder: (context) {
+                                        final keyVerse = _currentKeyVerse!;
+                                        return Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 5),
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.surface
+                                                .withValues(alpha: 0.5),
+                                            borderRadius: BorderRadius.circular(8),
                                           ),
-                                        ],
-                                      ).animate().fadeIn(delay: 700.ms),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Key verse text
+                                              Text(
+                                                keyVerse.verse,
+                                                style: theme.textTheme.bodySmall?.copyWith(
+                                                  color: theme.colorScheme.onSurface
+                                                      .withValues(alpha: 0.8),
+                                                  height: 1.5,
+                                                  fontStyle: FontStyle.normal,
+                                                  fontFamily: kSystemWideFont,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ).animate().fadeIn(delay: 700.ms),
+                                        );
+                                      },
                                     )
                                   else
                                     Container(

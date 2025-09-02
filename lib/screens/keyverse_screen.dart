@@ -39,7 +39,8 @@ class _KeyVerseScreenState extends State<KeyVerseScreen> {
       });
       
       if (_currentKeyVerse != null) {
-        log('✅ Keyverse loaded for year $_selectedYear: ${_currentKeyVerse!.title}');
+        final keyVerse = _currentKeyVerse!;
+        log('✅ Keyverse loaded for year $_selectedYear: ${keyVerse.title}');
       } else {
         log('⚠️ No keyverse found for year $_selectedYear');
       }
@@ -215,62 +216,67 @@ class _KeyVerseScreenState extends State<KeyVerseScreen> {
                     ),
                   )
                 else if (_currentKeyVerse != null)
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            theme.colorScheme.secondaryContainer.withValues(alpha: 0.1),
-                            theme.colorScheme.surface,
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Bible reference
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
+                  Builder(
+                    builder: (context) {
+                      final keyVerse = _currentKeyVerse!;
+                      return Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                theme.colorScheme.secondaryContainer.withValues(alpha: 0.1),
+                                theme.colorScheme.surface,
+                              ],
                             ),
-                            child: Text(
-                              _currentKeyVerse!.chapterVerseRange,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.primary,
-                                fontFamily: kSystemWideFont,
-                              ),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: theme.colorScheme.outline.withValues(alpha: 0.1),
                             ),
                           ),
-                          SizedBox(height: 16),
-
-                          // Verse text
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Text(
-                                _currentKeyVerse!.verse,
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: theme.colorScheme.onSurface,
-                                  height: 1.6,
-                                  fontSize: 18,
-                                  fontFamily: kSystemWideFont
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Bible reference
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                textAlign: TextAlign.justify,
+                                child: Text(
+                                  keyVerse.chapterVerseRange,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.primary,
+                                    fontFamily: kSystemWideFont,
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(height: 16),
+
+                              // Verse text
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    keyVerse.verse,
+                                    style: theme.textTheme.bodyLarge?.copyWith(
+                                      color: theme.colorScheme.onSurface,
+                                      height: 1.6,
+                                      fontSize: 18,
+                                      fontFamily: kSystemWideFont
+                                    ),
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ).animate().fadeIn(delay: 300.ms, duration: 800.ms).slideY(begin: 0.2, end: 0),
+                        ).animate().fadeIn(delay: 300.ms, duration: 800.ms).slideY(begin: 0.2, end: 0),
+                      );
+                    },
                   )
                 else
                   Expanded(

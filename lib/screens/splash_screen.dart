@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
       BackgroundService().initializeInBackground();
       
       // Wait for animation to complete and some additional time for user to see version
-      await Future.delayed(const Duration(milliseconds: 2500));
+      await Future.delayed(const Duration(milliseconds: 3500));
       
       // Navigate to home screen
       if (mounted) {
