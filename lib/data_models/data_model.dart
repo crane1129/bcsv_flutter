@@ -82,7 +82,7 @@ class ServingTurn {
   final String prayer;
   final String joycorner;
   final String food;
-  final String tuesdayPrayMeeting;
+  final String prayerDate;
   final String babysitter;
 
   ServingTurn(
@@ -90,7 +90,7 @@ class ServingTurn {
       required this.prayer,
       required this.joycorner,
       required this.food,
-      required this.tuesdayPrayMeeting,
+      required this.prayerDate,
       required this.babysitter});
 
   factory ServingTurn.fromJson(dynamic json) {
@@ -99,7 +99,7 @@ class ServingTurn {
         prayer: json['prayer'],
         joycorner: json['joycorner'],
         food: json['food'],
-        tuesdayPrayMeeting: json['tuesday_pray_meeting'],
+        prayerDate: json['tuesday_pray_meeting'],
         babysitter: json['babysitter']);
   }
 }

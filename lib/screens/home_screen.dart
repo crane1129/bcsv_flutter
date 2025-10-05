@@ -122,7 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
 
     return UpgradeAlert(
       dialogStyle: UpgradeDialogStyle.cupertino,
@@ -177,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
               slivers: [
                 SliverToBoxAdapter(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).size.width >= 768 && MediaQuery.of(context).size.height > MediaQuery.of(context).size.width ? 8 : 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -426,7 +425,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 MessageListScreen())).then(
                                         (onValue) => updateMessageCounter()),
                                     cardChild: IconMsgContent(
-                                      cardIcon: FontAwesomeIcons.message,
+                                      cardIcon: FontAwesomeIcons.newspaper,
                                       label: AppLocalizations.of(context)!
                                           .newMessage,
                                       msg_widget: displayMsgCounter()
@@ -481,9 +480,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                             builder: (context) =>
                                                 SundayBibleTextScreen())),
                                     cardChild: IconContent(
-                                      cardIcon: FontAwesomeIcons.bookBible,
+                                      cardIcon: FontAwesomeIcons.scroll,
                                       label: AppLocalizations.of(context)!
-                                          .bibleText,
+                                          .sermonBibleText,
                                     ),
                                     animationDelay: 1200.ms,
                                     slideDirection: -0.3,
@@ -516,7 +515,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 BibleSearchScreen())),
                                     cardChild: IconContent(
                                       cardIcon:
-                                          FontAwesomeIcons.magnifyingGlass,
+                                          FontAwesomeIcons.bookBible,
                                       label: AppLocalizations.of(context)!
                                           .bible_search,
                                     ),
@@ -531,7 +530,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             builder: (context) =>
                                                 BibleKeywordSearchScreen())),
                                     cardChild: IconContent(
-                                      cardIcon: FontAwesomeIcons.searchengin,
+                                      cardIcon: FontAwesomeIcons.magnifyingGlass,
                                       label: AppLocalizations.of(context)!
                                           .keywordSearch,
                                     ),
@@ -614,7 +613,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (cards.isEmpty) return SizedBox.shrink();
 
     final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     final bool isTablet = width >= 768; // iPad breakpoint
+    final bool isPortrait = height > width;
 
     if (!isTablet) {
       if (cards.length == 1) {
@@ -626,12 +627,15 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    // Tablet layout: allow 3 cards per row when available, otherwise 2 or 1
+    // Tablet layout: optimize for portrait vs landscape
+    final int cardsPerRow = isPortrait ? 2 : 3; // 2 cards per row in portrait, 3 in landscape
+    final double bottomMargin = isPortrait ? 8.0 : 12.0; // Reduce spacing in portrait
+    
     final List<Widget> chunks = [];
-    for (int i = 0; i < cards.length; i += 3) {
-      final slice = cards.sublist(i, (i + 3).clamp(0, cards.length));
+    for (int i = 0; i < cards.length; i += cardsPerRow) {
+      final slice = cards.sublist(i, (i + cardsPerRow).clamp(0, cards.length));
       chunks.add(Container(
-        margin: EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: bottomMargin),
         child: Row(
           children: slice.map((card) => Expanded(child: card)).toList(),
         ),

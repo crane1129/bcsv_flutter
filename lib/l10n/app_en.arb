@@ -39,7 +39,7 @@
   "@servingTurn": {
     "description": "description"
   },
-  "announcement": "Announcement",
+  "announcement": "Sunday Bulletin",
   "@announcement": {
     "description": "description"
   },
@@ -47,7 +47,7 @@
   "@bibleText": {
     "description": "description"
   },
-  "sermonBibleText": "Sermon Bible Text",
+  "sermonBibleText": "Sermon Text",
   "@sermonBibleText": {
     "description": "description"
   },
@@ -215,8 +215,8 @@
   "@foodPrep": {
     "description": "The current language"
   },
-  "babysitting": "Wednesday Baby Sitting",
-  "@babysitting": {
+  "wednesday_worship": "Wednesday",
+  "@wednesday_worship": {
     "description": "The current language"
   },
   "clear": "Clear",
@@ -335,7 +335,7 @@
   "@restartLater": {
     "description": "Button text to restart the app later"
   },
-  "keywordSearch": "Keyword Search",
+  "keywordSearch": "Bible Keyword",
   "@keywordSearch": {
     "description": "Bible Keyword Search Button Text"
   },
