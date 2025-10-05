@@ -526,7 +526,7 @@ class _ServingTurnPageState extends State<ServingTurnPage> {
                 style: kBodyTextStyle(context),
                 maxLines: 1,
               ),
-              icon: Icons.church,
+              icon: Icons.baby_changing_station,
             ),
           ],
         ),
