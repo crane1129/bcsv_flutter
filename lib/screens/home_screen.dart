@@ -21,6 +21,7 @@ import 'package:bcsv_flutter_project/services/keyverse_service.dart';
 import 'package:bcsv_flutter_project/data_models/keyverse_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'dart:developer';
+import 'dart:async';
 import '../utilities/constants.dart';
 import 'offering_screen.dart';
 
@@ -60,6 +61,15 @@ class _MyHomePageState extends State<MyHomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeApp();
     });
+    
+    // Periodically refresh message counter to catch updates from background service
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      if (mounted) {
+        updateMessageCounter();
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   void _loadCardVisibilitySettings() {
@@ -80,6 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.didChangeDependencies();
     // Refresh card visibility when returning from settings
     _loadCardVisibilitySettings();
+    // Also refresh message counter when returning to home screen
+    updateMessageCounter();
   }
 
   Future<void> _initializeApp() async {

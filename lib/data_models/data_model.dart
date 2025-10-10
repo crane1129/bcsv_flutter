@@ -157,6 +157,15 @@ class MessageList {
         message: json['Message'],
         imageLink: json['ImageLink'] ?? "https://tinyurl.com/yc8rdbr4",
         externalLink: json['ExternalLink'] ?? "",
-        messageID: json['MessageID'] ?? "");
+        messageID: _asInt(json['MessageID']));
+  }
+
+  // Converts dynamic -> int with fallbacks
+  static int _asInt(dynamic v) {
+    if (v == null) return 0;                // pick your default
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    if (v is String) return int.tryParse(v) ?? 0;
+    return 0;
   }
 }

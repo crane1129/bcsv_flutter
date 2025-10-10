@@ -30,6 +30,10 @@ class _MessageListScreenState extends State<MessageListScreen> {
     // TODO: implement initState
     super.initState();
     getMessageListFromGoogleSheet();
+    
+    // Reset counter when user actually opens the message screen
+    UserSharedPreferences.setMessageListCounter(0);
+    globals.messageCnt = 0;
   }
 
   @override
@@ -205,8 +209,9 @@ class _MessageListScreenState extends State<MessageListScreen> {
           ),
         );
       }
-      UserSharedPreferences.setMessageListCounter(0);
-      globals.messageCnt = 0;
+      // Don't reset counter here - only reset when user actually views messages
+      // UserSharedPreferences.setMessageListCounter(0);
+      // globals.messageCnt = 0;
       isLoading = false;
     });
 

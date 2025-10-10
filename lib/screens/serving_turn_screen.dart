@@ -552,8 +552,8 @@ class ModernServingTurnTile extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(12),
@@ -565,7 +565,7 @@ class ModernServingTurnTile extends StatelessWidget {
         children: [
           // Icon container
           Container(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
@@ -576,7 +576,7 @@ class ModernServingTurnTile extends StatelessWidget {
               size: 16,
             ),
           ),
-          SizedBox(width: 12),
+          SizedBox(width: 4),
           
           // Leading text
           Expanded(
@@ -584,13 +584,13 @@ class ModernServingTurnTile extends StatelessWidget {
             child: leadingText,
           ),
           
-          SizedBox(width: 12),
+          SizedBox(width: 4),
           
           // Content
           Expanded(
             flex: 3,
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
