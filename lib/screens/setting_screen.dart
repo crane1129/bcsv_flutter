@@ -406,7 +406,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         onPressed: () async {
-                          resetCache(kPrayerListData);
+                          resetCache(kMessageListData);
                           await dialog.confirm(context,
                               AppLocalizations.of(context)!.noticeTitle,
                               AppLocalizations.of(context)!.restartNotice);
@@ -429,7 +429,12 @@ class _SettingsPageState extends State<SettingsPage> {
   void resetCache(String targetFile) async {
     var dir = await getTemporaryDirectory();
     File file = File("${dir.path}/$targetFile");
-    file.writeAsStringSync("", flush: true, mode: FileMode.write);
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+    if (targetFile == kMessageListData) {
+      await UserSharedPreferences.setMessageListTextCache(false);
+    }
     log("Reset Message cache file successfully.");
 
     // ✅ Clear staff mode and password from shared preferences

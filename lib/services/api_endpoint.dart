@@ -165,7 +165,7 @@ class ApiEndpoint {
       );
       
       var dir = await getTemporaryDirectory();
-      File file = File("${dir.path}/${kPrayerListData}");
+      File file = File("${dir.path}/${kMessageListData}");
 
       int messageCounter = 0;
 

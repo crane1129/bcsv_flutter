@@ -15,13 +15,12 @@ import 'dart:developer';
 class BackgroundService {
   static final BackgroundService _instance = BackgroundService._internal();
   factory BackgroundService() => _instance;
-  BackgroundService._internal() {
-    _setupNetworkMonitoring();
-  }
+  BackgroundService._internal();
 
   bool _isInitialized = false;
   bool _isLoading = false;
   bool _hasInternetConnection = false;
+  bool _isNetworkMonitoringSetup = false;
   Timer? _networkCheckTimer;
   Timer? _retryTimer;
   StreamSubscription<InternetConnectionStatus>? _networkSubscription;
@@ -47,7 +46,12 @@ class BackgroundService {
   /// Initialize background services without blocking UI
   Future<void> initializeInBackground() async {
     if (_isLoading || _isInitialized) return;
-    
+
+    if (!_isNetworkMonitoringSetup) {
+      _isNetworkMonitoringSetup = true;
+      _setupNetworkMonitoring();
+    }
+
     _isLoading = true;
     log('🔄 Starting background initialization...');
 

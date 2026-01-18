@@ -130,7 +130,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
     ModelParam modelParam = ModelParam(
       apiEndpoint: messageEndpoint,
       tag: '',
-      cacheFileName: kPrayerListData,
+      cacheFileName: kMessageListData,
       getSharedReference: UserSharedPreferences.getMessageListTextCache,
       setSharedReference: UserSharedPreferences.setMessageListTextCache,
     );
@@ -221,7 +221,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
     }
 
     var dir = await getTemporaryDirectory();
-    File file = File("${dir.path}/${kPrayerListData}");
+    File file = File("${dir.path}/${kMessageListData}");
     file.writeAsStringSync(jsonEncode(jsonObj),
         flush: true, mode: FileMode.write);
   }
