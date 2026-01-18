@@ -56,8 +56,15 @@ class ApiGoogleDocContent {
           onTimeout: () => throw TimeoutException('Google Doc fetch timeout', _defaultTimeout),
         );
       }else{
+        final Uri updatedEndpoint = modelParam.apiEndpoint.replace(
+          queryParameters: {
+            ...modelParam.apiEndpoint.queryParameters,
+            'year': DateTime.now().year.toString(),
+          },
+        );
+
         response = await http.get(
-            modelParam.apiEndpoint,
+            updatedEndpoint,
             headers: {"Content-Type": "application/json"},
         ).timeout(
           _defaultTimeout,

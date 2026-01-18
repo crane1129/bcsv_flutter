@@ -1115,6 +1115,28 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
   Future<void> _buildBibleTextTilesFromApi(List<dynamic> bibleTextList) async {
     List<ContentListTile> newTiles = [];
 
+    // Sort by date (newest first)
+    bibleTextList.sort((a, b) {
+      String dateA = a['Date'] ?? '';
+      String dateB = b['Date'] ?? '';
+      
+      // Try to parse dates and compare
+      try {
+        DateTime? parsedDateA = _parseDate(dateA);
+        DateTime? parsedDateB = _parseDate(dateB);
+        
+        if (parsedDateA == null && parsedDateB == null) return 0;
+        if (parsedDateA == null) return 1; // Put items without dates at the end
+        if (parsedDateB == null) return -1;
+        
+        // Sort in descending order (newest first)
+        return parsedDateB.compareTo(parsedDateA);
+      } catch (e) {
+        // If parsing fails, use string comparison as fallback
+        return dateB.compareTo(dateA);
+      }
+    });
+
     for (var item in bibleTextList) {
       try {
         // Extract basic information
@@ -1323,6 +1345,71 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
 
     bibleTextTiles.addAll(newTiles);
     log('📊 Total tiles created: ${newTiles.length}');
+  }
+
+  /// Parse date string into DateTime object
+  /// Supports common date formats like YYYY-MM-DD, MM/DD/YYYY, etc.
+  DateTime? _parseDate(String dateString) {
+    if (dateString.isEmpty) return null;
+    
+    // Try common date formats
+    List<String> formats = [
+      'yyyy-MM-dd',
+      'MM/dd/yyyy',
+      'dd/MM/yyyy',
+      'yyyy/MM/dd',
+      'MM-dd-yyyy',
+      'dd-MM-yyyy',
+    ];
+    
+    for (String format in formats) {
+      try {
+        // Simple parsing for YYYY-MM-DD format (most common)
+        if (format == 'yyyy-MM-dd') {
+          List<String> parts = dateString.split('-');
+          if (parts.length == 3) {
+            int? year = int.tryParse(parts[0]);
+            int? month = int.tryParse(parts[1]);
+            int? day = int.tryParse(parts[2]);
+            if (year != null && month != null && day != null) {
+              return DateTime(year, month, day);
+            }
+          }
+        }
+        
+        // For other formats, try splitting by / or -
+        String separator = format.contains('/') ? '/' : '-';
+        List<String> parts = dateString.split(separator);
+        if (parts.length == 3) {
+          int? year, month, day;
+          
+          if (format.startsWith('yyyy')) {
+            // YYYY-MM-DD or YYYY/MM/DD
+            year = int.tryParse(parts[0]);
+            month = int.tryParse(parts[1]);
+            day = int.tryParse(parts[2]);
+          } else if (format.startsWith('MM')) {
+            // MM/DD/YYYY or MM-DD-YYYY
+            month = int.tryParse(parts[0]);
+            day = int.tryParse(parts[1]);
+            year = int.tryParse(parts[2]);
+          } else if (format.startsWith('dd')) {
+            // DD/MM/YYYY or DD-MM-YYYY
+            day = int.tryParse(parts[0]);
+            month = int.tryParse(parts[1]);
+            year = int.tryParse(parts[2]);
+          }
+          
+          if (year != null && month != null && day != null) {
+            return DateTime(year, month, day);
+          }
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+    
+    return null;
   }
 
   void showMessage(title) {

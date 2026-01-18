@@ -333,12 +333,15 @@ class BackgroundService {
       final endpointService = ApiEndpoint();
       
       // Initialize endpoints with caching - loads cached data immediately
-      // and updates in background if needed
       final endpointsAvailable = await endpointService.initializeEndpoints();
       
       if (endpointsAvailable) {
-        // Only check messages if endpoints are available (cached or fresh)
-        await endpointService.checkNewMessage();
+        // Start message check in background (don't wait for it)
+        endpointService.checkNewMessage().then((_) {
+          log('✅ Message check completed');
+        }).catchError((e) {
+          log('❌ Message check failed: $e');
+        });
         log('✅ API services initialized');
       } else {
         log('⚠️ No endpoints available (no cache or network), skipping message check');

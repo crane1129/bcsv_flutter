@@ -19,7 +19,6 @@ import 'package:upgrader/upgrader.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/services/keyverse_service.dart';
 import 'package:bcsv_flutter_project/data_models/keyverse_model.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'dart:developer';
 import 'dart:async';
 import '../utilities/constants.dart';
@@ -55,7 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _loadCardVisibilitySettings();
-    _loadCurrentYearKeyVerse();
+    
+    // Only load keyverse if background service is not initialized
+    // (Background service will load it if already initialized)
+    if (!BackgroundService().isInitialized) {
+      _loadCurrentYearKeyVerse();
+    }
 
     // Initialize app services immediately when home screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -104,15 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
         return;
       }
 
-      // If not initialized, load user settings immediately (lightweight operation)
+      // Only load settings if background service is not initialized
+      // (This should rarely happen as splash screen initializes it)
+      log('⚠️ Background service not initialized, loading settings as fallback');
       BackgroundService().loadSettings(context);
 
-      // Check network connectivity before starting background services
-      final hasConnection =
-          await InternetConnectionChecker.instance.hasConnection;
-
-      if (!hasConnection) {
-        log('❌ No network connection detected on home screen');
+      // Use background service's network status instead of checking again
+      if (!BackgroundService().hasInternetConnection) {
+        log('❌ No network connection detected (from background service)');
         // Show disconnect screen after a brief delay to allow UI to settle
         Future.delayed(Duration(milliseconds: 500), () {
           if (mounted) {
@@ -594,13 +597,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  /// Load current year's key verse
+  /// Load current year's key verse (only if background service not initialized)
   Future<void> _loadCurrentYearKeyVerse() async {
     setState(() {
       _isLoadingKeyVerse = true;
     });
 
     try {
+      // If background service is initialized, it should have already loaded keyverse
+      if (BackgroundService().isInitialized) {
+        log('🔄 Background service already initialized, getting keyverse from cache...');
+        // Wait a bit for background service to complete keyverse loading
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+      
       final keyVerse = await KeyVerseService().getCurrentYearKeyVerse();
       setState(() {
         _currentKeyVerse = keyVerse;
