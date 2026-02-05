@@ -22,7 +22,6 @@ import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:bcsv_flutter_project/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
 class NavBar extends StatefulWidget {
@@ -414,12 +413,12 @@ class _NavBarState extends State<NavBar> {
 
   void updateMessageCounter() {
     setState(() {
-      globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
+      messageCounter = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
   }
 
   Widget displayMsgCounter() {
-    if (globals.messageCnt == 0) {
+    if (messageCounter == 0) {
       return emptyString;
     } else {
       return ClipOval(
@@ -428,7 +427,7 @@ class _NavBarState extends State<NavBar> {
           width: 20,
           height: 20,
           child: Center(
-            child: Text(globals.messageCnt.toString(),
+            child: Text(messageCounter.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 12)),
           ),
         ),

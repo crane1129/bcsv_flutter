@@ -13,7 +13,6 @@ import 'package:bcsv_flutter_project/components/reusable_card.dart';
 import 'package:bcsv_flutter_project/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:bcsv_flutter_project/globals.dart' as globals;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
@@ -574,7 +573,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget displayMsgCounter() {
     updateMessageCounter();
 
-    if (globals.messageCnt == 0) {
+    if (messageCounter == 0) {
       return emptyString;
     } else {
       return ClipOval(
@@ -583,7 +582,7 @@ class _MyHomePageState extends State<MyHomePage> {
           width: 20,
           height: 20,
           child: Center(
-            child: Text(globals.messageCnt.toString(),
+            child: Text(messageCounter.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 12)),
           ),
         ),
@@ -593,7 +592,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void updateMessageCounter() {
     setState(() {
-      globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
+      messageCounter = UserSharedPreferences.getMessageListCounter() ?? 0;
     });
   }
 

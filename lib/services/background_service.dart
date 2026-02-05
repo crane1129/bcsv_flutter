@@ -4,6 +4,8 @@ import 'package:bcsv_flutter_project/services/gsheet_access.dart';
 import 'package:bcsv_flutter_project/services/keyverse_service.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
+import 'package:bcsv_flutter_project/core/storage/cache_manager.dart';
+import 'package:bcsv_flutter_project/core/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -357,6 +359,9 @@ class BackgroundService {
   }
 
   /// Load user settings (lightweight operation)
+  /// Note: Cache flags are NO LONGER reset on startup.
+  /// Caches are now validated using timestamps via CacheManager (TTL-based).
+  /// This allows the app to work offline with cached data.
   void loadSettings(BuildContext context) {
     try {
       // Language option (Default: Korean)
@@ -365,21 +370,60 @@ class BackgroundService {
       provider.setLocale(Locale.fromSubtags(languageCode: languageOption));
       log('🌐 Language: $languageOption');
 
-      // Reset cache flags
-      UserSharedPreferences.setAnnouncementCache(false);
-      UserSharedPreferences.setBibleReviewCache(false);
-      UserSharedPreferences.setBibleTextCache(false);
-      UserSharedPreferences.setServingTurnCache(false);
-      UserSharedPreferences.setDailyBibleText1Cache(false);
-      UserSharedPreferences.setDailyBibleText2Cache(false);
-      
-      // Clear keyverse cache when settings are reloaded
-      KeyVerseService().clearCache();
-      
-      log('✅ Settings loaded');
+      // REMOVED: Cache reset on every launch
+      // Caches are now managed by CacheManager with TTL validation.
+      // Old binary cache flags are kept for backward compatibility but
+      // should be migrated to CacheManager in Phase 3+.
+      //
+      // Previously this code reset all caches on every app launch:
+      // UserSharedPreferences.setAnnouncementCache(false);
+      // UserSharedPreferences.setBibleReviewCache(false);
+      // ... etc
+      //
+      // This prevented offline functionality. Now caches persist and
+      // are validated by timestamp when accessed.
+
+      log('✅ Settings loaded (caches preserved for offline use)');
     } catch (e) {
       log('❌ Error loading settings: $e');
     }
+  }
+
+  /// Check cache validity and log status
+  /// Returns map of cache keys and their validity status
+  Map<String, bool> checkCacheValidity() {
+    final cacheStatus = <String, bool>{};
+
+    // Check each cache using CacheManager TTL validation
+    cacheStatus['announcements'] = CacheManager.hasValidCache(AppConfig.announcementCacheKey);
+    cacheStatus['messages'] = CacheManager.hasValidCache(AppConfig.messageCacheKey);
+    cacheStatus['bibleText'] = CacheManager.hasValidCache(AppConfig.bibleTextCacheKey);
+    cacheStatus['dailyBible'] = CacheManager.hasValidCache(AppConfig.dailyBibleCacheKey);
+    cacheStatus['servingTurn'] = CacheManager.hasValidCache(AppConfig.servingTurnCacheKey);
+
+    final validCount = cacheStatus.values.where((v) => v).length;
+    log('📦 Cache status: $validCount/${cacheStatus.length} valid');
+
+    return cacheStatus;
+  }
+
+  /// Invalidate all caches (for manual cache clear)
+  Future<void> invalidateAllCaches() async {
+    log('🗑️ Invalidating all caches...');
+    await CacheManager.clearAll();
+
+    // Also clear legacy cache flags for backward compatibility
+    await UserSharedPreferences.setAnnouncementCache(false);
+    await UserSharedPreferences.setBibleReviewCache(false);
+    await UserSharedPreferences.setBibleTextCache(false);
+    await UserSharedPreferences.setServingTurnCache(false);
+    await UserSharedPreferences.setDailyBibleText1Cache(false);
+    await UserSharedPreferences.setDailyBibleText2Cache(false);
+
+    // Clear keyverse cache
+    KeyVerseService().clearCache();
+
+    log('✅ All caches invalidated');
   }
 
   /// Force refresh all data (for manual refresh)

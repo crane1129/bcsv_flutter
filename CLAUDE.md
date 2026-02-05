@@ -37,10 +37,30 @@ flutter clean && flutter pub get
 flutter pub run flutter_launcher_icons
 ```
 
+## Migration Status (Provider → Riverpod)
+
+**Current Phase:** Phase 2 - Offline Infrastructure (not started)
+**Plan File:** `docs/MIGRATION_PLAN.md`
+
+### Completed:
+- Phase 0: Foundation & Security (SDK 3.0, credentials secured, core infra)
+- Phase 1: Settings & Theme Migration (Riverpod providers created)
+
+### New Architecture Files:
+- `lib/core/` - Config, errors, network, storage utilities
+- `lib/presentation/providers/` - Riverpod state management
+- `lib/domain/repositories/` - Repository interfaces
+- `lib/data/repositories/` - Repository implementations
+
+### To Resume:
+1. Run `flutter test` to verify (6 tests should pass)
+2. Continue with Phase 2 in `docs/MIGRATION_PLAN.md`
+
 ## Architecture
 
 ### State Management
-- **Provider** pattern with `ThemeNotifier` and `LocaleProvider` for global state
+- **Provider** pattern with `ThemeNotifier` and `LocaleProvider` for global state (legacy)
+- **Riverpod** pattern with new providers in `lib/presentation/providers/` (migration in progress)
 - `SharedPreferences` via `UserSharedPreferences` class for persistent storage
 - Local state uses standard `setState()` in StatefulWidgets
 
@@ -64,6 +84,11 @@ Services use the singleton pattern and `Future.wait()` for parallel operations.
 - `lib/utilities/` - Constants, themes, shared preferences
 - `lib/l10n/` - Localization files (app_ko.arb, app_en.arb)
 - `lib/data_models/` - Data structures
+- `lib/core/` - Core infrastructure (config, errors, network, storage)
+- `lib/presentation/providers/` - Riverpod providers (new)
+- `lib/domain/repositories/` - Repository interfaces (new)
+- `lib/data/repositories/` - Repository implementations (new)
+- `docs/` - Project documentation including MIGRATION_PLAN.md
 
 ## Internationalization
 

@@ -1,297 +1,168 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/link.dart';
-import 'dart:convert';
-import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
-import 'package:bcsv_flutter_project/data_models/model_param.dart';
-import 'package:bcsv_flutter_project/components/list_tile.dart';
-import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
-import 'package:bcsv_flutter_project/data_models/data_model.dart';
-import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
+import 'package:bcsv_flutter_project/presentation/providers/announcement_provider.dart';
+import 'package:bcsv_flutter_project/domain/entities/announcement.dart';
 import 'dart:developer';
 
-class AnnouncementPage extends StatefulWidget {
+class AnnouncementPage extends ConsumerStatefulWidget {
+  const AnnouncementPage({super.key});
+
   @override
-  _AnnouncementPageState createState() => _AnnouncementPageState();
+  ConsumerState<AnnouncementPage> createState() => _AnnouncementPageState();
 }
 
-class _AnnouncementPageState extends State<AnnouncementPage> {
-  bool isLoading = false;
-
+class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   @override
   void initState() {
     super.initState();
-    // Load data directly – let API call handle connectivity detection
+    // Load announcements with force refresh on initial load
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getAnnouncementFromGoogleSheet();
+      ref.read(announcementNotifierProvider.notifier).loadAnnouncements(
+        forceRefresh: true,
+      );
     });
   }
 
-  /// Check network connectivity before loading announcement data
-  Future<void> _checkNetworkAndLoadData() async {
-    try {
-      log('📢 Checking network connectivity for announcements...');
-      
-      final hasConnection = await InternetConnectionChecker.instance
-          .hasConnection
-          .timeout(Duration(seconds: 10));
-
-      if (!hasConnection) {
-        log('❌ No network connection detected on announcement screen');
-        _navigateToDisconnectScreen();
-        return;
-      }
-
-      log('✅ Network available, loading announcements...');
-      getAnnouncementFromGoogleSheet();
-    } catch (e) {
-      log('❌ Network check failed on announcement screen: $e');
-      _navigateToDisconnectScreen();
-    }
+  /// Refresh announcements from network
+  Future<void> _refreshData() async {
+    log('🔄 User initiated refresh for announcements');
+    await ref.read(announcementNotifierProvider.notifier).refresh();
   }
-
-  /// Navigate to disconnect screen when network is unavailable
-  void _navigateToDisconnectScreen() {
-    if (!mounted) return;
-    
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DisconnectScreen(
-          returnScreen: AnnouncementPage(),
-        ),
-      ),
-    );
-  }
-
-  var announcementTiles = <ContentListTile>[];
 
   @override
   Widget build(BuildContext context) {
+    final announcementState = ref.watch(announcementNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent.withValues(alpha:0.5),
+        backgroundColor: Colors.transparent.withValues(alpha: 0.5),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
-            text1: AppLocalizations.of(context)!.announcement, text2: ''),
+          text1: AppLocalizations.of(context)!.announcement,
+          text2: '',
+        ),
+        actions: [
+          // Show indicator if using offline data
+          if (announcementState.isOfflineData)
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(
+                Icons.cloud_off,
+                color: Colors.orange,
+                size: 20,
+              ),
+            ),
+        ],
       ),
       body: SafeArea(
-        child: isLoading
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 200,
-                      width: 200,
-                      child: SpinKitFadingCube(
-                        itemBuilder: (BuildContext context, int index) {
-                          return const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                            ),
-                          );
-                        },
+        child: announcementState.isLoading
+            ? _buildLoadingState()
+            : announcementState.hasError
+                ? _buildErrorState(announcementState.errorMessage)
+                : announcementState.isEmpty
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: _refreshData,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: _buildListPanel(announcementState.announcements),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 24),
-                    Text(
-                      AppLocalizations.of(context)?.dataLoading ?? 'Loading announcements...',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : (announcementTiles.isEmpty
-                ? _buildEmptyState()
-                : SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: _buildListPanel(),
-                  )),
       ),
     );
   }
 
-  void getAnnouncementFromGoogleSheet() async {
-    try {
-      //Show loading spinner
-      setState(() {
-        isLoading = true;
-      });
-
-      log('🔄 Fetching announcement data from Google Sheets...');
-
-      ModelParam modelParam = ModelParam(
-        apiEndpoint: ApiEndpoint.apiMap['ANNOUNCEMENT']!,
-        tag: 'announcements',
-        cacheFileName: kAnnouncementData,
-        getSharedReference: UserSharedPreferences.getAnnouncementCache,
-        setSharedReference: UserSharedPreferences.setAnnouncementCache,
-      );
-
-      Map data = {};
-      ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
-          modelParam: modelParam, body: data, isBodyRequired: false);
-
-      String _announcementList = await myGoogleDocContent.getContent();
-      var jsonObj = jsonDecode(_announcementList)[modelParam.tag] as List;
-
-      List<dynamic> announcementList =
-          jsonObj.map((tagJson) => Announcement.fromJson(tagJson)).toList();
-
-      setState(() {
-        for (Announcement content in announcementList.reversed) {
-          if (content.announcement.isEmpty) {
-            continue;
-          }
-          announcementTiles.add(
-            ContentListTile(
-              icon: Icons.calendar_today_outlined,
-              headerText: Text('${content.date}  설교 ${content.preacher}',
-                  style: kBodyTextStyle(context)),
-              contents: [
-                Text('기도 ${content.prayer}', style: kBodyTextStyle(context)),
-                SelectableText(
-                    '광고내용\n${content.announcement}\n\n헌금: ${content.offering}',
-                    style: kBodyTextStyle(context)).animate().fade(duration: 500.ms),
-                Center(
-                  child: content.File_url.toString().isEmpty
-                      ? null
-                      : Link(
-                          target: LinkTarget.blank,
-                          uri: Uri.parse(content.File_url),
-                          builder: (context, followLink) => ElevatedButton(
-                            child: const Text('Open PDF'),
-                            onPressed: followLink,
-                          ),
-                        ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        //Hide loading spinner
-        isLoading = false;
-      });
-
-      log('✅ Announcement data loaded successfully');
-    } catch (e) {
-      log('❌ Error loading announcement data: $e');
-      
-      // Check if it's a network-related error
-      if (e.toString().contains('connection') || 
-          e.toString().contains('network') || 
-          e.toString().contains('timeout')) {
-        
-        // Double-check network connectivity
-        try {
-          final hasConnection = await InternetConnectionChecker.instance
-              .hasConnection
-              .timeout(Duration(seconds: 5));
-          
-          if (!hasConnection) {
-            log('🌐 Network disconnection confirmed, navigating to disconnect screen');
-            _navigateToDisconnectScreen();
-            return;
-          }
-        } catch (networkError) {
-          log('❌ Network verification failed: $networkError');
-          _navigateToDisconnectScreen();
-          return;
-        }
-      }
-      
-      // If not a network error, just hide loading and show error state
-      setState(() {
-        isLoading = false;
-      });
-      
-      // Show error message to user
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)?.networkErrorMessage ?? 
-              'Failed to load announcements. Please try again.',
-            ),
-            backgroundColor: Colors.red,
-            action: SnackBarAction(
-              label: AppLocalizations.of(context)?.tryAgain ?? 'Retry',
-              textColor: Colors.white,
-              onPressed: () {
-                _checkNetworkAndLoadData();
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 200,
+            width: 200,
+            child: SpinKitFadingCube(
+              itemBuilder: (BuildContext context, int index) {
+                return const DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                  ),
+                );
               },
             ),
           ),
-        );
-      }
-    }
+          const SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)?.dataLoading ??
+                'Loading announcements...',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
+          ),
+        ],
+      ),
+    );
   }
 
-  /// Refresh data when user pulls down
-  Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for announcements');
-    
-    // Clear existing data
-    setState(() {
-      announcementTiles.clear();
-    });
-    
-    // Check network and reload data
-    await _checkNetworkAndLoadData();
-  }
-
-  /// Build empty state when no announcements are available
-  Widget _buildEmptyState() {
+  Widget _buildErrorState(String? errorMessage) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.announcement_outlined,
+            Icons.error_outline,
             size: 80,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Text(
-            AppLocalizations.of(context)?.announcement ?? 'No announcements available',
+            AppLocalizations.of(context)?.networkErrorMessage ??
+                'Failed to load announcements',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+                ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 16),
-          Text(
-            'Pull down to refresh or check your connection',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          const SizedBox(height: 16),
+          if (errorMessage != null)
+            Text(
+              errorMessage,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.5),
+                  ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           ElevatedButton.icon(
             onPressed: _refreshData,
-            icon: Icon(Icons.refresh),
-            label: Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
+            icon: const Icon(Icons.refresh),
+            label:
+                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -302,37 +173,119 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     );
   }
 
-  Widget _buildListPanel() {
-    return ExpansionPanelList.radio(
-      children: announcementTiles
-          .map(
-            (tile) => ExpansionPanelRadio(
-              //backgroundColor: Theme.of(context).colorScheme.onSurface,
-              value: tile.headerText,
-              canTapOnHeader: true,
-              headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
-              body: Column(
-                children: tile.contents.map(buildContentTile).toList(),
+  /// Build empty state when no announcements are available
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.announcement_outlined,
+            size: 80,
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)?.announcement ??
+                'No announcements available',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Pull down to refresh or check your connection',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.5),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: _refreshData,
+            icon: const Icon(Icons.refresh),
+            label:
+                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListPanel(List<AnnouncementEntity> announcements) {
+    return ExpansionPanelList.radio(
+      children: announcements
+          .where((announcement) => announcement.hasContent)
+          .map(
+            (announcement) => ExpansionPanelRadio(
+              value: announcement.date + announcement.preacher,
+              canTapOnHeader: true,
+              headerBuilder: (context, isExpanded) =>
+                  _buildHeaderTile(announcement),
+              body: _buildContentSection(announcement),
             ),
           )
           .toList(),
     );
   }
 
-  Widget buildHeaderTile(ContentListTile tile) {
+  Widget _buildHeaderTile(AnnouncementEntity announcement) {
     return ListTile(
-      leading: Icon(tile.icon),
-      title: tile.headerText,
+      leading: const Icon(Icons.calendar_today_outlined),
+      title: Text(
+        announcement.headerText,
+        style: kBodyTextStyle(context),
+      ),
       iconColor: Theme.of(context).colorScheme.surface,
-      //tileColor: Theme.of(context).colorScheme.onSurface,
-      // selectedTileColor: Colors.indigo,
     );
   }
 
-  Widget buildContentTile(Widget content) {
-    return ListTile(
-      title: content,
+  Widget _buildContentSection(AnnouncementEntity announcement) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            announcement.prayerInfo,
+            style: kBodyTextStyle(context),
+          ),
+        ),
+        ListTile(
+          title: SelectableText(
+            announcement.contentText,
+            style: kBodyTextStyle(context),
+          ).animate().fade(duration: 500.ms),
+        ),
+        if (announcement.hasPdfAttachment)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Link(
+              target: LinkTarget.blank,
+              uri: Uri.parse(announcement.fileUrl),
+              builder: (context, followLink) => ElevatedButton(
+                onPressed: followLink,
+                child: const Text('Open PDF'),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

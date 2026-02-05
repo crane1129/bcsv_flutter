@@ -1,228 +1,291 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
-import 'package:bcsv_flutter_project/data_models/model_param.dart';
-import 'package:bcsv_flutter_project/data_models/data_model.dart';
-import 'package:bcsv_flutter_project/services/api_data_fetch.dart';
-import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:bcsv_flutter_project/globals.dart' as globals;
+import 'package:bcsv_flutter_project/presentation/providers/message_provider.dart';
+import 'package:bcsv_flutter_project/domain/entities/message.dart';
+import 'dart:developer';
 
-class MessageListScreen extends StatefulWidget {
-  const MessageListScreen({Key? key}) : super(key: key);
+class MessageListScreen extends ConsumerStatefulWidget {
+  const MessageListScreen({super.key});
 
   @override
-  _MessageListScreenState createState() => _MessageListScreenState();
+  ConsumerState<MessageListScreen> createState() => _MessageListScreenState();
 }
 
-class _MessageListScreenState extends State<MessageListScreen> {
-  bool isLoading = false;
-  var prayerListTiles = <Widget>[];
-
+class _MessageListScreenState extends ConsumerState<MessageListScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getMessageListFromGoogleSheet();
-    
-    // Reset counter when user actually opens the message screen
-    UserSharedPreferences.setMessageListCounter(0);
-    globals.messageCnt = 0;
+    // Load messages with force refresh on initial load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(messageNotifierProvider.notifier).loadMessages(
+        forceRefresh: true,
+      );
+      // Mark all messages as read when user opens the screen
+      ref.read(messageNotifierProvider.notifier).markAllAsRead();
+    });
+  }
+
+  /// Refresh messages from network
+  Future<void> _refreshData() async {
+    log('🔄 User initiated refresh for messages');
+    await ref.read(messageNotifierProvider.notifier).refresh();
   }
 
   @override
   Widget build(BuildContext context) {
+    final messageState = ref.watch(messageNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withValues(alpha: 0.5),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
-            text1: AppLocalizations.of(context)!.newMessage, text2: ''),
+          text1: AppLocalizations.of(context)!.newMessage,
+          text2: '',
+        ),
+        actions: [
+          // Show indicator if using offline data
+          if (messageState.isOfflineData)
+            const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: Icon(
+                Icons.cloud_off,
+                color: Colors.orange,
+                size: 20,
+              ),
+            ),
+        ],
       ),
       body: SafeArea(
-        child: isLoading
-            ? Center(
-                child: SizedBox(
-                  height: 200,
-                  width: 200,
-                  child: SpinKitFadingCube(
-                    itemBuilder: (BuildContext context, int index) {
-                      return const DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
+        child: messageState.isLoading
+            ? _buildLoadingState()
+            : messageState.hasError
+                ? _buildErrorState(messageState.errorMessage)
+                : messageState.isEmpty
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: _refreshData,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Column(
+                            children: messageState.messages
+                                .map((message) => _buildMessageCard(message))
+                                .toList(),
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                  children: prayerListTiles,
-                ),
-              ),
+                      ),
       ),
     );
   }
 
-  void getMessageListFromGoogleSheet() async {
-    //Show loading spinner
-    setState(() {
-      isLoading = true;
-    });
-
-    // Check if MESSAGE endpoint is available
-    final messageEndpoint = ApiEndpoint.apiMap['MESSAGE'];
-    if (messageEndpoint == null) {
-      // Handle case where endpoint is not available
-      setState(() {
-        isLoading = false;
-        prayerListTiles.clear();
-        // Add an error message card
-        prayerListTiles.add(
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+  Widget _buildLoadingState() {
+    return Center(
+      child: SizedBox(
+        height: 200,
+        width: 200,
+        child: SpinKitFadingCube(
+          itemBuilder: (BuildContext context, int index) {
+            return const DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.grey,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.cloud_off,
-                      size: 48,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      AppLocalizations.of(context)!.networkErrorMessage,
-                      style: kCardTitleStyle(context),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      AppLocalizations.of(context)!.retryNetworkMessage,
-                      style: kBodyTextStyle(context),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String? errorMessage) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 80,
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)?.networkErrorMessage ??
+                'Failed to load messages',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          if (errorMessage != null)
+            Text(
+              errorMessage,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.5),
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          const SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: _refreshData,
+            icon: const Icon(Icons.refresh),
+            label:
+                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.message_outlined,
+            size: 80,
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)?.newMessage ?? 'No messages available',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Pull down to refresh',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.5),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: _refreshData,
+            icon: const Icon(Icons.refresh),
+            label:
+                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageCard(MessageEntity message) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          children: <Widget>[
+            // Image section
+            message.hasImage
+                ? Image.network(
+                    message.imageLink,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/bridgeway.png',
+                        height: 100,
+                        width: 200,
+                        fit: BoxFit.fitWidth,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    'assets/images/bridgeway.png',
+                    height: 100,
+                    width: 200,
+                    fit: BoxFit.fitWidth,
+                  ),
+            // Title section
+            ListTile(
+              leading: Icon(Icons.event, color: kActiveIconColor(context)),
+              title: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  message.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: kCardTitleStyle(context),
                 ),
               ),
             ),
-          ),
-        );
-      });
-      return;
-    }
-
-    ModelParam modelParam = ModelParam(
-      apiEndpoint: messageEndpoint,
-      tag: '',
-      cacheFileName: kMessageListData,
-      getSharedReference: UserSharedPreferences.getMessageListTextCache,
-      setSharedReference: UserSharedPreferences.setMessageListTextCache,
-    );
-
-    Map data = {};
-    ApiGoogleDocContent myGoogleDocContent = ApiGoogleDocContent(
-        modelParam: modelParam, body: data, isBodyRequired: false);
-
-    String _messageList = await myGoogleDocContent.getContent();
-    var jsonObj = jsonDecode(_messageList) as List;
-
-    List<dynamic> messageList =
-        jsonObj.map((tagJson) => MessageList.fromJson(tagJson)).toList();
-
-    setState(() {
-      for (MessageList myMessageItem in messageList) {
-        // DateTime givenDate = DateTime.parse(myMessageItem.expireDate);
-        // if (todayDate.isAfter(givenDate)) {
-        //   //This is expired item
-        //   continue;
-        // } else {
-        //
-        // }
-        prayerListTiles.add(
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                children: <Widget>[
-                  myMessageItem.imageLink.isEmpty
-                      ? Image.asset('assets/images/bridgeway.png',
-                          height: 100, width: 200, fit: BoxFit.fitWidth)
-                      : Image.network(
-                          myMessageItem.imageLink,
-                        ),
-                  ListTile(
-                    leading:
-                        Icon(Icons.event, color: kActiveIconColor(context)),
-                    title: Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        myMessageItem.title,
-                        overflow: TextOverflow.ellipsis,
-                        style: kCardTitleStyle(context),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SelectableText(
-                      myMessageItem.message,
-                      style: kBodyTextStyle(context),
-                    ),
-                  ),
-                  myMessageItem.externalLink.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: OutlinedButton.icon(
-                            onPressed: () async {
-                              if (await canLaunchUrl(
-                                  Uri.parse(myMessageItem.externalLink))) {
-                                await launchUrl(
-                                    Uri.parse(myMessageItem.externalLink));
-                              }
-                            },
-                            icon: Icon(Icons.link),
-                            label: Text('Link'),
-                          ))
-                      : SizedBox(height: 1.0),
-                ],
+            // Message content
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SelectableText(
+                message.message,
+                style: kBodyTextStyle(context),
               ),
             ),
-          ),
-        );
-      }
-      // Don't reset counter here - only reset when user actually views messages
-      // UserSharedPreferences.setMessageListCounter(0);
-      // globals.messageCnt = 0;
-      isLoading = false;
-    });
-
-    // Update the "viewed" field and save to file
-    for (var i = 0; i < jsonObj.length; i++) {
-      jsonObj[i]['viewed'] = true;
-    }
-
-    var dir = await getTemporaryDirectory();
-    File file = File("${dir.path}/${kMessageListData}");
-    file.writeAsStringSync(jsonEncode(jsonObj),
-        flush: true, mode: FileMode.write);
+            // External link button
+            if (message.hasExternalLink)
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: OutlinedButton.icon(
+                  onPressed: () async {
+                    final uri = Uri.parse(message.externalLink);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    }
+                  },
+                  icon: const Icon(Icons.link),
+                  label: const Text('Link'),
+                ),
+              )
+            else
+              const SizedBox(height: 1.0),
+          ],
+        ),
+      ),
+    );
   }
 }

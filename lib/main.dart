@@ -1,6 +1,9 @@
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:bcsv_flutter_project/utilities/theme_notifier.dart';
+import 'package:bcsv_flutter_project/core/storage/local_storage.dart';
+import 'package:bcsv_flutter_project/core/storage/credential_migration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:bcsv_flutter_project/screens/splash_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,15 +24,21 @@ void main() async {
 
   kNotificationDuration = const Duration(milliseconds: 2000);
   kNotificationSlideDuration = const Duration(milliseconds: 500);
+
+  // Initialize storage systems
   await UserSharedPreferences.init();
+  await LocalStorage.init();
+
+  // Migrate credentials to secure storage (one-time operation)
+  await CredentialMigration.migrateIfNeeded();
 
   // Initialize package info immediately (lightweight)
   try {
     final info = await PackageInfo.fromPlatform();
     PackageInformation.packageInfo = info;
-    log('✅ Package info loaded in main()');
+    log('Package info loaded in main()');
   } catch (e) {
-    log('❌ Error loading package info: $e');
+    log('Error loading package info: $e');
   }
 
   // Load saved theme setting
@@ -37,9 +46,13 @@ void main() async {
   ThemeData initialTheme = ThemeNotifier.getThemeByIndex(themeIndex);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(initialTheme, themeIndex),
-      child: MyBCSVApp(),
+    // Wrap with ProviderScope for Riverpod
+    // This enables gradual migration from Provider to Riverpod
+    ProviderScope(
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeNotifier(initialTheme, themeIndex),
+        child: MyBCSVApp(),
+      ),
     ),
   );
 }
