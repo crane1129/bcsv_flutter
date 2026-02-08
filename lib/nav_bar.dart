@@ -256,11 +256,6 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (_) => DailyBibleTextScreen()));
             },
           ),
-          ListWebViewMenu(
-              myIcon: FontAwesomeIcons.calendarDays,
-              menuName: AppLocalizations.of(context)!.bible_reading_plan,
-              url: ApiEndpoint.apiMap['DAILY_BIBLE_READING_PLAN'],
-              trailing: emptyString),
           ListTile(
             leading: Icon(Icons.search, color: kActiveIconColor(context)),
             title: Text(AppLocalizations.of(context)!.bible_search,

@@ -10,7 +10,7 @@ class EndpointWaiter {
   ///
   /// Returns true if endpoints became available, false if timeout
   static Future<bool> waitForEndpoints({
-    Duration maxWait = const Duration(seconds: 3),
+    Duration maxWait = const Duration(seconds: 10),
     Duration checkInterval = const Duration(milliseconds: 500),
   }) async {
     final maxAttempts = maxWait.inMilliseconds ~/ checkInterval.inMilliseconds;
