@@ -23,9 +23,10 @@ abstract class MessageRepository {
   /// Get the count of new/unread messages since last check
   Future<int> getNewMessageCount();
 
-  /// Get the last seen message ID
-  int getLastSeenMessageId();
+  /// Get the last seen message timestamp
+  /// Returns null if no timestamp has been set (first time user)
+  DateTime? getLastSeenTimestamp();
 
-  /// Update last seen message ID
-  Future<void> setLastSeenMessageId(int messageId);
+  /// Update last seen message timestamp
+  Future<void> setLastSeenTimestamp(DateTime timestamp);
 }

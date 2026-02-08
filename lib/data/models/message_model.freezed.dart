@@ -20,19 +20,23 @@ MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MessageModel {
-  @JsonKey(name: 'MessageID')
-  int get messageId => throw _privateConstructorUsedError;
+  @JsonKey(name: '_id')
+  String get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'Created Date')
+  DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'Title')
   String get title => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Message')
+  @JsonKey(name: 'message')
   String get message => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'category')
   String get category => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ExpireDate')
-  String get expireDate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ImageLink')
-  String get imageLink => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ExternalLink')
+  @JsonKey(name: 'startDate')
+  DateTime get startDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'endDate')
+  DateTime? get endDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'titleImage')
+  String get imageUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'externalLink')
   String get externalLink => throw _privateConstructorUsedError;
 
   /// Serializes this MessageModel to a JSON map.
@@ -52,13 +56,15 @@ abstract class $MessageModelCopyWith<$Res> {
       _$MessageModelCopyWithImpl<$Res, MessageModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'MessageID') int messageId,
+      {@JsonKey(name: '_id') String id,
+      @JsonKey(name: 'Created Date') DateTime createdAt,
       @JsonKey(name: 'Title') String title,
-      @JsonKey(name: 'Message') String message,
-      @JsonKey(name: 'Category') String category,
-      @JsonKey(name: 'ExpireDate') String expireDate,
-      @JsonKey(name: 'ImageLink') String imageLink,
-      @JsonKey(name: 'ExternalLink') String externalLink});
+      @JsonKey(name: 'message') String message,
+      @JsonKey(name: 'category') String category,
+      @JsonKey(name: 'startDate') DateTime startDate,
+      @JsonKey(name: 'endDate') DateTime? endDate,
+      @JsonKey(name: 'titleImage') String imageUrl,
+      @JsonKey(name: 'externalLink') String externalLink});
 }
 
 /// @nodoc
@@ -76,19 +82,25 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? messageId = null,
+    Object? id = null,
+    Object? createdAt = null,
     Object? title = null,
     Object? message = null,
     Object? category = null,
-    Object? expireDate = null,
-    Object? imageLink = null,
+    Object? startDate = null,
+    Object? endDate = freezed,
+    Object? imageUrl = null,
     Object? externalLink = null,
   }) {
     return _then(_value.copyWith(
-      messageId: null == messageId
-          ? _value.messageId
-          : messageId // ignore: cast_nullable_to_non_nullable
-              as int,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -101,13 +113,17 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
-      expireDate: null == expireDate
-          ? _value.expireDate
-          : expireDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageLink: null == imageLink
-          ? _value.imageLink
-          : imageLink // ignore: cast_nullable_to_non_nullable
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      imageUrl: null == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       externalLink: null == externalLink
           ? _value.externalLink
@@ -126,13 +142,15 @@ abstract class _$$MessageModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'MessageID') int messageId,
+      {@JsonKey(name: '_id') String id,
+      @JsonKey(name: 'Created Date') DateTime createdAt,
       @JsonKey(name: 'Title') String title,
-      @JsonKey(name: 'Message') String message,
-      @JsonKey(name: 'Category') String category,
-      @JsonKey(name: 'ExpireDate') String expireDate,
-      @JsonKey(name: 'ImageLink') String imageLink,
-      @JsonKey(name: 'ExternalLink') String externalLink});
+      @JsonKey(name: 'message') String message,
+      @JsonKey(name: 'category') String category,
+      @JsonKey(name: 'startDate') DateTime startDate,
+      @JsonKey(name: 'endDate') DateTime? endDate,
+      @JsonKey(name: 'titleImage') String imageUrl,
+      @JsonKey(name: 'externalLink') String externalLink});
 }
 
 /// @nodoc
@@ -148,19 +166,25 @@ class __$$MessageModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? messageId = null,
+    Object? id = null,
+    Object? createdAt = null,
     Object? title = null,
     Object? message = null,
     Object? category = null,
-    Object? expireDate = null,
-    Object? imageLink = null,
+    Object? startDate = null,
+    Object? endDate = freezed,
+    Object? imageUrl = null,
     Object? externalLink = null,
   }) {
     return _then(_$MessageModelImpl(
-      messageId: null == messageId
-          ? _value.messageId
-          : messageId // ignore: cast_nullable_to_non_nullable
-              as int,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -173,13 +197,17 @@ class __$$MessageModelImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
-      expireDate: null == expireDate
-          ? _value.expireDate
-          : expireDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageLink: null == imageLink
-          ? _value.imageLink
-          : imageLink // ignore: cast_nullable_to_non_nullable
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      imageUrl: null == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       externalLink: null == externalLink
           ? _value.externalLink
@@ -193,43 +221,51 @@ class __$$MessageModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MessageModelImpl extends _MessageModel {
   const _$MessageModelImpl(
-      {@JsonKey(name: 'MessageID') required this.messageId,
+      {@JsonKey(name: '_id') required this.id,
+      @JsonKey(name: 'Created Date') required this.createdAt,
       @JsonKey(name: 'Title') required this.title,
-      @JsonKey(name: 'Message') required this.message,
-      @JsonKey(name: 'Category') required this.category,
-      @JsonKey(name: 'ExpireDate') required this.expireDate,
-      @JsonKey(name: 'ImageLink') this.imageLink = '',
-      @JsonKey(name: 'ExternalLink') this.externalLink = ''})
+      @JsonKey(name: 'message') required this.message,
+      @JsonKey(name: 'category') required this.category,
+      @JsonKey(name: 'startDate') required this.startDate,
+      @JsonKey(name: 'endDate') this.endDate,
+      @JsonKey(name: 'titleImage') this.imageUrl = '',
+      @JsonKey(name: 'externalLink') this.externalLink = ''})
       : super._();
 
   factory _$MessageModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MessageModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'MessageID')
-  final int messageId;
+  @JsonKey(name: '_id')
+  final String id;
+  @override
+  @JsonKey(name: 'Created Date')
+  final DateTime createdAt;
   @override
   @JsonKey(name: 'Title')
   final String title;
   @override
-  @JsonKey(name: 'Message')
+  @JsonKey(name: 'message')
   final String message;
   @override
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'category')
   final String category;
   @override
-  @JsonKey(name: 'ExpireDate')
-  final String expireDate;
+  @JsonKey(name: 'startDate')
+  final DateTime startDate;
   @override
-  @JsonKey(name: 'ImageLink')
-  final String imageLink;
+  @JsonKey(name: 'endDate')
+  final DateTime? endDate;
   @override
-  @JsonKey(name: 'ExternalLink')
+  @JsonKey(name: 'titleImage')
+  final String imageUrl;
+  @override
+  @JsonKey(name: 'externalLink')
   final String externalLink;
 
   @override
   String toString() {
-    return 'MessageModel(messageId: $messageId, title: $title, message: $message, category: $category, expireDate: $expireDate, imageLink: $imageLink, externalLink: $externalLink)';
+    return 'MessageModel(id: $id, createdAt: $createdAt, title: $title, message: $message, category: $category, startDate: $startDate, endDate: $endDate, imageUrl: $imageUrl, externalLink: $externalLink)';
   }
 
   @override
@@ -237,24 +273,26 @@ class _$MessageModelImpl extends _MessageModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MessageModelImpl &&
-            (identical(other.messageId, messageId) ||
-                other.messageId == messageId) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.category, category) ||
                 other.category == category) &&
-            (identical(other.expireDate, expireDate) ||
-                other.expireDate == expireDate) &&
-            (identical(other.imageLink, imageLink) ||
-                other.imageLink == imageLink) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             (identical(other.externalLink, externalLink) ||
                 other.externalLink == externalLink));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, messageId, title, message,
-      category, expireDate, imageLink, externalLink);
+  int get hashCode => Object.hash(runtimeType, id, createdAt, title, message,
+      category, startDate, endDate, imageUrl, externalLink);
 
   /// Create a copy of MessageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -274,13 +312,15 @@ class _$MessageModelImpl extends _MessageModel {
 
 abstract class _MessageModel extends MessageModel {
   const factory _MessageModel(
-          {@JsonKey(name: 'MessageID') required final int messageId,
+          {@JsonKey(name: '_id') required final String id,
+          @JsonKey(name: 'Created Date') required final DateTime createdAt,
           @JsonKey(name: 'Title') required final String title,
-          @JsonKey(name: 'Message') required final String message,
-          @JsonKey(name: 'Category') required final String category,
-          @JsonKey(name: 'ExpireDate') required final String expireDate,
-          @JsonKey(name: 'ImageLink') final String imageLink,
-          @JsonKey(name: 'ExternalLink') final String externalLink}) =
+          @JsonKey(name: 'message') required final String message,
+          @JsonKey(name: 'category') required final String category,
+          @JsonKey(name: 'startDate') required final DateTime startDate,
+          @JsonKey(name: 'endDate') final DateTime? endDate,
+          @JsonKey(name: 'titleImage') final String imageUrl,
+          @JsonKey(name: 'externalLink') final String externalLink}) =
       _$MessageModelImpl;
   const _MessageModel._() : super._();
 
@@ -288,25 +328,31 @@ abstract class _MessageModel extends MessageModel {
       _$MessageModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'MessageID')
-  int get messageId;
+  @JsonKey(name: '_id')
+  String get id;
+  @override
+  @JsonKey(name: 'Created Date')
+  DateTime get createdAt;
   @override
   @JsonKey(name: 'Title')
   String get title;
   @override
-  @JsonKey(name: 'Message')
+  @JsonKey(name: 'message')
   String get message;
   @override
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'category')
   String get category;
   @override
-  @JsonKey(name: 'ExpireDate')
-  String get expireDate;
+  @JsonKey(name: 'startDate')
+  DateTime get startDate;
   @override
-  @JsonKey(name: 'ImageLink')
-  String get imageLink;
+  @JsonKey(name: 'endDate')
+  DateTime? get endDate;
   @override
-  @JsonKey(name: 'ExternalLink')
+  @JsonKey(name: 'titleImage')
+  String get imageUrl;
+  @override
+  @JsonKey(name: 'externalLink')
   String get externalLink;
 
   /// Create a copy of MessageModel

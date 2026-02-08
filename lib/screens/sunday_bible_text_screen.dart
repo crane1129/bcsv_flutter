@@ -1,47 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'dart:convert';
-import 'dart:async';
-// import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:bcsv_flutter_project/components/list_tile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:bcsv_flutter_project/presentation/providers/sunday_bible_text_provider.dart';
+import 'package:bcsv_flutter_project/domain/entities/sunday_bible_text.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/loading_shimmer.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/empty_state.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/error_state.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/offline_banner.dart';
 import 'dart:developer';
 
-class SundayBibleTextScreen extends StatefulWidget {
-  const SundayBibleTextScreen({Key? key}) : super(key: key);
+class SundayBibleTextScreen extends ConsumerStatefulWidget {
+  const SundayBibleTextScreen({super.key});
 
   @override
-  _SundayBibleTextScreenState createState() => _SundayBibleTextScreenState();
+  ConsumerState<SundayBibleTextScreen> createState() => _SundayBibleTextScreenState();
 }
 
-class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
-  bool isLoading = true;  // Start with loading spinner
-
+class _SundayBibleTextScreenState extends ConsumerState<SundayBibleTextScreen> {
   // Search filter variables
   int selectedYear = DateTime.now().year;
   int selectedMonth = DateTime.now().month;
   int fromMonth = DateTime.now().month;
   int toMonth = DateTime.now().month;
   String keyword = '';
-  
+
   // UI Controllers
   final TextEditingController _keywordController = TextEditingController();
-  
+
   // UI State for collapsible filter
   bool _isFilterExpanded = false;
 
   @override
   void initState() {
     super.initState();
-    getBibleTextFromDataSource();
+    // Load data after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _performSearch();
+    });
   }
 
   @override
@@ -50,40 +52,51 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     super.dispose();
   }
 
-  var bibleTextTiles = <ContentListTile>[];
-
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(sundayBibleTextNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent.withValues(alpha: 0.5),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           color: kNavBackButtonColor,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
-            text1: AppLocalizations.of(context)!.sermonBibleText, text2: ''),
+          text1: AppLocalizations.of(context)!.sermonBibleText,
+          text2: '',
+        ),
+        actions: [
+          OfflineBanner(
+            isOffline: state.isOfflineData,
+            lastUpdated: state.lastUpdated,
+            style: OfflineBannerStyle.icon,
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
             // Compact search filters section
             _buildCompactSearchFilters(),
-            
+
             // Content section
             Expanded(
-              child: isLoading
+              child: state.isLoading
                   ? _buildLoadingState()
-                  : RefreshIndicator(
-                      onRefresh: _refreshData,
-                      child: bibleTextTiles.isEmpty
-                          ? _buildEmptyState()
-                          : SingleChildScrollView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              child: _buildListPanel(),
-                            ),
-                    ),
+                  : state.hasError
+                      ? _buildErrorState(state.errorMessage)
+                      : RefreshIndicator(
+                          onRefresh: _refreshData,
+                          child: state.isEmpty
+                              ? _buildEmptyState()
+                              : SingleChildScrollView(
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  child: _buildBibleTextList(state.texts),
+                                ),
+                        ),
             ),
           ],
         ),
@@ -91,119 +104,252 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
     );
   }
 
-  Widget _buildListPanel() {
+  /// Build list of Bible texts as expansion panels
+  Widget _buildBibleTextList(List<SundayBibleTextEntity> texts) {
+    // Convert entities to expansion panels
     return ExpansionPanelList.radio(
-      children: bibleTextTiles
-          .map(
-            (tile) => ExpansionPanelRadio(
-              //backgroundColor: Theme.of(context).colorScheme.onSurface,
-              value: tile.headerText,
-              canTapOnHeader: true,
-              headerBuilder: (context, isExpanded) => buildHeaderTile(tile),
-              body: Column(
-                children: tile.contents.map(buildContentTile).toList(),
+      children: texts.map((text) => _buildBibleTextPanel(text)).toList(),
+    );
+  }
+
+  /// Build a single Bible text panel
+  ExpansionPanelRadio _buildBibleTextPanel(SundayBibleTextEntity text) {
+    return ExpansionPanelRadio(
+      value: '${text.date}_${text.title}', // Unique value for expansion
+      canTapOnHeader: true,
+      headerBuilder: (context, isExpanded) => _buildPanelHeader(text),
+      body: _buildPanelBody(text),
+    );
+  }
+
+  /// Build panel header
+  Widget _buildPanelHeader(SundayBibleTextEntity text) {
+    final theme = Theme.of(context);
+
+    return ListTile(
+      tileColor: theme.colorScheme.surface,
+      title: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Date badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                text.date,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          )
-          .toList(),
+            const SizedBox(height: 8),
+            // Title
+            Text(
+              text.title,
+              style: kBodyTextStyle(context).copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Bible chapter
+            Text(
+              text.bibleChapter,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+      ).animate().fadeIn(duration: 400.ms),
     );
   }
 
-  Widget buildHeaderTile(ContentListTile tile) {
-    return ListTile(
-      tileColor: Theme.of(context).colorScheme.surface,
-        leading: tile.icon != null
-            ? Icon(tile.icon, color: Theme.of(context).colorScheme.surface)
-            : null,
-        title: tile.headerText);
+  /// Build panel body with content
+  Widget _buildPanelBody(SundayBibleTextEntity text) {
+    final theme = Theme.of(context);
+
+    // Build complete text for copying
+    final buffer = StringBuffer();
+    buffer.write(text.bibleText);
+
+    for (final ref in text.references) {
+      buffer.write('\n\n📚참고본문: ${ref.bibleChapter}\n${ref.bibleText}');
+    }
+
+    if (text.reviewQuestion != null) {
+      final reviewQ = text.reviewQuestion!;
+      buffer.write('\n\n✏️말씀 Review: ${reviewQ.bibleChapter.isNotEmpty ? '${reviewQ.bibleChapter}\n' : ''}${reviewQ.bibleText}');
+    }
+
+    final completeText = buffer.toString();
+
+    return Column(
+      children: [
+        // Action buttons row
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.copy, size: 18),
+                  label: Text(AppLocalizations.of(context)!.copy),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    foregroundColor: theme.colorScheme.onPrimaryContainer,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: completeText));
+                    _showCopiedMessage('Bible Text');
+                  },
+                ),
+              ),
+              if (text.hasPdfAttachment) ...[
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.picture_as_pdf, size: 18),
+                    label: const Text('PDF'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.secondaryContainer,
+                      foregroundColor: theme.colorScheme.onSecondaryContainer,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    onPressed: () => _openPdfUrl(text.fileUrl),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ).animate().scale(duration: 300.ms),
+
+        // Bible text content
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: SelectableText(
+            '📖본문:\n${text.bibleText}',
+            style: kBodyTextStyle(context).copyWith(height: 1.6),
+          ),
+        ).animate().fade(duration: 500.ms),
+
+        // References section
+        if (text.hasReferences)
+          ...text.references.map((ref) => Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+              ),
+            ),
+            child: SelectableText(
+              '📚참고본문: ${ref.bibleChapter}\n${ref.bibleText}',
+              style: kBodyTextStyle(context).copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              ),
+            ),
+          ).animate().slideX(begin: 0.2, end: 0)),
+
+        // Review question section
+        if (text.hasReviewQuestion)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: theme.colorScheme.secondary.withValues(alpha: 0.2),
+              ),
+            ),
+            child: SelectableText(
+              '✏️말씀 Review: ${text.reviewQuestion!.bibleChapter.isNotEmpty ? '${text.reviewQuestion!.bibleChapter}\n' : ''}${text.reviewQuestion!.bibleText}',
+              style: kBodyTextStyle(context).copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              ),
+            ),
+          ).animate().slideY(begin: 0.2, end: 0),
+
+        const SizedBox(height: 8),
+      ],
+    );
   }
 
-  Widget buildContentTile(Widget content) {
-    return ListTile(
-      tileColor: Theme.of(context).colorScheme.surface,
-      title: content,
+  /// Show copied notification
+  void _showCopiedMessage(String title) {
+    showSimpleNotification(
+      Text('$title copied to clipboard'),
+      leading: const Icon(Icons.content_paste_outlined),
+      background: Colors.blueAccent,
+      elevation: 5,
     );
+  }
+
+  /// Open PDF URL
+  Future<void> _openPdfUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open PDF: $url')),
+        );
+      }
+    }
   }
 
   /// Build modern loading state
   Widget _buildLoadingState() {
-    final theme = Theme.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 200,
-            width: 200,
-            child: SpinKitFadingCube(
-              itemBuilder: (BuildContext context, int index) {
-                return DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                );
-              },
-            ),
-          ),
-          SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.dataLoading ?? 'Loading Bible text...',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-      ),
+    return const LoadingIndicator(
+      style: LoadingStyle.spinner,
+      size: 50.0,
     );
   }
 
   /// Build empty state when no bible texts are available
   Widget _buildEmptyState() {
-    final theme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            FontAwesomeIcons.bookBible,
-            size: 80,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-          SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.sermonBibleText ?? 'No texts available',
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Pull down to refresh or check your connection',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: _refreshData,
-            icon: Icon(Icons.refresh),
-            label: Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return EmptyState(
+      icon: FontAwesomeIcons.bookBible,
+      title: AppLocalizations.of(context)?.sermonBibleText ?? 'No Bible Texts',
+      message: 'No Bible texts found for the selected filters.\nTry adjusting your search criteria.',
+      actionLabel: AppLocalizations.of(context)?.tryAgain ?? 'Refresh',
+      onAction: _refreshData,
+    );
+  }
+
+  /// Build error state
+  Widget _buildErrorState(String? errorMessage) {
+    return ErrorState(
+      title: 'Failed to load Bible texts',
+      message: errorMessage,
+      errorType: ErrorType.unknown,
+      onRetry: _refreshData,
+      retryLabel: AppLocalizations.of(context)?.tryAgain ?? 'Try Again',
     );
   }
 
@@ -984,441 +1130,33 @@ class _SundayBibleTextScreenState extends State<SundayBibleTextScreen> {
   }
 
   /// Perform search with current filter settings
-  void _performSearch() {
+  Future<void> _performSearch() async {
     log('🔍 Performing search: Year=$selectedYear, Month=$selectedMonth, Range=$fromMonth-$toMonth, Keyword="$keyword"');
-    getBibleTextFromDataSource();
+
+    final notifier = ref.read(sundayBibleTextNotifierProvider.notifier);
+
+    // Set year first
+    if (selectedYear != ref.read(sundayBibleTextNotifierProvider).filter.year) {
+      await notifier.setYear(selectedYear);
+    }
+
+    // Handle keyword search vs month filtering
+    if (keyword.trim().isNotEmpty) {
+      // Keyword search takes precedence
+      await notifier.setKeyword(keyword.trim());
+    } else {
+      // Month filtering
+      if (fromMonth == toMonth) {
+        await notifier.setMonth(fromMonth);
+      } else {
+        await notifier.setMonthRange(fromMonth, toMonth);
+      }
+    }
   }
 
   /// Refresh data when user pulls down
   Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for Sunday bible text v2');
-    setState(() {
-      bibleTextTiles.clear();
-    });
-    getBibleTextFromDataSource();
-  }
-
-  /// Main data loading method with search parameters
-  Future<void> getBibleTextFromDataSource() async {
-    try {
-      // Show loading spinner
-      setState(() {
-        isLoading = true;
-        bibleTextTiles.clear();
-      });
-
-      log('🔄 Loading Bible text data with filters: Year=$selectedYear, Month=$selectedMonth, Range=$fromMonth-$toMonth, Keyword="$keyword"');
-
-      // Build URL with query parameters
-      String baseUrl = 'https://script.google.com/macros/s/AKfycbwCn5iCa3MK1fPtz8y_Ut5PP-HlwWs-K8_YDrJW_UQpCOUEkQTf8xjpqOTt2ah6MnLX7A/exec';
-      List<String> queryParams = [];
-      
-      // Always add year
-      queryParams.add('year=$selectedYear');
-      
-      // Add keyword if provided - when keyword is present, skip month filters
-      if (keyword.trim().isNotEmpty) {
-        queryParams.add('keyword=${Uri.encodeComponent(keyword.trim())}');
-        log('🔍 Using keyword search: "${keyword.trim()}" - skipping month filters');
-      } else {
-        // Only add month filters when no keyword is provided
-        if (fromMonth == toMonth) {
-          // Exact month filter
-          queryParams.add('month=$fromMonth');
-          log('📅 Using exact month filter: $fromMonth');
-        } else {
-          // Month range filter
-          queryParams.add('start=$fromMonth');
-          queryParams.add('end=$toMonth');
-          log('📅 Using month range filter: $fromMonth to $toMonth');
-        }
-      }
-      
-      String finalUrl = '$baseUrl?${queryParams.join('&')}';
-      log('🌐 Request URL: $finalUrl');
-
-      // Make HTTP request directly
-      final response = await http.get(
-        Uri.parse(finalUrl),
-        headers: {"Content-Type": "application/json"},
-      ).timeout(
-        Duration(seconds: 30),
-        onTimeout: () => throw TimeoutException('Request timeout', Duration(seconds: 30)),
-      );
-      
-      if (response.statusCode != 200) {
-        log('❌ HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
-        throw Exception('HTTP Error: ${response.statusCode}');
-      }
-
-      String responseData = response.body;
-      
-      if (responseData.isEmpty) {
-        log('❌ Empty response received from API');
-        throw Exception('No data received from server');
-      }
-
-      log('📥 Received data: ${responseData.length} characters');
-      log('📄 Response preview: ${responseData.length > 200 ? responseData.substring(0, 200) + "..." : responseData}');
-
-      var jsonObj = jsonDecode(responseData);
-      
-      // Handle response format
-      List<dynamic> bibleTextList;
-      if (jsonObj is Map && jsonObj.containsKey('bibleText')) {
-        bibleTextList = jsonObj['bibleText'] as List;
-      } else if (jsonObj is List) {
-        bibleTextList = jsonObj;
-      } else {
-        throw Exception('Unexpected response format: ${jsonObj.runtimeType}');
-      }
-
-      log('✅ Parsed ${bibleTextList.length} Bible text entries');
-
-      await _buildBibleTextTilesFromApi(bibleTextList);
-
-      setState(() {
-        isLoading = false;
-      });
-
-      log('🎉 Bible text data loaded successfully: ${bibleTextTiles.length} tiles created');
-
-    } catch (e, stackTrace) {
-      log('❌ Error loading Bible text data: $e');
-      log('Stack trace: $stackTrace');
-      
-      setState(() {
-        isLoading = false;
-      });
-
-      // Show error to user
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load Bible texts: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            action: SnackBarAction(
-              label: 'Retry',
-              textColor: Colors.white,
-              onPressed: () {
-                log('🔁 User requested retry');
-                getBibleTextFromDataSource();
-              },
-            ),
-          ),
-        );
-      }
-    }
-  }
-
-  /// Build Bible text tiles from API response data
-  Future<void> _buildBibleTextTilesFromApi(List<dynamic> bibleTextList) async {
-    List<ContentListTile> newTiles = [];
-
-    // Sort by date (newest first)
-    bibleTextList.sort((a, b) {
-      String dateA = a['Date'] ?? '';
-      String dateB = b['Date'] ?? '';
-      
-      // Try to parse dates and compare
-      try {
-        DateTime? parsedDateA = _parseDate(dateA);
-        DateTime? parsedDateB = _parseDate(dateB);
-        
-        if (parsedDateA == null && parsedDateB == null) return 0;
-        if (parsedDateA == null) return 1; // Put items without dates at the end
-        if (parsedDateB == null) return -1;
-        
-        // Sort in descending order (newest first)
-        return parsedDateB.compareTo(parsedDateA);
-      } catch (e) {
-        // If parsing fails, use string comparison as fallback
-        return dateB.compareTo(dateA);
-      }
-    });
-
-    for (var item in bibleTextList) {
-      try {
-        // Extract basic information
-        String date = item['Date'] ?? '';
-        String title = item['Title'] ?? '';
-        String bibleChapter = item['Bible_chapter'] ?? '';
-        String bibleText = item['Bible_text'] ?? '';
-        String fileUrl = item['File_url'] ?? '';
-        
-        // Process References
-        String referencesText = "";
-        if (item['References'] != null && item['References'] is List) {
-          List<dynamic> references = item['References'];
-          for (var ref in references) {
-            if (ref['Text_Class'] == 'ReferenceText') {
-              referencesText += "\n\n📚참고본문: ${ref['Bible_chapter']}\n${ref['Bible_text']}";
-            }
-          }
-        }
-        
-        // Process Review Question
-        String reviewQuestionText = "";
-        if (item['ReviewQuestion'] != null) {
-          var reviewQ = item['ReviewQuestion'];
-          if (reviewQ['Text_Class'] == 'ReviewQuestion') {
-            String chapter = reviewQ['Bible_chapter'] ?? '';
-            String questionText = reviewQ['Bible_text'] ?? '';
-            reviewQuestionText = "\n\n✏️말씀 Review: ${chapter.isNotEmpty ? '$chapter\n' : ''}$questionText";
-          }
-        }
-
-        // Build complete text for copying
-        String completeText = "$bibleText$referencesText$reviewQuestionText";
-
-        // Create tile
-        newTiles.add(
-          ContentListTile(
-            icon: FontAwesomeIcons.bookBible,
-            headerText: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Date badge
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      date,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  // Title
-                  Text(
-                    title,
-                    style: kBodyTextStyle(context).copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  // Bible chapter
-                  Text(
-                    bibleChapter,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
-            ).animate().fadeIn(duration: 400.ms),
-            contents: [
-              // Action buttons row
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 18),
-                        label: Text(AppLocalizations.of(context)!.copy),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                        ),
-                        onPressed: () async {
-                          showMessage("Bible Text");
-                          Clipboard.setData(ClipboardData(text: completeText));
-                        },
-                      ),
-                    ),
-                    if (fileUrl.isNotEmpty) ...[
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          icon: Icon(Icons.picture_as_pdf, size: 18),
-                          label: Text('PDF'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                          ),
-                          onPressed: () async {
-                            final Uri url = Uri.parse(fileUrl);
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url, mode: LaunchMode.externalApplication);
-                            } else {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Could not open PDF: $fileUrl')),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ).animate().scale(duration: 300.ms),
-              
-              // Bible text content
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: SelectableText(
-                  "📖본문:\n$bibleText",
-                  style: kBodyTextStyle(context).copyWith(
-                    height: 1.6,
-                  ),
-                ),
-              ).animate().fade(duration: 500.ms),
-              
-              // References section
-              if (referencesText.isNotEmpty)
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: SelectableText(
-                    referencesText.trim(),
-                    style: kBodyTextStyle(context).copyWith(
-                      height: 1.5,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-                    ),
-                  ),
-                ).animate().slideX(begin: 0.2, end: 0),
-              
-              // Review question section
-              if (reviewQuestionText.isNotEmpty)
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: SelectableText(
-                    reviewQuestionText.trim(),
-                    style: kBodyTextStyle(context).copyWith(
-                      height: 1.5,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-                    ),
-                  ),
-                ).animate().slideY(begin: 0.2, end: 0),
-            ],
-          ),
-        );
-
-        log('✅ Created tile for: $title ($date)');
-        
-      } catch (e) {
-        log('❌ Error processing Bible text item: $e');
-        log('   Item data: $item');
-        continue; // Skip this item and continue with the next
-      }
-    }
-
-    bibleTextTiles.addAll(newTiles);
-    log('📊 Total tiles created: ${newTiles.length}');
-  }
-
-  /// Parse date string into DateTime object
-  /// Supports common date formats like YYYY-MM-DD, MM/DD/YYYY, etc.
-  DateTime? _parseDate(String dateString) {
-    if (dateString.isEmpty) return null;
-    
-    // Try common date formats
-    List<String> formats = [
-      'yyyy-MM-dd',
-      'MM/dd/yyyy',
-      'dd/MM/yyyy',
-      'yyyy/MM/dd',
-      'MM-dd-yyyy',
-      'dd-MM-yyyy',
-    ];
-    
-    for (String format in formats) {
-      try {
-        // Simple parsing for YYYY-MM-DD format (most common)
-        if (format == 'yyyy-MM-dd') {
-          List<String> parts = dateString.split('-');
-          if (parts.length == 3) {
-            int? year = int.tryParse(parts[0]);
-            int? month = int.tryParse(parts[1]);
-            int? day = int.tryParse(parts[2]);
-            if (year != null && month != null && day != null) {
-              return DateTime(year, month, day);
-            }
-          }
-        }
-        
-        // For other formats, try splitting by / or -
-        String separator = format.contains('/') ? '/' : '-';
-        List<String> parts = dateString.split(separator);
-        if (parts.length == 3) {
-          int? year, month, day;
-          
-          if (format.startsWith('yyyy')) {
-            // YYYY-MM-DD or YYYY/MM/DD
-            year = int.tryParse(parts[0]);
-            month = int.tryParse(parts[1]);
-            day = int.tryParse(parts[2]);
-          } else if (format.startsWith('MM')) {
-            // MM/DD/YYYY or MM-DD-YYYY
-            month = int.tryParse(parts[0]);
-            day = int.tryParse(parts[1]);
-            year = int.tryParse(parts[2]);
-          } else if (format.startsWith('dd')) {
-            // DD/MM/YYYY or DD-MM-YYYY
-            day = int.tryParse(parts[0]);
-            month = int.tryParse(parts[1]);
-            year = int.tryParse(parts[2]);
-          }
-          
-          if (year != null && month != null && day != null) {
-            return DateTime(year, month, day);
-          }
-        }
-      } catch (e) {
-        continue;
-      }
-    }
-    
-    return null;
-  }
-
-  void showMessage(title) {
-    showSimpleNotification(
-        Text(
-          title + " copied to clipboard",
-        ),
-        leading: Icon(Icons.content_paste_outlined),
-        background: Colors.blueAccent,
-        elevation: 5);
+    log('🔄 User initiated refresh for Sunday bible text');
+    await ref.read(sundayBibleTextNotifierProvider.notifier).refresh();
   }
 }

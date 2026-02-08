@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/domain/entities/message.dart';
 import 'package:bcsv_flutter_project/domain/repositories/message_repository.dart';
 import 'package:bcsv_flutter_project/data/repositories/message_repository_impl.dart';
+import 'package:bcsv_flutter_project/services/app_badge_service.dart';
 import 'dart:developer';
 
 /// State for message list
@@ -57,6 +58,7 @@ class MessageNotifier extends StateNotifier<MessageState> {
   MessageNotifier(this._repository) : super(const MessageState());
 
   /// Load messages (with caching)
+  /// Filters to only show visible messages based on startDate/endDate
   Future<void> loadMessages({bool forceRefresh = false}) async {
     if (state.isLoading) return;
 
@@ -64,13 +66,26 @@ class MessageNotifier extends StateNotifier<MessageState> {
     log('🔄 Loading messages (forceRefresh: $forceRefresh)');
 
     try {
-      final messages = await _repository.getMessages(forceRefresh: forceRefresh);
+      final allMessages = await _repository.getMessages(forceRefresh: forceRefresh);
+
+      // Debug: log each message's visibility
+      final now = DateTime.now();
+      for (final m in allMessages) {
+        log('📅 Message "${m.title}": startDate=${m.startDate}, now=$now, isVisible=${m.isVisible}');
+      }
+
+      // Filter to only visible messages based on startDate/endDate
+      final visibleMessages = allMessages.where((m) => m.isVisible).toList();
+
       final lastUpdated = _repository.getLastUpdated();
       final wasFromCache = _repository.wasLastFetchFromCache();
       final unreadCount = await _repository.getNewMessageCount();
 
+      // Update app badge
+      AppBadgeService.updateBadgeCount(unreadCount);
+
       state = state.copyWith(
-        messages: messages,
+        messages: visibleMessages,
         status: MessageStatus.loaded,
         lastUpdated: lastUpdated,
         isOfflineData: wasFromCache,
@@ -78,7 +93,7 @@ class MessageNotifier extends StateNotifier<MessageState> {
         errorMessage: null,
       );
 
-      log('✅ Loaded ${messages.length} messages, $unreadCount unread');
+      log('✅ Loaded ${visibleMessages.length} visible messages (${allMessages.length} total), $unreadCount unread');
     } catch (e) {
       log('❌ Error loading messages: $e');
       state = state.copyWith(
@@ -94,17 +109,21 @@ class MessageNotifier extends StateNotifier<MessageState> {
   }
 
   /// Mark all messages as read
+  /// Uses the most recent message's createdAt timestamp
   Future<void> markAllAsRead() async {
     if (state.messages.isEmpty) return;
 
-    // Find the highest message ID
-    final maxId = state.messages
-        .map((m) => m.messageId)
-        .reduce((a, b) => a > b ? a : b);
+    // Find the most recent message timestamp
+    final maxTimestamp = state.messages
+        .map((m) => m.createdAt)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
 
-    await _repository.setLastSeenMessageId(maxId);
+    await _repository.setLastSeenTimestamp(maxTimestamp);
     state = state.copyWith(unreadCount: 0);
-    log('✅ Marked all messages as read (lastSeenId: $maxId)');
+
+    // Clear app badge
+    AppBadgeService.removeBadge();
+    log('✅ Marked all messages as read (lastSeen: $maxTimestamp)');
   }
 
   /// Update unread count

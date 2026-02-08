@@ -1,11 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'dart:async';
 import 'dart:developer';
 import 'package:bcsv_flutter_project/data_models/data_model.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 
 /// API Endpoint manager with caching support
@@ -30,7 +27,6 @@ class ApiEndpoint {
   
   // Timeout configuration
   static const Duration _defaultTimeout = Duration(seconds: 10);
-  static const Duration _messageTimeout = Duration(seconds: 15);
 
   Future<bool> bindEndpoints() async {
     try {
@@ -138,7 +134,13 @@ class ApiEndpoint {
     final uri = Uri.https('www.bridgeway.online', '/_functions/endpoints');
 
     try {
-      final response = await http.get(uri).timeout(
+      final response = await http.get(
+        uri,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      ).timeout(
         _defaultTimeout,
         onTimeout: () => throw TimeoutException('Endpoint fetch timeout', _defaultTimeout),
       );
@@ -156,82 +158,15 @@ class ApiEndpoint {
     }
   }
 
+  /// @deprecated This method is deprecated and replaced by MessageRepository pattern.
+  /// Kept for backwards compatibility during migration.
+  /// Use MessageRepositoryImpl and MessageProvider instead.
+  @Deprecated('Use MessageRepositoryImpl.getNewMessageCount() instead')
   Future<void> checkNewMessage() async {
-    try {
-      // Get messages from the google doc
-      http.Response response = await http.get(apiMap['MESSAGE']!).timeout(
-        _messageTimeout,
-        onTimeout: () => throw TimeoutException('Message fetch timeout', _messageTimeout),
-      );
-      
-      var dir = await getTemporaryDirectory();
-      File file = File("${dir.path}/${kMessageListData}");
-
-      int messageCounter = 0;
-
-      if (response.statusCode == 200) {
-        var new_msg_id = <String>[];
-        var downloadedJsonObjMsg = jsonDecode(response.body) as List;
-        var storedJsonObjMsg = <dynamic>[];
-
-        try {
-          storedJsonObjMsg = jsonDecode(file.readAsStringSync()) as List;
-        } on Exception {
-          log("⚠️ File not found: ${file}");
-        }
-
-        var messages = jsonDecode(response.body) as List;
-        if (storedJsonObjMsg.length > 0) {
-          // Optimize: Use Set for faster lookups instead of List.contains
-          var messageIdSet = <String>{};
-          var messageIdWithViewStatus = <String, bool>{};
-          
-          for (dynamic message in storedJsonObjMsg) {
-            final messageId = message['MessageID'].toString();
-            messageIdSet.add(messageId);
-            messageIdWithViewStatus[messageId] = message['viewed'] ?? false;
-          }
-
-          for (dynamic message in downloadedJsonObjMsg) {
-            final messageId = message['MessageID'].toString();
-            if (!messageIdSet.contains(messageId)) {
-              // New message
-              new_msg_id.add(messageId);
-              messageCounter++;
-            } else {
-              // Existing message, check if viewed
-              if (messageIdWithViewStatus[messageId] == false) {
-                new_msg_id.add(messageId);
-                messageCounter++;
-              }
-            }
-          }
-
-          UserSharedPreferences.setMessageListCounter(messageCounter);
-
-          //Add 'viewed' element in message and save data to cache
-          for (var i = 0; i < messages.length; i++) {
-            final messageId = messages[i]['MessageID'];
-            messages[i]['viewed'] = !new_msg_id.contains(messageId);
-          }
-        } else {
-          // This block is executed at the first time
-          // when the app is installed and launched.
-          UserSharedPreferences.setMessageListCounter(messages.length);
-          for (var i = 0; i < messages.length; i++) {
-              messages[i]['viewed'] = false;
-          }
-        }
-
-        await file.writeAsString(jsonEncode(messages), flush: true, mode: FileMode.write);
-        UserSharedPreferences.setMessageListTextCache(true);
-        log("✅ Message stored.");
-      } else {
-        log("❌ Message fetch failed with status: ${response.statusCode}");
-      }
-    } catch (e) {
-      log("❌ Error checking messages: $e");
-      // Don't block app startup if message check fails
-    }
+    // This method is deprecated. Message checking is now handled by:
+    // - MessageRepositoryImpl.getNewMessageCount()
+    // - MessageProvider for state management
+    // - Uses createdAt timestamp instead of MessageID
+    log('⚠️ checkNewMessage() is deprecated - use MessageProvider instead');
   }
 }

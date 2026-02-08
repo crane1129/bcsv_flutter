@@ -87,5 +87,22 @@
     "keywordSearch": "성경 키워드 검색",
     "keyVerse": "올해 Key Verse",
     "vision_direction": "우리 교회의 비젼과 방향",
-    "vision_direction_content": "• 말씀 중심의 사역과 제자 양육 \n• 실리콘밸리/캠퍼스 청년 복음화\n•  나누는 공동체\n• 개인의 믿음 성장과 헌신 격려"
+    "vision_direction_content": "• 말씀 중심의 사역과 제자 양육 \n• 실리콘밸리/캠퍼스 청년 복음화\n•  나누는 공동체\n• 개인의 믿음 성장과 헌신 격려",
+    "uploadMessage": "메시지 업로드",
+    "uploadMessageTitle": "새 메시지 등록",
+    "uploadMessageSubtitle": "교회 공지사항과 소식을 등록합니다.",
+    "messageTitle": "제목",
+    "messageContent": "내용",
+    "selectCategory": "카테고리 선택",
+    "startDateLabel": "시작일",
+    "endDateLabel": "종료일",
+    "externalLinkLabel": "외부 링크",
+    "uploadSuccess": "메시지가 성공적으로 업로드되었습니다",
+    "imageAttached": "이미지 첨부됨",
+    "attachImageOptional": "이미지 첨부 (선택사항)",
+    "manageMessages": "메시지 관리",
+    "editMessage": "메시지 수정",
+    "update": "수정",
+    "updateSuccess": "수정 완료",
+    "selectMessageToEdit": "수정할 메시지를 선택하세요"
 }

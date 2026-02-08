@@ -46,10 +46,7 @@ dependencies:
 
   win32: ^5.0.0
 
-  # State management - keeping provider temporarily for gradual migration
-  provider: ^6.1.5
-
-  # Riverpod for new state management
+  # Riverpod for state management
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
 
@@ -96,6 +93,9 @@ dependencies:
   
   # Image picker with automatic HEIC conversion
   image_picker: ^1.0.7
+
+  # HTML rendering for rich text content
+  flutter_html: ^3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:

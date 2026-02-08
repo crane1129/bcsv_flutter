@@ -12,8 +12,17 @@ class AnnouncementRemoteDatasource {
   /// Fetch announcements from remote API
   Future<List<AnnouncementModel>> fetchAnnouncements() async {
     try {
+      // Check if API endpoints are initialized
+      if (!ApiEndpoint().isInitialized) {
+        log('⚠️ API endpoints not yet initialized, will use cache');
+        throw const ServerException(
+          message: 'Announcement endpoint not yet initialized',
+        );
+      }
+
       final endpoint = ApiEndpoint.apiMap['ANNOUNCEMENT'];
       if (endpoint == null) {
+        log('⚠️ ANNOUNCEMENT endpoint not found in API configuration');
         throw const ServerException(message: 'Announcement endpoint not configured');
       }
 

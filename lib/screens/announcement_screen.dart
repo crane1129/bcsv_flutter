@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/link.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
@@ -8,6 +7,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:bcsv_flutter_project/presentation/providers/announcement_provider.dart';
 import 'package:bcsv_flutter_project/domain/entities/announcement.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/loading_shimmer.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/empty_state.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/error_state.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/offline_banner.dart';
+import 'package:bcsv_flutter_project/core/utils/endpoint_waiter.dart';
 import 'dart:developer';
 
 class AnnouncementPage extends ConsumerStatefulWidget {
@@ -21,10 +25,17 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   @override
   void initState() {
     super.initState();
-    // Load announcements with force refresh on initial load
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    log('🟢 [AnnouncementScreen] initState called');
+    // Load announcements - wait for endpoints to initialize first
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      log('🟢 [AnnouncementScreen] Post-frame callback - waiting for endpoints');
+
+      // Wait for endpoints to be ready (max 3 seconds)
+      await EndpointWaiter.waitForEndpoints();
+
+      log('🟢 [AnnouncementScreen] Initiating loadAnnouncements');
       ref.read(announcementNotifierProvider.notifier).loadAnnouncements(
-        forceRefresh: true,
+        forceRefresh: false, // Use cache first
       );
     });
   }
@@ -38,6 +49,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   @override
   Widget build(BuildContext context) {
     final announcementState = ref.watch(announcementNotifierProvider);
+    log('🔵 [AnnouncementScreen] build called - status: ${announcementState.status}, count: ${announcementState.announcements.length}, isEmpty: ${announcementState.isEmpty}');
 
     return Scaffold(
       appBar: AppBar(
@@ -52,16 +64,12 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
           text2: '',
         ),
         actions: [
-          // Show indicator if using offline data
-          if (announcementState.isOfflineData)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.cloud_off,
-                color: Colors.orange,
-                size: 20,
-              ),
-            ),
+          // Show offline indicator if using cached data
+          OfflineBanner(
+            isOffline: announcementState.isOfflineData,
+            lastUpdated: announcementState.lastUpdated,
+            style: OfflineBannerStyle.icon,
+          ),
         ],
       ),
       body: SafeArea(
@@ -83,150 +91,31 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   }
 
   Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 200,
-            width: 200,
-            child: SpinKitFadingCube(
-              itemBuilder: (BuildContext context, int index) {
-                return const DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.dataLoading ??
-                'Loading announcements...',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
-                ),
-          ),
-        ],
-      ),
+    return const LoadingIndicator(
+      style: LoadingStyle.spinner,
+      size: 50.0,
     );
   }
 
   Widget _buildErrorState(String? errorMessage) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 80,
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.networkErrorMessage ??
-                'Failed to load announcements',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          if (errorMessage != null)
-            Text(
-              errorMessage,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: _refreshData,
-            icon: const Icon(Icons.refresh),
-            label:
-                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return ErrorState(
+      title: AppLocalizations.of(context)?.networkErrorMessage ??
+          'Failed to load announcements',
+      message: errorMessage,
+      errorType: ErrorType.unknown,
+      onRetry: _refreshData,
+      retryLabel: AppLocalizations.of(context)?.tryAgain ?? 'Try Again',
     );
   }
 
   /// Build empty state when no announcements are available
   Widget _buildEmptyState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.announcement_outlined,
-            size: 80,
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.announcement ??
-                'No announcements available',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Pull down to refresh or check your connection',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.5),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: _refreshData,
-            icon: const Icon(Icons.refresh),
-            label:
-                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return EmptyState(
+      icon: Icons.campaign_outlined,
+      title: 'No Announcements',
+      message: 'There are no announcements at this time.',
+      actionLabel: AppLocalizations.of(context)?.tryAgain ?? 'Refresh',
+      onAction: _refreshData,
     );
   }
 

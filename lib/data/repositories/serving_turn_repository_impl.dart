@@ -26,11 +26,13 @@ class ServingTurnRepositoryImpl implements ServingTurnRepository {
   }) async {
     // Check if we have valid cached data and don't need to refresh
     if (!forceRefresh && _localDatasource.hasValidCache()) {
-      log('📦 Using cached serving turns');
+      log('📦 Checking cached serving turns');
       final cached = _localDatasource.getCachedServingTurns();
-      if (cached != null) {
+      if (cached != null && cached.isNotEmpty) {
+        log('📦 Using ${cached.length} cached serving turns');
         return cached.map((m) => m.toEntity()).toList();
       }
+      log('📦 Cache is empty, will fetch from network');
     }
 
     // Check network connectivity

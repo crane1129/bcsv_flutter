@@ -56,16 +56,27 @@ class ServingTurnNotifier extends StateNotifier<ServingTurnState> {
 
   /// Load serving turns (with caching)
   Future<void> loadServingTurns({bool forceRefresh = false}) async {
-    if (state.isLoading) return;
+    log('🎯 [ServingTurn] loadServingTurns called (forceRefresh: $forceRefresh, currentState: ${state.status})');
 
+    if (state.isLoading) {
+      log('⚠️ [ServingTurn] Already loading, skipping request');
+      return;
+    }
+
+    log('🔵 [ServingTurn] Setting state to loading');
     state = state.copyWith(status: ServingTurnStatus.loading);
-    log('🔄 Loading serving turns (forceRefresh: $forceRefresh)');
 
     try {
+      log('🌐 [ServingTurn] Fetching from repository...');
       final servingTurns = await _repository.getServingTurns(forceRefresh: forceRefresh);
       final lastUpdated = _repository.getLastUpdated();
       final hasCached = await _repository.hasCachedServingTurns();
       final currentTurn = _repository.getCurrentServingTurn(servingTurns);
+
+      log('📊 [ServingTurn] Received ${servingTurns.length} items');
+      log('📦 [ServingTurn] Has cache: $hasCached');
+      log('🕐 [ServingTurn] Last updated: ${lastUpdated?.toString() ?? "never"}');
+      log('🎯 [ServingTurn] Current turn: ${currentTurn?.date ?? "none"}');
 
       state = state.copyWith(
         servingTurns: servingTurns,
@@ -76,16 +87,21 @@ class ServingTurnNotifier extends StateNotifier<ServingTurnState> {
         errorMessage: null,
       );
 
-      log('✅ Loaded ${servingTurns.length} serving turns');
-      if (currentTurn != null) {
-        log('📅 Current turn: ${currentTurn.date} - ${currentTurn.prayer}');
+      log('✅ [ServingTurn] State updated successfully');
+      if (servingTurns.isEmpty) {
+        log('⚠️ [ServingTurn] WARNING: No serving turns in result');
       }
-    } catch (e) {
-      log('❌ Error loading serving turns: $e');
+      if (currentTurn != null) {
+        log('📅 [ServingTurn] Current turn: ${currentTurn.date} - ${currentTurn.prayer}');
+      }
+    } catch (e, stackTrace) {
+      log('❌ [ServingTurn] Error loading: $e');
+      log('📍 [ServingTurn] Stack: ${stackTrace.toString().split('\n').take(5).join('\n')}');
       state = state.copyWith(
         status: ServingTurnStatus.error,
         errorMessage: e.toString(),
       );
+      log('🔴 [ServingTurn] State set to error');
     }
   }
 

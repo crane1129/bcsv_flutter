@@ -52,18 +52,28 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
 
   /// Load announcements (with caching)
   Future<void> loadAnnouncements({bool forceRefresh = false}) async {
-    if (state.isLoading) return;
+    log('🎯 [Announcement] loadAnnouncements called (forceRefresh: $forceRefresh, currentState: ${state.status})');
 
+    if (state.isLoading) {
+      log('⚠️ [Announcement] Already loading, skipping request');
+      return;
+    }
+
+    log('🔵 [Announcement] Setting state to loading');
     state = state.copyWith(status: AnnouncementStatus.loading);
-    log('🔄 Loading announcements (forceRefresh: $forceRefresh)');
 
     try {
+      log('🌐 [Announcement] Fetching from repository...');
       final announcements = await _repository.getAnnouncements(
         forceRefresh: forceRefresh,
       );
 
       final lastUpdated = _repository.getLastUpdated();
       final wasFromCache = _repository.wasLastFetchFromCache();
+
+      log('📊 [Announcement] Received ${announcements.length} items');
+      log('📦 [Announcement] Source: ${wasFromCache ? "CACHE" : "NETWORK"}');
+      log('🕐 [Announcement] Last updated: ${lastUpdated?.toString() ?? "never"}');
 
       state = state.copyWith(
         announcements: announcements.reversed.toList(), // Reverse for newest first
@@ -73,13 +83,18 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
         errorMessage: null,
       );
 
-      log('✅ Loaded ${announcements.length} announcements');
-    } catch (e) {
-      log('❌ Error loading announcements: $e');
+      log('✅ [Announcement] State updated successfully');
+      if (announcements.isEmpty) {
+        log('⚠️ [Announcement] WARNING: No announcements in result');
+      }
+    } catch (e, stackTrace) {
+      log('❌ [Announcement] Error loading: $e');
+      log('📍 [Announcement] Stack: ${stackTrace.toString().split('\n').take(5).join('\n')}');
       state = state.copyWith(
         status: AnnouncementStatus.error,
         errorMessage: e.toString(),
       );
+      log('🔴 [Announcement] State set to error');
     }
   }
 

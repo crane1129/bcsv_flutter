@@ -87,13 +87,18 @@ class MessageLocalDatasource {
     log('🗑️ Message cache cleared');
   }
 
-  /// Get last seen message ID from SharedPreferences
-  int getLastSeenMessageId() {
-    return UserSharedPreferences.getMessageListCounter() ?? 0;
+  /// Get last seen message timestamp from SharedPreferences
+  /// Returns null if no timestamp has been set (first time user)
+  DateTime? getLastSeenTimestamp() {
+    final timestamp = UserSharedPreferences.getLastSeenMessageTimestamp();
+    if (timestamp == null) return null;
+    return DateTime.tryParse(timestamp);
   }
 
-  /// Set last seen message ID
-  Future<void> setLastSeenMessageId(int messageId) async {
-    await UserSharedPreferences.setMessageListCounter(messageId);
+  /// Set last seen message timestamp (ISO8601 string)
+  Future<void> setLastSeenTimestamp(DateTime timestamp) async {
+    await UserSharedPreferences.setLastSeenMessageTimestamp(
+      timestamp.toIso8601String(),
+    );
   }
 }

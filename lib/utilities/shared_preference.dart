@@ -28,6 +28,21 @@ class UserSharedPreferences{
   // API Endpoints cache
   static const _keyEndpointsCache = 'endpoints_cache';
   static const _keyEndpointsCacheTimestamp = 'endpoints_cache_timestamp';
+
+  // Key Verse cache
+  static const _keyKeyverseCache = 'keyverse_cache';
+  static const _keyKeyverseCacheTimestamp = 'keyverse_cache_timestamp';
+  static const _keyKeyverseCachedYear = 'keyverse_cached_year';
+
+  // Daily Bible cache
+  static const _keyDailyBibleCacheDate = 'daily_bible_cache_date';
+  static const _keyDailyBibleCacheTimestamp = 'daily_bible_cache_timestamp';
+
+  // Sunday Bible Text cache
+  static const _keySundayBibleTextCacheTimestamp = 'sunday_bible_text_cache_timestamp';
+
+  // Message last seen timestamp (for new message detection)
+  static const _keyLastSeenMessageTimestamp = 'last_seen_message_timestamp';
   
   static Future init() async {
     _peferences = await SharedPreferences.getInstance();
@@ -158,11 +173,85 @@ class UserSharedPreferences{
   static bool isEndpointsCacheExpired({Duration maxAge = const Duration(hours: 24)}) {
     final timestamp = getEndpointsCacheTimestamp();
     if (timestamp == null) return true;
-    
+
     final cacheDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
     final now = DateTime.now();
     return now.difference(cacheDate) > maxAge;
   }
+
+  // Key Verse cache methods
+  static Future setKeyverseCache(String? keyverseJson) async {
+    if (keyverseJson == null) {
+      await _peferences.remove(_keyKeyverseCache);
+    } else {
+      await _peferences.setString(_keyKeyverseCache, keyverseJson);
+    }
+  }
+
+  static String? getKeyverseCache() => _peferences.getString(_keyKeyverseCache);
+
+  static Future setKeyverseCacheTimestamp(int? timestamp) async {
+    if (timestamp == null) {
+      await _peferences.remove(_keyKeyverseCacheTimestamp);
+    } else {
+      await _peferences.setInt(_keyKeyverseCacheTimestamp, timestamp);
+    }
+  }
+
+  static int? getKeyverseCacheTimestamp() => _peferences.getInt(_keyKeyverseCacheTimestamp);
+
+  static Future setKeyverseCachedYear(int? year) async {
+    if (year == null) {
+      await _peferences.remove(_keyKeyverseCachedYear);
+    } else {
+      await _peferences.setInt(_keyKeyverseCachedYear, year);
+    }
+  }
+
+  static int? getKeyverseCachedYear() => _peferences.getInt(_keyKeyverseCachedYear);
+
+  // Daily Bible cache methods
+  static Future setDailyBibleCacheDate(String? date) async {
+    if (date == null) {
+      await _peferences.remove(_keyDailyBibleCacheDate);
+    } else {
+      await _peferences.setString(_keyDailyBibleCacheDate, date);
+    }
+  }
+
+  static String? getDailyBibleCacheDate() =>
+      _peferences.getString(_keyDailyBibleCacheDate);
+
+  static Future setDailyBibleCacheTimestamp(int? timestamp) async {
+    if (timestamp == null) {
+      await _peferences.remove(_keyDailyBibleCacheTimestamp);
+    } else {
+      await _peferences.setInt(_keyDailyBibleCacheTimestamp, timestamp);
+    }
+  }
+
+  static int? getDailyBibleCacheTimestamp() =>
+      _peferences.getInt(_keyDailyBibleCacheTimestamp);
+
+  // Sunday Bible Text cache methods
+  static Future setSundayBibleTextCacheTimestamp(int? timestamp) async {
+    if (timestamp == null) {
+      await _peferences.remove(_keySundayBibleTextCacheTimestamp);
+    } else {
+      await _peferences.setInt(_keySundayBibleTextCacheTimestamp, timestamp);
+    }
+  }
+
+  static int? getSundayBibleTextCacheTimestamp() =>
+      _peferences.getInt(_keySundayBibleTextCacheTimestamp);
+
+  // Message last seen timestamp methods
+  static Future setLastSeenMessageTimestamp(String timestamp) async {
+    await _peferences.setString(_keyLastSeenMessageTimestamp, timestamp);
+  }
+
+  static String? getLastSeenMessageTimestamp() =>
+      _peferences.getString(_keyLastSeenMessageTimestamp);
 
   // Generic methods for other data types
   static Future setString(String key, String value) async {

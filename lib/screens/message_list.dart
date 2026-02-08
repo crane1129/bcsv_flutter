@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/presentation/providers/message_provider.dart';
 import 'package:bcsv_flutter_project/domain/entities/message.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/loading_shimmer.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/empty_state.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/error_state.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/offline_banner.dart';
+import 'package:bcsv_flutter_project/services/app_badge_service.dart';
 import 'dart:developer';
 
 class MessageListScreen extends ConsumerStatefulWidget {
@@ -20,13 +25,17 @@ class _MessageListScreenState extends ConsumerState<MessageListScreen> {
   @override
   void initState() {
     super.initState();
-    // Load messages with force refresh on initial load
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(messageNotifierProvider.notifier).loadMessages(
+    // Load messages with force refresh on initial load, then mark as read
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // First load messages
+      await ref.read(messageNotifierProvider.notifier).loadMessages(
         forceRefresh: true,
       );
-      // Mark all messages as read when user opens the screen
-      ref.read(messageNotifierProvider.notifier).markAllAsRead();
+      // Then mark all messages as read (after loading completes)
+      await ref.read(messageNotifierProvider.notifier).markAllAsRead();
+      // Clear app badge when user views messages
+      AppBadgeService.removeBadge();
+      log('✅ Messages loaded and marked as read, badge cleared');
     });
   }
 
@@ -53,16 +62,12 @@ class _MessageListScreenState extends ConsumerState<MessageListScreen> {
           text2: '',
         ),
         actions: [
-          // Show indicator if using offline data
-          if (messageState.isOfflineData)
-            const Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.cloud_off,
-                color: Colors.orange,
-                size: 20,
-              ),
-            ),
+          // Show offline indicator if using cached data
+          OfflineBanner(
+            isOffline: messageState.isOfflineData,
+            lastUpdated: messageState.lastUpdated,
+            style: OfflineBannerStyle.icon,
+          ),
         ],
       ),
       body: SafeArea(
@@ -88,136 +93,71 @@ class _MessageListScreenState extends ConsumerState<MessageListScreen> {
   }
 
   Widget _buildLoadingState() {
-    return Center(
-      child: SizedBox(
-        height: 200,
-        width: 200,
-        child: SpinKitFadingCube(
-          itemBuilder: (BuildContext context, int index) {
-            return const DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.grey,
-              ),
-            );
-          },
-        ),
-      ),
+    return const LoadingIndicator(
+      style: LoadingStyle.spinner,
+      size: 50.0,
     );
   }
 
   Widget _buildErrorState(String? errorMessage) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 80,
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.networkErrorMessage ??
-                'Failed to load messages',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          if (errorMessage != null)
-            Text(
-              errorMessage,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.5),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: _refreshData,
-            icon: const Icon(Icons.refresh),
-            label:
-                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return ErrorState(
+      title: AppLocalizations.of(context)?.networkErrorMessage ??
+          'Failed to load messages',
+      message: errorMessage,
+      errorType: ErrorType.unknown,
+      onRetry: _refreshData,
+      retryLabel: AppLocalizations.of(context)?.tryAgain ?? 'Try Again',
     );
   }
 
   Widget _buildEmptyState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.message_outlined,
-            size: 80,
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)?.newMessage ?? 'No messages available',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Pull down to refresh',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.5),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: _refreshData,
-            icon: const Icon(Icons.refresh),
-            label:
-                Text(AppLocalizations.of(context)?.tryAgain ?? 'Try Again'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return EmptyState(
+      icon: Icons.message_outlined,
+      title: 'No Messages',
+      message: 'There are no messages at this time.',
+      actionLabel: AppLocalizations.of(context)?.tryAgain ?? 'Refresh',
+      onAction: _refreshData,
     );
   }
 
+  /// Check if URL points to an image file
+  /// Supports standard extensions and Wix media URLs
+  bool _isImageFile(String url) {
+    if (url.isEmpty) return false;
+
+    try {
+      final lowerUrl = url.toLowerCase();
+
+      // Check for Wix static media URLs (always images)
+      if (lowerUrl.contains('static.wixstatic.com/media/')) {
+        return true;
+      }
+
+      // Check for standard image extensions
+      final uri = Uri.parse(url);
+      final path = uri.path.toLowerCase();
+      return path.endsWith('.jpg') ||
+          path.endsWith('.jpeg') ||
+          path.endsWith('.png') ||
+          path.endsWith('.gif') ||
+          path.endsWith('.webp') ||
+          path.contains('.jpg') ||
+          path.contains('.jpeg') ||
+          path.contains('.png') ||
+          path.contains('.gif') ||
+          path.contains('.webp');
+    } catch (_) {
+      return false;
+    }
+  }
+
   Widget _buildMessageCard(MessageEntity message) {
+    // Debug: log image URL to diagnose issues
+    log('🖼️ Message "${message.title}" imageUrl: "${message.imageUrl}" (hasImage: ${message.hasImage}, isImageFile: ${_isImageFile(message.imageUrl)})');
+
+    final theme = Theme.of(context);
+    final bool showImage = message.hasImage && _isImageFile(message.imageUrl);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Card(
@@ -227,25 +167,48 @@ class _MessageListScreenState extends ConsumerState<MessageListScreen> {
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: <Widget>[
-            // Image section
-            message.hasImage
-                ? Image.network(
-                    message.imageLink,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'assets/images/bridgeway.png',
-                        height: 100,
-                        width: 200,
-                        fit: BoxFit.fitWidth,
-                      );
-                    },
-                  )
-                : Image.asset(
-                    'assets/images/bridgeway.png',
+            // Image section - same pattern as unconfirmed_opinion_screen.dart
+            if (showImage)
+              Image.network(
+                message.imageUrl,
+                fit: BoxFit.cover,
+                height: 200,
+                width: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  log('❌ Failed to load image: $error');
+                  return Container(
                     height: 100,
-                    width: 200,
-                    fit: BoxFit.fitWidth,
-                  ),
+                    width: double.infinity,
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.broken_image_rounded,
+                            color: theme.colorScheme.error,
+                            size: 32,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Image failed to load",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              )
+            else
+              Image.asset(
+                'assets/images/bridgeway.png',
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.fitWidth,
+              ),
             // Title section
             ListTile(
               leading: Icon(Icons.event, color: kActiveIconColor(context)),
@@ -258,12 +221,35 @@ class _MessageListScreenState extends ConsumerState<MessageListScreen> {
                 ),
               ),
             ),
-            // Message content
+            // Message content - using Html widget for rich text
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SelectableText(
-                message.message,
-                style: kBodyTextStyle(context),
+              child: Html(
+                data: message.message,
+                style: {
+                  "body": Style(
+                    fontSize: FontSize(16),
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                    margin: Margins.zero,
+                    padding: HtmlPaddings.zero,
+                  ),
+                  "p": Style(
+                    fontSize: FontSize(16),
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                  ),
+                  "a": Style(
+                    color: Theme.of(context).colorScheme.primary,
+                    textDecoration: TextDecoration.underline,
+                  ),
+                },
+                onLinkTap: (url, _, __) async {
+                  if (url != null) {
+                    final uri = Uri.parse(url);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    }
+                  }
+                },
               ),
             ),
             // External link button

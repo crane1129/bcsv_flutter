@@ -8,22 +8,28 @@ part of 'message_model.dart';
 
 _$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
     _$MessageModelImpl(
-      messageId: (json['MessageID'] as num).toInt(),
+      id: json['_id'] as String,
+      createdAt: DateTime.parse(json['Created Date'] as String),
       title: json['Title'] as String,
-      message: json['Message'] as String,
-      category: json['Category'] as String,
-      expireDate: json['ExpireDate'] as String,
-      imageLink: json['ImageLink'] as String? ?? '',
-      externalLink: json['ExternalLink'] as String? ?? '',
+      message: json['message'] as String,
+      category: json['category'] as String,
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: json['endDate'] == null
+          ? null
+          : DateTime.parse(json['endDate'] as String),
+      imageUrl: json['titleImage'] as String? ?? '',
+      externalLink: json['externalLink'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) =>
     <String, dynamic>{
-      'MessageID': instance.messageId,
+      '_id': instance.id,
+      'Created Date': instance.createdAt.toIso8601String(),
       'Title': instance.title,
-      'Message': instance.message,
-      'Category': instance.category,
-      'ExpireDate': instance.expireDate,
-      'ImageLink': instance.imageLink,
-      'ExternalLink': instance.externalLink,
+      'message': instance.message,
+      'category': instance.category,
+      'startDate': instance.startDate.toIso8601String(),
+      'endDate': instance.endDate?.toIso8601String(),
+      'titleImage': instance.imageUrl,
+      'externalLink': instance.externalLink,
     };

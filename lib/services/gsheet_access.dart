@@ -40,7 +40,7 @@ class GoogleMessageSheet {
         },
       );
 
-      _userSheet = await _getWorkSheet(spreadsheet, title: sheetName);
+      _userSheet = _getWorkSheet(spreadsheet, title: sheetName);
       _initialized = true;
       log('Google Sheets initialized successfully');
     } catch (e) {
@@ -58,23 +58,16 @@ class GoogleMessageSheet {
     await init();
   }
 
-  static Future<Worksheet> _getWorkSheet(
+  static Worksheet _getWorkSheet(
     Spreadsheet spreadsheet, {
     required String title,
-  }) async {
-    try {
-      return await spreadsheet.addWorksheet(title).timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => throw Exception('Add worksheet timeout'),
-          );
-    } catch (e) {
-      // If adding fails, try to get existing worksheet
-      final worksheet = spreadsheet.worksheetByTitle(sheetName);
-      if (worksheet == null) {
-        throw Exception('Failed to get or create worksheet: $e');
-      }
-      return worksheet;
+  }) {
+    final worksheet = spreadsheet.worksheetByTitle(title);
+    if (worksheet == null) {
+      throw Exception('Worksheet "$title" not found in spreadsheet');
     }
+    log('✅ Found worksheet: $title');
+    return worksheet;
   }
 
   /// Check if the service is properly initialized

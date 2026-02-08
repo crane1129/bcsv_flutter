@@ -350,5 +350,73 @@
   "vision_direction_content": "• Mnistry centered on the Word and disciple training\n• Evangelization of youth in Silicon Valley/campuses\n• A community that shares life together\n• Encouragement of personal faith growth and commitment",
   "@vision_direction_content": {
     "description": "description"
+  },
+  "uploadMessage": "Upload Message",
+  "@uploadMessage": {
+    "description": "Title for message upload screen"
+  },
+  "uploadMessageTitle": "Upload New Message",
+  "@uploadMessageTitle": {
+    "description": "Header title for message upload form"
+  },
+  "uploadMessageSubtitle": "Post announcements and news for the church.",
+  "@uploadMessageSubtitle": {
+    "description": "Subtitle for message upload form"
+  },
+  "messageTitle": "Title",
+  "@messageTitle": {
+    "description": "Label for message title field"
+  },
+  "messageContent": "Content",
+  "@messageContent": {
+    "description": "Label for message content field"
+  },
+  "selectCategory": "Select Category",
+  "@selectCategory": {
+    "description": "Label for category dropdown"
+  },
+  "startDateLabel": "Start Date",
+  "@startDateLabel": {
+    "description": "Label for start date picker"
+  },
+  "endDateLabel": "End Date",
+  "@endDateLabel": {
+    "description": "Label for end date picker"
+  },
+  "externalLinkLabel": "External Link",
+  "@externalLinkLabel": {
+    "description": "Label for external link field"
+  },
+  "uploadSuccess": "Message uploaded successfully",
+  "@uploadSuccess": {
+    "description": "Success message after upload"
+  },
+  "imageAttached": "Image attached",
+  "@imageAttached": {
+    "description": "Status text when image is attached"
+  },
+  "attachImageOptional": "Attach Image (optional)",
+  "@attachImageOptional": {
+    "description": "Placeholder text for image attachment"
+  },
+  "manageMessages": "Manage Messages",
+  "@manageMessages": {
+    "description": "Title for message management screen"
+  },
+  "editMessage": "Edit Message",
+  "@editMessage": {
+    "description": "Title for edit message form"
+  },
+  "update": "Update",
+  "@update": {
+    "description": "Update button label"
+  },
+  "updateSuccess": "Update Successful",
+  "@updateSuccess": {
+    "description": "Success message after updating"
+  },
+  "selectMessageToEdit": "Select a message to edit",
+  "@selectMessageToEdit": {
+    "description": "Empty state message for message management"
   }
 }

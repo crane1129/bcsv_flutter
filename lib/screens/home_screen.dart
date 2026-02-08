@@ -3,41 +3,35 @@ import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/message_list.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/screens/announcement_screen.dart';
 import 'package:bcsv_flutter_project/screens/serving_turn_screen.dart';
 import 'package:bcsv_flutter_project/screens/daily_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/screens/sunday_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/nav_bar.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
-import 'package:bcsv_flutter_project/components/reusable_card.dart';
+import 'package:bcsv_flutter_project/presentation/shared/widgets/app_card.dart';
 import 'package:bcsv_flutter_project/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
-import 'package:bcsv_flutter_project/services/keyverse_service.dart';
-import 'package:bcsv_flutter_project/data_models/keyverse_model.dart';
+import 'package:bcsv_flutter_project/presentation/providers/keyverse_provider.dart';
+import 'package:bcsv_flutter_project/presentation/providers/message_provider.dart';
 import 'dart:developer';
-import 'dart:async';
 import '../utilities/constants.dart';
 import 'offering_screen.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class MyHomePage extends ConsumerStatefulWidget {
+  const MyHomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Widget emptyString = Text('');
-  late int messageCounter;
-
-  // Key verse state
-  KeyVerse? _currentKeyVerse;
-  bool _isLoadingKeyVerse = false;
 
   // Card visibility states
   bool showAnnouncementCard = true;
@@ -52,26 +46,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    log('🟢 [HomeScreen] initState called');
     _loadCardVisibilitySettings();
-    
-    // Only load keyverse if background service is not initialized
-    // (Background service will load it if already initialized)
-    if (!BackgroundService().isInitialized) {
-      _loadCurrentYearKeyVerse();
-    }
 
-    // Initialize app services immediately when home screen loads
+    // Initialize app services and load keyverse
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      log('🟢 [HomeScreen] Post-frame callback - initiating loadKeyVerse and app initialization');
+      // Load current year's key verse using provider (cache first, then refresh in background)
+      ref.read(keyVerseNotifierProvider.notifier).loadKeyVerse(forceRefresh: false);
+
+      // Load messages to get unread count for badge display
+      ref.read(messageNotifierProvider.notifier).loadMessages(forceRefresh: false);
+
       _initializeApp();
-    });
-    
-    // Periodically refresh message counter to catch updates from background service
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      if (mounted) {
-        updateMessageCounter();
-      } else {
-        timer.cancel();
-      }
     });
   }
 
@@ -93,8 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.didChangeDependencies();
     // Refresh card visibility when returning from settings
     _loadCardVisibilitySettings();
-    // Also refresh message counter when returning to home screen
-    updateMessageCounter();
   }
 
   Future<void> _initializeApp() async {
@@ -136,6 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final keyVerseState = ref.watch(keyVerseNotifierProvider);
+    log('🔵 [HomeScreen] build called - keyVerse status: ${keyVerseState.status}, hasData: ${keyVerseState.keyVerse != null}');
 
     return UpgradeAlert(
       dialogStyle: UpgradeDialogStyle.cupertino,
@@ -254,9 +241,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                       // Mission statement
                                       Expanded(
-                                        child: _currentKeyVerse != null
+                                        child: keyVerseState.keyVerse != null
                                             ? Text(
-                                                _currentKeyVerse!.title,
+                                                keyVerseState.keyVerse!.title,
                                                 style: theme.textTheme.titleMedium
                                                     ?.copyWith(
                                                   fontWeight: FontWeight.bold,
@@ -278,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                       // Compact verse badge
                                       Container(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
                                           color: theme
@@ -287,9 +274,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
-                                        child: _currentKeyVerse != null
+                                        child: keyVerseState.keyVerse != null
                                             ? Text(
-                                                _currentKeyVerse!.shortReference,
+                                                keyVerseState.keyVerse!.shortReference,
                                                 style: theme.textTheme.labelSmall
                                                     ?.copyWith(
                                                   color: theme.colorScheme.secondary,
@@ -311,13 +298,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ],
                                   ),
 
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
 
                                   // Key verse content
-                                  if (_isLoadingKeyVerse)
+                                  if (keyVerseState.isLoading)
                                     Container(
                                       width: double.infinity,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 12, horizontal: 12),
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.surface
@@ -335,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               color: theme.colorScheme.primary,
                                             ),
                                           ),
-                                          SizedBox(width: 12),
+                                          const SizedBox(width: 12),
                                           Text(
                                             'Loading key verse...',
                                             style: theme.textTheme.bodySmall?.copyWith(
@@ -346,13 +333,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ],
                                       ),
                                     )
-                                  else if (_currentKeyVerse != null)
+                                  else if (keyVerseState.keyVerse != null)
                                     Builder(
                                       builder: (context) {
-                                        final keyVerse = _currentKeyVerse!;
+                                        final keyVerse = keyVerseState.keyVerse!;
                                         return Container(
                                           width: double.infinity,
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               vertical: 5, horizontal: 5),
                                           decoration: BoxDecoration(
                                             color: theme.colorScheme.surface
@@ -436,13 +423,33 @@ class _MyHomePageState extends State<MyHomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) =>
-                                                MessageListScreen())).then(
-                                        (onValue) => updateMessageCounter()),
-                                    cardChild: IconMsgContent(
-                                      cardIcon: FontAwesomeIcons.newspaper,
-                                      label: AppLocalizations.of(context)!
-                                          .newMessage,
-                                      msg_widget: displayMsgCounter()
+                                                MessageListScreen())),
+                                    cardChild: Builder(
+                                      builder: (context) {
+                                        final unreadCount = ref.watch(unreadMessageCountProvider);
+                                        if (unreadCount > 0) {
+                                          return IconMsgContent(
+                                            cardIcon: FontAwesomeIcons.newspaper,
+                                            label: AppLocalizations.of(context)!.newMessage,
+                                            msg_widget: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                '$unreadCount',
+                                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                            badgeDelay: 1000.ms,
+                                          );
+                                        }
+                                        return IconContent(
+                                          cardIcon: FontAwesomeIcons.newspaper,
+                                          label: AppLocalizations.of(context)!.newMessage,
+                                        );
+                                      },
                                     ),
                                     animationDelay: 900.ms,
                                     slideDirection: 0.3,
@@ -570,65 +577,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget displayMsgCounter() {
-    updateMessageCounter();
-
-    if (messageCounter == 0) {
-      return emptyString;
-    } else {
-      return ClipOval(
-        child: Container(
-          color: Colors.red,
-          width: 20,
-          height: 20,
-          child: Center(
-            child: Text(messageCounter.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 12)),
-          ),
-        ),
-      );
-    }
-  }
-
-  void updateMessageCounter() {
-    setState(() {
-      messageCounter = UserSharedPreferences.getMessageListCounter() ?? 0;
-    });
-  }
-
-  /// Load current year's key verse (only if background service not initialized)
-  Future<void> _loadCurrentYearKeyVerse() async {
-    setState(() {
-      _isLoadingKeyVerse = true;
-    });
-
-    try {
-      // If background service is initialized, it should have already loaded keyverse
-      if (BackgroundService().isInitialized) {
-        log('🔄 Background service already initialized, getting keyverse from cache...');
-        // Wait a bit for background service to complete keyverse loading
-        await Future.delayed(Duration(milliseconds: 100));
-      }
-      
-      final keyVerse = await KeyVerseService().getCurrentYearKeyVerse();
-      setState(() {
-        _currentKeyVerse = keyVerse;
-        _isLoadingKeyVerse = false;
-      });
-      
-      if (keyVerse != null) {
-        log('✅ Key verse loaded: ${keyVerse.title}');
-      } else {
-        log('⚠️ No key verse found for current year');
-      }
-    } catch (e) {
-      log('❌ Error loading key verse: $e');
-      setState(() {
-        _isLoadingKeyVerse = false;
-      });
-    }
-  }
-
   /// Helper method to build a row with dynamic card visibility
   Widget _buildRow(List<Widget> cards) {
     if (cards.isEmpty) return SizedBox.shrink();
@@ -680,10 +628,11 @@ class _MyHomePageState extends State<MyHomePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: ReusableCard2(
-        onPress: onPress,
+      child: AppCard(
+        onTap: onPress,
         color: theme.colorScheme.surface,
-        cardChild: cardChild,
+        variant: AppCardVariant.elevated,
+        child: cardChild,
       ),
     ).animate().fadeIn(delay: animationDelay).slideX(begin: slideDirection);
   }

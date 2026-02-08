@@ -12,8 +12,17 @@ class ServingTurnRemoteDatasource {
   /// Fetch serving turns from remote API
   Future<List<ServingTurnModel>> fetchServingTurns() async {
     try {
+      // Check if API endpoints are initialized
+      if (!ApiEndpoint().isInitialized) {
+        log('⚠️ API endpoints not yet initialized, will use cache');
+        throw const ServerException(
+          message: 'Serving turn endpoint not yet initialized',
+        );
+      }
+
       final endpoint = ApiEndpoint.apiMap['SERVING_TURN'];
       if (endpoint == null) {
+        log('⚠️ SERVING_TURN endpoint not found in API configuration');
         throw const ServerException(message: 'Serving turn endpoint not configured');
       }
 
@@ -41,10 +50,12 @@ class ServingTurnRemoteDatasource {
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        final servingTurnsList = jsonData['serving_turn'] as List?;
+        log('🔍 [ServingTurn] Response keys: ${jsonData.keys.toList()}');
+        log('🔍 [ServingTurn] Response body preview: ${response.body.length > 200 ? response.body.substring(0, 200) : response.body}');
+        final servingTurnsList = jsonData['servingTurns'] as List?;
 
         if (servingTurnsList == null) {
-          log('⚠️ No serving turns found in response');
+          log('⚠️ No serving turns found in response (key "servingTurns" not found)');
           return [];
         }
 

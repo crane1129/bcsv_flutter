@@ -6,6 +6,8 @@ import 'package:bcsv_flutter_project/screens/bible_keyword_search_screen.dart';
 import 'package:bcsv_flutter_project/screens/keyverse_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:bcsv_flutter_project/screens/unconfirmed_opinion_screen.dart';
+import 'package:bcsv_flutter_project/screens/message_upload_screen.dart';
+import 'package:bcsv_flutter_project/screens/message_management_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,8 +34,7 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  Widget emptyString = Text('');
-  late int messageCounter;
+  Widget emptyString = const SizedBox.shrink();
   Timer? _endpointCheckTimer;
   bool _endpointsInitialized = false;
   int _unconfirmedCount = 0;
@@ -41,7 +42,6 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
-    updateMessageCounter();
     _checkEndpointInitialization();
     _loadUnconfirmedCount();
   }
@@ -392,6 +392,38 @@ class _NavBarState extends State<NavBar> {
                       ).then((_) => _loadUnconfirmedCount());
                     },
                   ),
+                  ListTile(
+                    leading: Icon(Icons.cloud_upload_rounded,
+                        color: kActiveIconColorAdmin(context)),
+                    title: Text(
+                      AppLocalizations.of(context)!.uploadMessage,
+                      style: kDrawerMenuTextStyle(context),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MessageUploadScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.edit_note_rounded,
+                        color: kActiveIconColorAdmin(context)),
+                    title: Text(
+                      AppLocalizations.of(context)!.manageMessages,
+                      style: kDrawerMenuTextStyle(context),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MessageManagementScreen(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               );
             },
@@ -411,29 +443,6 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  void updateMessageCounter() {
-    setState(() {
-      messageCounter = UserSharedPreferences.getMessageListCounter() ?? 0;
-    });
-  }
-
-  Widget displayMsgCounter() {
-    if (messageCounter == 0) {
-      return emptyString;
-    } else {
-      return ClipOval(
-        child: Container(
-          color: Colors.red,
-          width: 20,
-          height: 20,
-          child: Center(
-            child: Text(messageCounter.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 12)),
-          ),
-        ),
-      );
-    }
-  }
 }
 
 class ListWebViewMenu extends StatelessWidget {

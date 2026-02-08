@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
-import 'package:bcsv_flutter_project/services/gsheet_access.dart';
+// import 'package:bcsv_flutter_project/services/gsheet_access.dart'; // Not currently used
 import 'package:bcsv_flutter_project/services/keyverse_service.dart';
-import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
-import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:bcsv_flutter_project/core/storage/cache_manager.dart';
 import 'package:bcsv_flutter_project/core/config/app_config.dart';
+import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
@@ -325,13 +323,10 @@ class BackgroundService {
   }
 
   Future<void> _initializeGoogleSheets() async {
-    try {
-      await GoogleMessageSheet.init();
-      log('✅ Google Sheets initialized');
-    } catch (e) {
-      log('❌ Google Sheets initialization failed: $e');
-      // Cache the failure for retry when network is restored
-    }
+    // GoogleMessageSheet is not currently used in the app.
+    // The insert() method for user feedback is never called.
+    // Skipping initialization to avoid unnecessary permission errors.
+    log('⏭️ Google Sheets initialization skipped (not in use)');
   }
 
   Future<void> _initializeApiServices() async {
@@ -362,13 +357,12 @@ class BackgroundService {
   /// Note: Cache flags are NO LONGER reset on startup.
   /// Caches are now validated using timestamps via CacheManager (TTL-based).
   /// This allows the app to work offline with cached data.
+  ///
+  /// Language/locale settings are now initialized in main.dart through Riverpod.
   void loadSettings(BuildContext context) {
     try {
-      // Language option (Default: Korean)
-      String languageOption = UserSharedPreferences.getLanguageOption() ?? 'en';
-      final provider = Provider.of<LocaleProvider>(context, listen: false);
-      provider.setLocale(Locale.fromSubtags(languageCode: languageOption));
-      log('🌐 Language: $languageOption');
+      // Language option loading has been moved to main.dart initialization
+      // via localeNotifierProvider (Riverpod migration - Phase 7)
 
       // REMOVED: Cache reset on every launch
       // Caches are now managed by CacheManager with TTL validation.

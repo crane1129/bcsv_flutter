@@ -1,28 +1,26 @@
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:bcsv_flutter_project/presentation/providers/theme_provider.dart';
+import 'package:bcsv_flutter_project/presentation/providers/locale_provider.dart';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:bcsv_flutter_project/dialog/dialog.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-import '../utilities/theme_notifier.dart';
+class SettingsPage extends ConsumerStatefulWidget {
+  const SettingsPage({super.key});
 
-class SettingsPage extends StatefulWidget {
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   var _groupValue;
   bool isStaffModeEnabled = false;
-  Dialogs dialog = new Dialogs();
   
   // Card visibility states
   bool showAnnouncementCard = true;
@@ -190,12 +188,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         groupValue: _groupValue,
                         onChanged: (value) async {
                           _groupValue = value;
-                          await UserSharedPreferences.setLanguageOption('ko');
                           log('Language option: $_groupValue');
-                          setState(() {
-                            final provider = Provider.of<LocaleProvider>(context, listen: false);
-                            provider.setLocale(Locale.fromSubtags(languageCode: 'ko'));
-                          });
+                          await ref.read(localeNotifierProvider.notifier).setLocale(
+                            const Locale.fromSubtags(languageCode: 'ko'),
+                          );
+                          setState(() {});
                         },
                       ),
                       Text('한국어', style: kBodyTextStyle(context)),
@@ -205,12 +202,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         groupValue: _groupValue,
                         onChanged: (value) async {
                           _groupValue = value;
-                          await UserSharedPreferences.setLanguageOption('en');
                           log('Language option: $_groupValue');
-                          setState(() {
-                            final provider = Provider.of<LocaleProvider>(context, listen: false);
-                            provider.setLocale(Locale.fromSubtags(languageCode: 'en'));
-                          });
+                          await ref.read(localeNotifierProvider.notifier).setLocale(
+                            const Locale.fromSubtags(languageCode: 'en'),
+                          );
+                          setState(() {});
                         },
                       ),
                       Text('English', style: kBodyTextStyle(context)),
@@ -229,34 +225,35 @@ class _SettingsPageState extends State<SettingsPage> {
                     leading: Icon(Icons.color_lens_outlined, color: kActiveIconColor(context)),
                     title: Text('Theme', style: kLargeButtonTextStyle(context)),
                   ),
-                  Consumer<ThemeNotifier>(
-                    builder: (context, themeNotifier, _) {
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final themeIndex = ref.watch(themeIndexProvider);
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           RadioListTile<int>(
-                            title: Text('Light'),
+                            title: const Text('Light'),
                             value: 0,
-                            groupValue: themeNotifier.currentIndex,
-                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
+                            groupValue: themeIndex,
+                            onChanged: (val) => ref.read(themeNotifierProvider.notifier).setThemeByIndex(val!),
                           ),
                           RadioListTile<int>(
-                            title: Text('Dark'),
+                            title: const Text('Dark'),
                             value: 1,
-                            groupValue: themeNotifier.currentIndex,
-                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
+                            groupValue: themeIndex,
+                            onChanged: (val) => ref.read(themeNotifierProvider.notifier).setThemeByIndex(val!),
                           ),
                           RadioListTile<int>(
-                            title: Text('Sepia'),
+                            title: const Text('Sepia'),
                             value: 2,
-                            groupValue: themeNotifier.currentIndex,
-                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
+                            groupValue: themeIndex,
+                            onChanged: (val) => ref.read(themeNotifierProvider.notifier).setThemeByIndex(val!),
                           ),
                           RadioListTile<int>(
-                            title: Text('Midnight Blue'),
+                            title: const Text('Midnight Blue'),
                             value: 3,
-                            groupValue: themeNotifier.currentIndex,
-                            onChanged: (val) => themeNotifier.setThemeByIndex(val!),
+                            groupValue: themeIndex,
+                            onChanged: (val) => ref.read(themeNotifierProvider.notifier).setThemeByIndex(val!),
                           ),
                         ],
                       );
@@ -382,64 +379,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.wifi_protected_setup_outlined, color: kActiveIconColor(context)),
-                    title: Text(AppLocalizations.of(context)!.initMessage,
-                        style: kLargeButtonTextStyle(context)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      OutlinedButton(
-                        child: Text(AppLocalizations.of(context)!.runButton,
-                            style: kLargeButtonTextStyle(context)),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: BorderSide(
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                        onPressed: () async {
-                          resetCache(kMessageListData);
-                          await dialog.confirm(context,
-                              AppLocalizations.of(context)!.noticeTitle,
-                              AppLocalizations.of(context)!.restartNotice);
-                          if (dialog.isPressedConfirm) {
-                            exit(0);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  void resetCache(String targetFile) async {
-    var dir = await getTemporaryDirectory();
-    File file = File("${dir.path}/$targetFile");
-    if (file.existsSync()) {
-      file.deleteSync();
-    }
-    if (targetFile == kMessageListData) {
-      await UserSharedPreferences.setMessageListTextCache(false);
-    }
-    log("Reset Message cache file successfully.");
-
-    // ✅ Clear staff mode and password from shared preferences
-    await UserSharedPreferences.setStaffMode(false);
-    await UserSharedPreferences.setStaffPassword("");
-    log("Cleared staff mode and password from preferences.");
-  }
 }

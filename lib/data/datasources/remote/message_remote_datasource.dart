@@ -1,55 +1,55 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bcsv_flutter_project/data/models/message_model.dart';
-import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/core/error/app_exception.dart';
 import 'dart:developer';
 
-/// Remote datasource for fetching messages from API
+/// Remote datasource for fetching messages from Wix API
 class MessageRemoteDatasource {
   static const Duration _timeout = Duration(seconds: 15);
+  static const String _wixEndpoint =
+      'https://www.bridgeway.online/_functions/activeMessages';
 
-  /// Fetch messages from remote API
+  /// Fetch messages from Wix API
   Future<List<MessageModel>> fetchMessages() async {
     try {
-      final endpoint = ApiEndpoint.apiMap['MESSAGE'];
-      if (endpoint == null) {
-        throw const ServerException(message: 'Message endpoint not configured');
-      }
+      final uri = Uri.parse(_wixEndpoint);
+      log('🔄 Fetching messages from: $uri');
 
-      log('🔄 Fetching messages from: $endpoint');
-
-      final response = await http
-          .get(
-            endpoint,
-            headers: {"Content-Type": "application/json"},
-          )
-          .timeout(
-            _timeout,
-            onTimeout: () => throw const AppTimeoutException(
-              operation: 'fetch messages',
-            ),
-          );
+      final response = await http.get(
+        uri,
+        headers: {"Content-Type": "application/json"},
+      ).timeout(
+        _timeout,
+        onTimeout: () => throw const AppTimeoutException(
+          operation: 'fetch messages',
+        ),
+      );
 
       if (response.statusCode == 200) {
-        // Message API returns a direct JSON array, not an object with 'messages' key
+        // Wix API returns: { now, count, items: [...] }
         final jsonData = jsonDecode(response.body);
 
-        if (jsonData is! List) {
-          log('⚠️ Unexpected response format (not a list)');
+        if (jsonData is! Map<String, dynamic>) {
+          log('⚠️ Unexpected response format (not an object)');
           return [];
         }
 
-        final messagesList = jsonData;
+        final messagesList = jsonData['items'] as List<dynamic>?;
 
-        if (messagesList.isEmpty) {
+        if (messagesList == null || messagesList.isEmpty) {
           log('⚠️ No messages found in response');
           return [];
         }
 
-        final messages = messagesList
-            .map((json) => MessageModel.fromJson(json as Map<String, dynamic>))
-            .toList();
+        final messages = messagesList.map((json) {
+          final jsonMap = json as Map<String, dynamic>;
+          // Debug: log all field names and image-related fields
+          log('📦 Message fields: ${jsonMap.keys.toList()}');
+          log('📷 titleImage: ${jsonMap['titleImage']} (type: ${jsonMap['titleImage']?.runtimeType})');
+          log('📷 image: ${jsonMap['image']} (type: ${jsonMap['image']?.runtimeType})');
+          return MessageModel.fromJson(jsonMap);
+        }).toList();
 
         log('✅ Fetched ${messages.length} messages');
         return messages;
