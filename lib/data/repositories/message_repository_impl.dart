@@ -102,13 +102,15 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Future<int> getNewMessageCount() async {
     final messages = await getMessages();
+    // Only count visible messages (same filter as what the user sees in the list)
+    final visibleMessages = messages.where((m) => m.isVisible).toList();
     final lastSeen = getLastSeenTimestamp();
 
-    // If no lastSeen timestamp, all messages are considered new
-    if (lastSeen == null) return messages.length;
+    // If no lastSeen timestamp, all visible messages are considered new
+    if (lastSeen == null) return visibleMessages.length;
 
-    // Count messages created after last seen timestamp
-    return messages.where((m) => m.createdAt.isAfter(lastSeen)).length;
+    // Count visible messages created after last seen timestamp
+    return visibleMessages.where((m) => m.createdAt.isAfter(lastSeen)).length;
   }
 
   @override
