@@ -82,7 +82,8 @@ class MessageNotifier extends StateNotifier<MessageState> {
       final unreadCount = await _repository.getNewMessageCount();
 
       // Update app badge
-      AppBadgeService.updateBadgeCount(unreadCount);
+      log('🔴 [MessageProvider] Setting app badge count: $unreadCount');
+      await AppBadgeService.updateBadgeCount(unreadCount);
 
       state = state.copyWith(
         messages: visibleMessages,

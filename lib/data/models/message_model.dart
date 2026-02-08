@@ -55,8 +55,8 @@ class MessageModel with _$MessageModel {
     return {
       // Wix document ID
       '_id': json['_id']?.toString() ?? '',
-      // Wix uses '_createdDate', map to 'Created Date' for freezed
-      'Created Date': _toIsoString(json['_createdDate']),
+      // Handle both Wix API format ('_createdDate') and cache format ('Created Date')
+      'Created Date': _toIsoString(json['_createdDate'] ?? json['Created Date']),
       // Wix uses lowercase 'title', map to 'Title' for freezed
       'Title': json['title']?.toString() ?? '',
       'message': json['message']?.toString() ?? '',

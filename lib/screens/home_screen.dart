@@ -55,8 +55,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       // Load current year's key verse using provider (cache first, then refresh in background)
       ref.read(keyVerseNotifierProvider.notifier).loadKeyVerse(forceRefresh: false);
 
-      // Load messages to get unread count for badge display
-      ref.read(messageNotifierProvider.notifier).loadMessages(forceRefresh: false);
+      // Load messages: first from cache (fast), then refresh in background (detect new messages)
+      _loadMessagesWithBackgroundRefresh();
 
       _initializeApp();
     });
@@ -116,6 +116,26 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     } catch (e) {
       log('❌ Error during home screen initialization: $e');
     }
+  }
+
+  /// Load messages with background refresh strategy:
+  /// 1. First load from cache (fast startup, immediate badge display)
+  /// 2. Then refresh from network in background (detect new messages)
+  Future<void> _loadMessagesWithBackgroundRefresh() async {
+    final notifier = ref.read(messageNotifierProvider.notifier);
+
+    // Step 1: Load from cache first (fast)
+    log('🔄 [HomeScreen] Loading messages from cache...');
+    await notifier.loadMessages(forceRefresh: false);
+
+    // Step 2: Refresh from network in background (detect new messages)
+    // Small delay to let UI settle, then fetch fresh data
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      if (mounted) {
+        log('🔄 [HomeScreen] Background refresh to detect new messages...');
+        await notifier.loadMessages(forceRefresh: true);
+      }
+    });
   }
 
   @override
