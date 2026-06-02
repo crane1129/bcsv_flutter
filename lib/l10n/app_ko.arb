@@ -104,5 +104,11 @@
     "editMessage": "메시지 수정",
     "update": "수정",
     "updateSuccess": "수정 완료",
-    "selectMessageToEdit": "수정할 메시지를 선택하세요"
+    "selectMessageToEdit": "수정할 메시지를 선택하세요",
+    "staffOptions": "스텝 설정",
+    "staffOptionsSubtitle": "스텝 인증 필요",
+    "staffMessageManagement": "메시지 관리",
+    "staffMessageManagementSubtitle": "교회 메시지를 업로드하고 관리합니다",
+    "staffOpinionReview": "건의 검토",
+    "staffOpinionReviewSubtitle": "제출된 건의 내용을 확인하고 승인합니다"
 }

@@ -14,7 +14,7 @@ import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
 import 'dart:developer';
 
 class SubmitOpinionScreen extends StatefulWidget {
-  const SubmitOpinionScreen({Key? key}) : super(key: key);
+  const SubmitOpinionScreen({super.key});
 
   @override
   _SubmitOpinionScreenState createState() => _SubmitOpinionScreenState();

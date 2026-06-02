@@ -14,6 +14,8 @@ import 'dart:developer';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BibleKeywordSearchScreen extends StatefulWidget {
+  const BibleKeywordSearchScreen({super.key});
+
   @override
   _BibleKeywordSearchScreenState createState() => _BibleKeywordSearchScreenState();
 }
@@ -702,7 +704,7 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
                                                       delay: (i * 50).ms,
                                                       duration: 400.ms)
                                                   .slideX(begin: 0.3, end: 0);
-                                            }).toList(),
+                                            }),
                                         ],
                                       ),
                                     ),
@@ -1075,7 +1077,7 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
 
     final buffer = StringBuffer();
     final sortedIndexes = selectedIndexes.toList()..sort();
-    final selected_verse_count = selectedIndexes.length;
+    final selectedVerseCount = selectedIndexes.length;
 
     for (var i in sortedIndexes) {
       final verse = results[i];
@@ -1084,12 +1086,12 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
     }
 
     Clipboard.setData(ClipboardData(text: buffer.toString())).then((_) {
-      log('✅ Copied ${selected_verse_count} selected verses to clipboard');
+      log('✅ Copied $selectedVerseCount selected verses to clipboard');
 
       if (mounted) {
         showSimpleNotification(
           Text(
-            '📋 Copied ${selected_verse_count} selected verse${selected_verse_count > 1 ? 's' : ''} to clipboard',
+            '📋 Copied $selectedVerseCount selected verse${selectedVerseCount > 1 ? 's' : ''} to clipboard',
             style: TextStyle(color: Colors.white),
           ),
           leading: Container(

@@ -10,7 +10,7 @@ class WebViewApp extends StatefulWidget {
   final String title1;
   final String title2;
 
-  WebViewApp(
+  const WebViewApp(
       {required this.url, required this.title1, required this.title2, super.key});
 
   @override

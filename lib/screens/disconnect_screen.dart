@@ -9,7 +9,7 @@ import 'dart:developer';
 
 class DisconnectScreen extends StatefulWidget {
   final Widget? returnScreen;
-  const DisconnectScreen({Key? key, this.returnScreen}) : super(key: key);
+  const DisconnectScreen({super.key, this.returnScreen});
 
   @override
   _DisconnectScreenState createState() => _DisconnectScreenState();

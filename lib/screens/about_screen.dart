@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../dialog/update_checker.dart';
 
 class AboutScreen extends StatefulWidget {
-  const AboutScreen({Key? key}) : super(key: key);
+  const AboutScreen({super.key});
   @override
   _AboutScreenState createState() => _AboutScreenState();
 }
@@ -60,7 +60,7 @@ class _AboutScreenState extends State<AboutScreen> {
               //     PackageInformation.packageInfo.buildSignature),
               _infoTile('Developer',
                   'Haksoo Kim(crane1129@gmail.com)'),
-              _infoTile('\n© ' + this_year + ' Bridgeway Baptist Church',
+              _infoTile('\n© $this_year Bridgeway Baptist Church',
                   '     2490 Middlefield. Palo Alto, CA 94301'),
               ElevatedButton(
                 onPressed: () => checkForUpdate(context),

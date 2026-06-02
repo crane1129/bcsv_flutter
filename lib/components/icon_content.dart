@@ -3,7 +3,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class IconContent extends StatelessWidget {
-  IconContent({required this.cardIcon, required this.label});
+  const IconContent({super.key, required this.cardIcon, required this.label});
 
   final IconData cardIcon;
   final String label;
@@ -30,7 +30,7 @@ class IconContent extends StatelessWidget {
 }
 
 class IconMsgContent extends StatelessWidget {
-  IconMsgContent({
+  const IconMsgContent({super.key, 
     required this.cardIcon,
     required this.label,
     required this.msg_widget,
@@ -74,7 +74,7 @@ class IconMsgContent extends StatelessWidget {
 }
 
 class DelayedChild extends StatefulWidget {
-  const DelayedChild({Key? key, required this.delay, required this.child}) : super(key: key);
+  const DelayedChild({super.key, required this.delay, required this.child});
 
   final Duration delay;
   final Widget child;

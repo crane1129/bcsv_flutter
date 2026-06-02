@@ -4,7 +4,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 
 class AppBarHeaderText extends StatelessWidget {
 
-  AppBarHeaderText({required this.text1, required this.text2});
+  const AppBarHeaderText({super.key, required this.text1, required this.text2});
   final String text1;
   final String text2;
 

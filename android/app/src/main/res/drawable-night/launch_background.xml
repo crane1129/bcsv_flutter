@@ -1,31 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Pure white background (same as light mode for consistency) -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#FFFFFF" />
+            <solid android:color="#121212" />
         </shape>
-    </item>
-    
-    <!-- Clean circular element (no image) -->
-    <item android:gravity="center" android:top="120dp">
-        <layer-list>
-            <!-- Subtle shadow -->
-            <item android:top="4dp" android:left="4dp">
-                <shape android:shape="oval">
-                    <size android:width="120dp" android:height="120dp" />
-                    <solid android:color="#10000000" />
-                </shape>
-            </item>
-            
-            <!-- Main circular background -->
-            <item>
-                <shape android:shape="oval">
-                    <size android:width="120dp" android:height="120dp" />
-                    <solid android:color="#FFFFFF" />
-                    <stroke android:width="2dp" android:color="#E5E7EB" />
-                </shape>
-            </item>
-        </layer-list>
     </item>
 </layer-list>

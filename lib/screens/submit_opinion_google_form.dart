@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class SubmitOpinionViaGoogleFormScreen extends StatefulWidget {
-  const SubmitOpinionViaGoogleFormScreen({Key? key}) : super(key: key);
+  const SubmitOpinionViaGoogleFormScreen({super.key});
 
   @override
   _SubmitOpinionViaGoogleFormScreenState createState() => _SubmitOpinionViaGoogleFormScreenState();

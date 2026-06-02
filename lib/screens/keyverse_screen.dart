@@ -8,7 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:developer';
 
 class KeyVerseScreen extends StatefulWidget {
-  const KeyVerseScreen({Key? key}) : super(key: key);
+  const KeyVerseScreen({super.key});
 
   @override
   _KeyVerseScreenState createState() => _KeyVerseScreenState();

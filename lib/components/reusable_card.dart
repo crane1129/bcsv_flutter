@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ReusableCard extends StatelessWidget {
-  ReusableCard(
-      {required this.color, required this.cardChild, required this.onPress});
+  const ReusableCard(
+      {super.key, required this.color, required this.cardChild, required this.onPress});
 
   final Color color;
   final Widget cardChild;
@@ -13,19 +13,19 @@ class ReusableCard extends StatelessWidget {
     return GestureDetector(
         onTap: onPress,
         child: Container(
-          child: cardChild,
           margin: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(10.0),
           ),
+          child: cardChild,
         ));
   }
 }
 
 class ReusableCard2 extends StatelessWidget {
-  ReusableCard2(
-      {required this.color, required this.cardChild, required this.onPress});
+  const ReusableCard2(
+      {super.key, required this.color, required this.cardChild, required this.onPress});
 
   final Color color;
   final Widget cardChild;
@@ -63,8 +63,8 @@ class ReusableCard2 extends StatelessWidget {
 
 class ReusableCard3 extends StatelessWidget {
   // Designed for message count in main screen
-  ReusableCard3(
-      {required this.color,
+  const ReusableCard3(
+      {super.key, required this.color,
       required this.cardChild,
       required this.onPress,
       msg_widget});

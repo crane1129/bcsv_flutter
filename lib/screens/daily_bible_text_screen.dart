@@ -307,7 +307,7 @@ class _DailyBibleTextScreenState extends ConsumerState<DailyBibleTextScreen> {
                   label: const Text('Next Day'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: state.isToday
-                        ? theme.colorScheme.surfaceVariant
+                        ? theme.colorScheme.surfaceContainerHighest
                         : theme.colorScheme.primaryContainer,
                     foregroundColor: state.isToday
                         ? theme.colorScheme.onSurfaceVariant

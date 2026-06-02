@@ -20,7 +20,8 @@ class SettingsPage extends ConsumerStatefulWidget {
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
   var _groupValue;
-  bool isStaffModeEnabled = false;
+  bool isStaffMessageModeEnabled = false;
+  bool isStaffOpinionModeEnabled = false;
   
   // Card visibility states
   bool showAnnouncementCard = true;
@@ -51,8 +52,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 
   void _loadStaffModeSetting() async {
-    bool enabled = await UserSharedPreferences.isStaffModeEnabled();
-    setState(() => isStaffModeEnabled = enabled);
+    final messageEnabled = await UserSharedPreferences.isStaffMessageModeEnabled();
+    final opinionEnabled = await UserSharedPreferences.isStaffOpinionModeEnabled();
+    setState(() {
+      isStaffMessageModeEnabled = messageEnabled;
+      isStaffOpinionModeEnabled = opinionEnabled;
+    });
   }
   
   void _loadCardVisibilitySettings() {
@@ -68,43 +73,53 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     });
   }
 
-  void _promptForPassword() async {
-    String inputPassword = '';
+  Future<void> _promptForPassword({
+    required String role,
+    required Future<void> Function() onSuccess,
+  }) async {
+    String password = '';
+    bool obscurePassword = true;
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Enter Staff Password"),
-        content: TextField(
-          obscureText: true,
-          onChanged: (val) => inputPassword = val,
-          decoration: InputDecoration(labelText: "Password"),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("Cancel"),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text("Staff Password"),
+          content: TextField(
+            obscureText: obscurePassword,
+            onChanged: (val) => password = val,
+            decoration: InputDecoration(
+              labelText: "Password",
+              suffixIcon: IconButton(
+                icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
+                onPressed: () => setDialogState(() => obscurePassword = !obscurePassword),
+              ),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final res = await http.post(
-                Uri.https('www.bridgeway.online', '/_functions/verifyStaffPassword'),
-                headers: {'Content-Type': 'application/json'},
-                body: jsonEncode({ 'password': inputPassword }),
-              );
-              if (res.statusCode == 200 && res.body.contains('true')) {
-                await UserSharedPreferences.setStaffMode(true);
-                await UserSharedPreferences.setStaffPassword(inputPassword);
-                setState(() => isStaffModeEnabled = true);
-                Navigator.of(context).pop();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Incorrect password")),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final res = await http.post(
+                  Uri.https('www.bridgeway.online', '/_functions/verifyStaffPassword'),
+                  headers: {'Content-Type': 'application/json'},
+                  body: jsonEncode({'password': password, 'role': role}),
                 );
-              }
-            },
-            child: Text("Submit"),
-          ),
-        ],
+                if (res.statusCode == 200 && res.body.contains('true')) {
+                  await onSuccess();
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Access denied")),
+                  );
+                }
+              },
+              child: Text("Submit"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -265,19 +280,59 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                  color: kActiveIconColorAdmin(context).withValues(alpha: 0.35),
+                  width: 1.0,
+                ),
               ),
-              child: SwitchListTile(
-                title: Text('Turn on Staff Mode', style: kLargeButtonTextStyle(context)),
-                value: isStaffModeEnabled,
-                onChanged: (val) {
-                  if (val) {
-                    _promptForPassword();
-                  } else {
-                    UserSharedPreferences.setStaffMode(false);
-                    setState(() => isStaffModeEnabled = false);
-                  }
-                },
-                secondary: Icon(Icons.lock_outline, color: kActiveIconColor(context)),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.manage_accounts_outlined, color: kActiveIconColorAdmin(context)),
+                    title: Text(AppLocalizations.of(context)!.staffOptions, style: kLargeButtonTextStyle(context)),
+                    subtitle: Text(AppLocalizations.of(context)!.staffOptionsSubtitle, style: kBodyTextStyle(context)),
+                  ),
+                  SwitchListTile(
+                    title: Text(AppLocalizations.of(context)!.staffMessageManagement, style: kLargeButtonTextStyle(context)),
+                    subtitle: Text(AppLocalizations.of(context)!.staffMessageManagementSubtitle, style: kBodyTextStyle(context)),
+                    value: isStaffMessageModeEnabled,
+                    onChanged: (val) {
+                      if (val) {
+                        _promptForPassword(
+                          role: 'message',
+                          onSuccess: () async {
+                            await UserSharedPreferences.setStaffMessageMode(true);
+                            setState(() => isStaffMessageModeEnabled = true);
+                          },
+                        );
+                      } else {
+                        UserSharedPreferences.setStaffMessageMode(false);
+                        setState(() => isStaffMessageModeEnabled = false);
+                      }
+                    },
+                    secondary: Icon(Icons.cloud_upload_outlined, color: kActiveIconColorAdmin(context)),
+                  ),
+                  SwitchListTile(
+                    title: Text(AppLocalizations.of(context)!.staffOpinionReview, style: kLargeButtonTextStyle(context)),
+                    subtitle: Text(AppLocalizations.of(context)!.staffOpinionReviewSubtitle, style: kBodyTextStyle(context)),
+                    value: isStaffOpinionModeEnabled,
+                    onChanged: (val) {
+                      if (val) {
+                        _promptForPassword(
+                          role: 'opinion',
+                          onSuccess: () async {
+                            await UserSharedPreferences.setStaffOpinionMode(true);
+                            setState(() => isStaffOpinionModeEnabled = true);
+                          },
+                        );
+                      } else {
+                        UserSharedPreferences.setStaffOpinionMode(false);
+                        setState(() => isStaffOpinionModeEnabled = false);
+                      }
+                    },
+                    secondary: Icon(Icons.admin_panel_settings_outlined, color: kActiveIconColorAdmin(context)),
+                  ),
+                ],
               ),
             ),
             Card(

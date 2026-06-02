@@ -5,7 +5,7 @@ import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReimbursementScreen extends StatelessWidget {
-  ReimbursementScreen({required this.url});
+  const ReimbursementScreen({super.key, required this.url});
 
   final Uri url;
 

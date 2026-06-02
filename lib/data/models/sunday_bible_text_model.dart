@@ -92,7 +92,7 @@ class SundayBibleTextModel with _$SundayBibleTextModel {
     List<Map<String, dynamic>> references = [];
     if (json['References'] is List) {
       references = (json['References'] as List)
-          .where((item) => item is Map)
+          .whereType<Map>()
           .map((item) => item as Map<String, dynamic>)
           .toList();
     }

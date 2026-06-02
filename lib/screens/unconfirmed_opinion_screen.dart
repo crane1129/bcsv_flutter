@@ -14,7 +14,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'dart:developer';
 
 class UnconfirmedOpinionsScreen extends StatefulWidget {
-  const UnconfirmedOpinionsScreen({Key? key}) : super(key: key);
+  const UnconfirmedOpinionsScreen({super.key});
 
   @override
   _UnconfirmedOpinionsScreenState createState() =>
@@ -121,7 +121,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
         }
       }
       
-      throw e;
+      rethrow;
     }
   }
 
@@ -597,7 +597,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
                               fit: BoxFit.cover,
                               height: 200,
                             width: double.infinity,
-                            errorBuilder: (_, __, ___) => Container(
+                            errorBuilder: (_, __, ___) => SizedBox(
                               height: 100,
                               child: Center(
                                 child: Text(

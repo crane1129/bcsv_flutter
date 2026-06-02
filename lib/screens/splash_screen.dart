@@ -5,7 +5,7 @@ import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'dart:developer';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -145,7 +145,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 width: 120,
                                 height: 120,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(26),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.1),
@@ -155,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   ],
                                 ),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(26),
                                   child: Image.asset(
                                     'assets/images/app.png',
                                     fit: BoxFit.cover,

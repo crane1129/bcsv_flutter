@@ -7,8 +7,8 @@ class WebviewScreen extends StatelessWidget {
   final String title1;
   final String title2;
 
-  WebviewScreen(
-      {required this.url, required this.title1, required this.title2});
+  const WebviewScreen(
+      {super.key, required this.url, required this.title1, required this.title2});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class WebviewScreen extends StatelessWidget {
 class WebViewApp extends StatefulWidget {
   // const WebViewApp({super.key});
   final Uri url;
-  WebViewApp({required this.url});
+  const WebViewApp({super.key, required this.url});
 
   @override
   State<WebViewApp> createState() => _WebViewAppState(url: url);
@@ -60,7 +60,7 @@ class _WebViewAppState extends State<WebViewApp> {
         },
       ))
       ..loadRequest(
-        Uri.parse(this.url.toString()),
+        Uri.parse(url.toString()),
       );
   }
 

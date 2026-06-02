@@ -14,6 +14,8 @@ class UserSharedPreferences{
   static const _keyAppThemeSetting = 'app_theme_setting';
   static const _keyStaffMode = 'staff_mode';
   static const _keyStaffPassword = 'staff_password';
+  static const _keyStaffMessageMode = 'staff_message_mode';
+  static const _keyStaffOpinionMode = 'staff_opinion_mode';
   
   // Card visibility settings
   static const _keyShowAnnouncementCard = 'show_announcement_card';
@@ -117,6 +119,24 @@ class UserSharedPreferences{
 
   static Future setStaffPassword(String password) async {
     await _peferences.setString(_keyStaffPassword, password);
+  }
+
+  // Staff message mode (Upload/Manage Messages)
+  static Future setStaffMessageMode(bool enabled) async {
+    await _peferences.setBool(_keyStaffMessageMode, enabled);
+  }
+
+  static Future<bool> isStaffMessageModeEnabled() async {
+    return _peferences.getBool(_keyStaffMessageMode) ?? false;
+  }
+
+  // Staff opinion mode (Unconfirmed Requests)
+  static Future setStaffOpinionMode(bool enabled) async {
+    await _peferences.setBool(_keyStaffOpinionMode, enabled);
+  }
+
+  static Future<bool> isStaffOpinionModeEnabled() async {
+    return _peferences.getBool(_keyStaffOpinionMode) ?? false;
   }
   
   // Card visibility settings methods

@@ -25,25 +25,44 @@ import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:bcsv_flutter_project/presentation/providers/opinion_provider.dart';
 
-class NavBar extends StatefulWidget {
-  const NavBar({Key? key}) : super(key: key);
+class NavBar extends ConsumerStatefulWidget {
+  const NavBar({super.key});
 
   @override
   _NavBarState createState() => _NavBarState();
 }
 
-class _NavBarState extends State<NavBar> {
+class _NavBarState extends ConsumerState<NavBar> {
   Widget emptyString = const SizedBox.shrink();
   Timer? _endpointCheckTimer;
   bool _endpointsInitialized = false;
   int _unconfirmedCount = 0;
+  bool _isStaffMessageMode = false;
+  bool _isStaffOpinionMode = false;
 
   @override
   void initState() {
     super.initState();
     _checkEndpointInitialization();
-    _loadUnconfirmedCount();
+    _initStaffMode();
+  }
+
+  Future<void> _initStaffMode() async {
+    final isMessage = await UserSharedPreferences.isStaffMessageModeEnabled();
+    final isOpinion = await UserSharedPreferences.isStaffOpinionModeEnabled();
+    if (!mounted) return;
+    setState(() {
+      _isStaffMessageMode = isMessage;
+      _isStaffOpinionMode = isOpinion;
+    });
+    if (isOpinion) {
+      _loadUnconfirmedCount();
+    } else {
+      ref.read(unconfirmedOpinionNotifierProvider.notifier).reset();
+    }
   }
 
   @override
@@ -81,8 +100,9 @@ class _NavBarState extends State<NavBar> {
         _endpointsInitialized = true;
       });
       _endpointCheckTimer?.cancel();
-      // Refresh unconfirmed count when endpoints become available
-      _loadUnconfirmedCount();
+      if (_isStaffOpinionMode) {
+        _loadUnconfirmedCount();
+      }
     }
   }
 
@@ -113,6 +133,7 @@ class _NavBarState extends State<NavBar> {
           setState(() {
             _unconfirmedCount = count;
           });
+          ref.read(unconfirmedOpinionNotifierProvider.notifier).setCount(count);
         }
       }
     } catch (_) {
@@ -345,84 +366,76 @@ class _NavBarState extends State<NavBar> {
                 style: kDrawerMenuTextStyle(context)),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => SettingsPage()));
+                  context, MaterialPageRoute(builder: (_) => SettingsPage()))
+                  .then((_) => _initStaffMode());
             },
           ),
-          FutureBuilder<bool>(
-            future: UserSharedPreferences.isStaffModeEnabled(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || !snapshot.data!) {
-                return SizedBox(); // or return alternative UI
-              }
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          if (_isStaffOpinionMode || _isStaffMessageMode) ...[
+            const Divider(),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.staff_only_mode,
+                  style: kDrawerMenuTextStyle(context)),
+            ),
+          ],
+          if (_isStaffOpinionMode) ...[
+            ListTile(
+              leading: Icon(Icons.admin_panel_settings,
+                  color: kActiveIconColorAdmin(context)),
+              title: Row(
                 children: [
-                  Divider(),
-                  ListTile(
-                    //leading: Icon(Icons.admin_panel_settings),
-                    title: Text(AppLocalizations.of(context)!.staff_only_mode,
-                        style: kDrawerMenuTextStyle(context)),
+                  Text(
+                    AppLocalizations.of(context)!.unconfirmed_opinion,
+                    style: kDrawerMenuTextStyle(context),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.admin_panel_settings,
-                        color: kActiveIconColorAdmin(context)),
-                    title: Row(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.unconfirmed_opinion,
-                          style: kDrawerMenuTextStyle(context),
-                        ),
-                        const SizedBox(width: 6),
-                        if (_unconfirmedCount > 0)
-                          _buildBadge(_unconfirmedCount),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => UnconfirmedOpinionsScreen(),
-                        ),
-                      ).then((_) => _loadUnconfirmedCount());
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.cloud_upload_rounded,
-                        color: kActiveIconColorAdmin(context)),
-                    title: Text(
-                      AppLocalizations.of(context)!.uploadMessage,
-                      style: kDrawerMenuTextStyle(context),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => MessageUploadScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.edit_note_rounded,
-                        color: kActiveIconColorAdmin(context)),
-                    title: Text(
-                      AppLocalizations.of(context)!.manageMessages,
-                      style: kDrawerMenuTextStyle(context),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => MessageManagementScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                  const SizedBox(width: 6),
+                  if (_unconfirmedCount > 0)
+                    _buildBadge(_unconfirmedCount),
                 ],
-              );
-            },
-          ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => UnconfirmedOpinionsScreen(),
+                  ),
+                ).then((_) => _loadUnconfirmedCount());
+              },
+            ),
+          ],
+          if (_isStaffMessageMode) ...[
+            ListTile(
+              leading: Icon(Icons.cloud_upload_rounded,
+                  color: kActiveIconColorAdmin(context)),
+              title: Text(
+                AppLocalizations.of(context)!.uploadMessage,
+                style: kDrawerMenuTextStyle(context),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MessageUploadScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.edit_note_rounded,
+                  color: kActiveIconColorAdmin(context)),
+              title: Text(
+                AppLocalizations.of(context)!.manageMessages,
+                style: kDrawerMenuTextStyle(context),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MessageManagementScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
           const Divider(color: Colors.grey),
           ListTile(
             leading: Icon(Icons.exit_to_app, color: kActiveIconColor(context)),
@@ -446,8 +459,8 @@ class ListWebViewMenu extends StatelessWidget {
   final Uri? url;
   final Widget trailing;
 
-  ListWebViewMenu(
-      {required this.myIcon,
+  const ListWebViewMenu(
+      {super.key, required this.myIcon,
       required this.menuName,
       required this.url,
       required this.trailing});

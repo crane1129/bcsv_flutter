@@ -19,6 +19,7 @@ import 'package:upgrader/upgrader.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/presentation/providers/keyverse_provider.dart';
 import 'package:bcsv_flutter_project/presentation/providers/message_provider.dart';
+import 'package:bcsv_flutter_project/presentation/providers/opinion_provider.dart';
 import 'dart:developer';
 import '../utilities/constants.dart';
 import 'offering_screen.dart';
@@ -57,6 +58,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
       // Load messages: first from cache (fast), then refresh in background (detect new messages)
       _loadMessagesWithBackgroundRefresh();
+
+      // Load unconfirmed opinion count for hamburger badge (staff mode only)
+      ref.read(unconfirmedOpinionNotifierProvider.notifier).loadIfStaffEnabled();
 
       _initializeApp();
     });
@@ -142,6 +146,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final keyVerseState = ref.watch(keyVerseNotifierProvider);
+    final hasUnconfirmedOpinions = ref.watch(hasUnconfirmedOpinionsProvider);
     log('🔵 [HomeScreen] build called - keyVerse status: ${keyVerseState.status}, hasData: ${keyVerseState.keyVerse != null}');
 
     return UpgradeAlert(
@@ -152,27 +157,45 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Colors.transparent.withValues(alpha: 0.5),
           elevation: 0,
-          leading: Container(
-            margin: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
+          leading: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                margin: EdgeInsets.all(8),
+                decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: IconButton(
-              icon: Icon(Icons.menu),
-              color: Colors.white70,
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-            ),
-          ).animate().fadeIn(delay: 200.ms).scale(begin: Offset(0.8, 0.8)),
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  color: Colors.white70,
+                  onPressed: () {
+                    _scaffoldKey.currentState?.openDrawer();
+                  },
+                ),
+              ).animate().fadeIn(delay: 200.ms).scale(begin: Offset(0.8, 0.8)),
+              if (hasUnconfirmedOpinions)
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           title: AppBarHeaderText(
             text1: AppLocalizations.of(context)!.bridgeway,
             text2: AppLocalizations.of(context)!.baptistChurch,

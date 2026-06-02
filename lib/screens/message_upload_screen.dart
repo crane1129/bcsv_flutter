@@ -14,7 +14,7 @@ import '../utilities/constants.dart';
 import 'dart:developer';
 
 class MessageUploadScreen extends StatefulWidget {
-  const MessageUploadScreen({Key? key}) : super(key: key);
+  const MessageUploadScreen({super.key});
 
   @override
   _MessageUploadScreenState createState() => _MessageUploadScreenState();

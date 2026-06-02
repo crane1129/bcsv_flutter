@@ -418,5 +418,29 @@
   "selectMessageToEdit": "Select a message to edit",
   "@selectMessageToEdit": {
     "description": "Empty state message for message management"
+  },
+  "staffOptions": "Staff Options",
+  "@staffOptions": {
+    "description": "Header title for staff options card in settings"
+  },
+  "staffOptionsSubtitle": "Staff authentication required",
+  "@staffOptionsSubtitle": {
+    "description": "Subtitle for staff options card header"
+  },
+  "staffMessageManagement": "Message Management",
+  "@staffMessageManagement": {
+    "description": "Title for staff message management toggle"
+  },
+  "staffMessageManagementSubtitle": "Upload & manage church messages",
+  "@staffMessageManagementSubtitle": {
+    "description": "Subtitle for staff message management toggle"
+  },
+  "staffOpinionReview": "Opinion Review",
+  "@staffOpinionReview": {
+    "description": "Title for staff opinion review toggle"
+  },
+  "staffOpinionReviewSubtitle": "View & confirm submitted opinions",
+  "@staffOpinionReviewSubtitle": {
+    "description": "Subtitle for staff opinion review toggle"
   }
 }

@@ -13,7 +13,7 @@ import '../components/webview/webview_screen.dart';
 import '../services/api_endpoint.dart';
 
 class OfferingScreen extends StatefulWidget {
-  OfferingScreen();
+  const OfferingScreen({super.key});
 
   @override
   _OfferingScreenState createState() => _OfferingScreenState();

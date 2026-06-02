@@ -18,7 +18,7 @@ import '../utilities/constants.dart';
 import 'dart:developer';
 
 class MessageManagementScreen extends ConsumerStatefulWidget {
-  const MessageManagementScreen({Key? key}) : super(key: key);
+  const MessageManagementScreen({super.key});
 
   @override
   ConsumerState<MessageManagementScreen> createState() => _MessageManagementScreenState();

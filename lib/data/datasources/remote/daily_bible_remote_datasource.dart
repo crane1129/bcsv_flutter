@@ -143,7 +143,7 @@ class DailyBibleRemoteDatasource {
           return [];
         }
 
-        final verses = (jsonData as List)
+        final verses = (jsonData)
             .map((json) => DailyBibleVerseModel.fromJson(json as Map<String, dynamic>))
             .toList();
 
