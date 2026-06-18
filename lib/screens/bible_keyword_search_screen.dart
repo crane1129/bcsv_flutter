@@ -11,7 +11,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
 import 'dart:developer';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 
 class BibleKeywordSearchScreen extends StatefulWidget {
   const BibleKeywordSearchScreen({super.key});

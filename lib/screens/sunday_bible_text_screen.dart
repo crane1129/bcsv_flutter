@@ -6,7 +6,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:bcsv_flutter_project/presentation/providers/sunday_bible_text_provider.dart';
 import 'package:bcsv_flutter_project/domain/entities/sunday_bible_text.dart';
@@ -831,7 +831,7 @@ class _SundayBibleTextScreenState extends ConsumerState<SundayBibleTextScreen> {
           // Header
           Row(
             children: [
-              Icon(
+              FaIcon(
                 FontAwesomeIcons.filter,
                 color: theme.colorScheme.primary,
                 size: 18,

@@ -4,7 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/presentation/providers/message_provider.dart';
 import 'package:bcsv_flutter_project/domain/entities/message.dart';
 import 'package:bcsv_flutter_project/presentation/shared/widgets/loading_shimmer.dart';

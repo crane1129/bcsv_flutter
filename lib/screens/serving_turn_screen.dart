@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:bcsv_flutter_project/presentation/providers/serving_turn_provider.dart';
 import 'package:bcsv_flutter_project/domain/entities/serving_turn.dart';

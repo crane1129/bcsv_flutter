@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class IconContent extends StatelessWidget {
   const IconContent({super.key, required this.cardIcon, required this.label});
 
-  final IconData cardIcon;
+  final FaIconData cardIcon;
   final String label;
 
   @override
@@ -14,7 +15,7 @@ class IconContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Center(
-            child: Icon(
+            child: FaIcon(
               cardIcon,
               size: 32.0,
               color: Theme.of(context).colorScheme.onSurface,
@@ -30,14 +31,14 @@ class IconContent extends StatelessWidget {
 }
 
 class IconMsgContent extends StatelessWidget {
-  const IconMsgContent({super.key, 
+  const IconMsgContent({super.key,
     required this.cardIcon,
     required this.label,
     required this.msg_widget,
     this.badgeDelay,
   });
 
-  final IconData cardIcon;
+  final FaIconData cardIcon;
   final String label;
   final Widget msg_widget;
   final Duration? badgeDelay;
@@ -48,7 +49,7 @@ class IconMsgContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Center(
-            child: Icon(
+            child: FaIcon(
               cardIcon,
               size: 32.0,
               color: Theme.of(context).colorScheme.onSurface,

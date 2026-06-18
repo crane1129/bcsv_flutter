@@ -4,7 +4,7 @@ import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:bcsv_flutter_project/presentation/providers/daily_bible_provider.dart';
 import 'package:bcsv_flutter_project/presentation/shared/widgets/loading_shimmer.dart';
@@ -245,7 +245,7 @@ class _DailyBibleTextScreenState extends ConsumerState<DailyBibleTextScreen> {
                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
+                child: FaIcon(
                   FontAwesomeIcons.calendar,
                   size: 24,
                   color: theme.colorScheme.primary,
@@ -386,7 +386,7 @@ class _DailyBibleTextScreenState extends ConsumerState<DailyBibleTextScreen> {
                       color: theme.colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: FaIcon(
                       FontAwesomeIcons.bookBible,
                       color: theme.colorScheme.primary,
                       size: 20,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 
 class ReimbursementScreen extends StatelessWidget {
   const ReimbursementScreen({super.key, required this.url});

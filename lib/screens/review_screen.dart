@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:bcsv_flutter_project/presentation/providers/sermon_review_provider.dart';
 import 'package:bcsv_flutter_project/domain/entities/sermon_review.dart';
@@ -173,7 +173,7 @@ class _SermonReviewScreenState extends ConsumerState<SermonReviewScreen> {
   /// Build header tile for expansion panel
   Widget _buildHeaderTile(_GroupedReview review) {
     return ListTile(
-      leading: Icon(
+      leading: FaIcon(
         FontAwesomeIcons.bible,
         color: kActiveIconColor(context),
       ),

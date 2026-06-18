@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/services/keyverse_service.dart';
 import 'package:bcsv_flutter_project/data_models/keyverse_model.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';

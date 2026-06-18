@@ -23,7 +23,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'package:bcsv_flutter_project/screens/reimbursement_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bcsv_flutter_project/presentation/providers/opinion_provider.dart';
@@ -454,7 +454,7 @@ class _NavBarState extends ConsumerState<NavBar> {
 }
 
 class ListWebViewMenu extends StatelessWidget {
-  final IconData myIcon;
+  final dynamic myIcon;
   final String menuName;
   final Uri? url;
   final Widget trailing;
@@ -471,9 +471,13 @@ class ListWebViewMenu extends StatelessWidget {
     
     return ListTile(
         //contentPadding: EdgeInsets.only(left: 20.0),
-        leading: Icon(myIcon, 
-            color: isUrlAvailable ? kActiveIconColor(context) : Colors.grey, 
-            size: 20),
+        leading: myIcon is FaIconData
+            ? FaIcon(myIcon,
+                color: isUrlAvailable ? kActiveIconColor(context) : Colors.grey,
+                size: 20)
+            : Icon(myIcon,
+                color: isUrlAvailable ? kActiveIconColor(context) : Colors.grey,
+                size: 20),
         title: Text(menuName, 
             style: isUrlAvailable 
                 ? kDrawerMenuTextStyle(context)

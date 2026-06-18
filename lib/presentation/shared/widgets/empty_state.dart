@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/presentation/shared/theme/app_spacing.dart';
 import 'package:bcsv_flutter_project/presentation/shared/theme/app_typography.dart';
 
@@ -24,7 +25,7 @@ class EmptyState extends StatelessWidget {
   final String? message;
 
   /// Icon to display (defaults to Icons.inbox_outlined)
-  final IconData? icon;
+  final dynamic icon;
 
   /// Size of the icon
   final double iconSize;
@@ -45,11 +46,17 @@ class EmptyState extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Icon
-            Icon(
-              icon ?? Icons.inbox_outlined,
-              size: iconSize,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
-            ),
+            icon is FaIconData
+              ? FaIcon(
+                  icon,
+                  size: iconSize,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                )
+              : Icon(
+                  icon ?? Icons.inbox_outlined,
+                  size: iconSize,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                ),
             const SizedBox(height: AppSpacing.lg),
 
             // Title

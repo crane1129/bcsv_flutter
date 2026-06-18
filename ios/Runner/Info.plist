@@ -27,7 +27,45 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<array>
+			<string>https</string>
+			<string>http</string>
+		</array>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera to take photos for opinion submissions</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>This app requires access to files to submit opinions with document</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library to submit opinions with pictures</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneDelegateClassName</key>
+					<string>FlutterSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -50,23 +88,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<array>
-			<string>https</string>
-			<string>http</string>
-		</array>
-	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-    <string>This app requires access to the photo library to submit opinions with pictures</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app requires access to the camera to take photos for opinion submissions</string>
-    <key>NSDocumentsFolderUsageDescription</key>
-    <string>This app requires access to files to submit opinions with document</string>
-
 </dict>
 </plist>
