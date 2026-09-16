@@ -63,17 +63,11 @@ dependencies:
   # Display App information
   package_info_plus: ^8.0.2
 
-  # Save local file
-  path_provider: ^2.0.8
-
   # Check Internet connection
   internet_connection_checker: ^3.0.1
 
   # Display top overlay
   overlay_support: ^2.1.0
-
-  # Google Sheet access
-  gsheets: ^0.5.0
 
   # Alert message popup_window:
   rflutter_alert: ^2.0.4
@@ -86,7 +80,6 @@ dependencies:
 
   # To open an external app
   external_app_launcher: ^4.0.3
-  file_picker: ^10.1.4
 
 flutter_native_splash:
   color: "#232F34"
@@ -130,33 +123,24 @@ flutter:
     - assets/images/
 
 
-  fonts:
-    - family: Dongle
-      fonts:
-        - asset: fonts/Dongle-Light.ttf
-          weight: 300
-        - asset: fonts/Dongle-Regular.ttf
-          weight: 400
-        - asset: fonts/Dongle-Bold.ttf
-          weight: 700
-
-    - family: SingleDay
-      fonts:
-        - asset: fonts/SingleDay-Regular.ttf
-
-    - family: Sunflower
-      fonts:
-        - asset: fonts/Sunflower-Light.ttf
-          weight: 300
-        - asset: fonts/Sunflower-Medium.ttf
-          weight: 400
-        - asset: fonts/Sunflower-Bold.ttf
-          weight: 700
-
-
-    - family: PoorStory
-      fonts:
-        - asset: fonts/PoorStory-Regular.ttf
+  # TODO: register the 'Paperozi' (Paperlogy) font family used by the
+  # homepage (see app/globals.css in bridgeway2490/homepage) once its
+  # .ttf/.otf files are available locally, e.g.:
+  #   fonts:
+  #     - family: Paperozi
+  #       fonts:
+  #         - asset: fonts/Paperozi-Regular.ttf
+  #           weight: 400
+  #         - asset: fonts/Paperozi-SemiBold.ttf
+  #           weight: 600
+  #         - asset: fonts/Paperozi-Bold.ttf
+  #           weight: 700
+  #         - asset: fonts/Paperozi-ExtraBold.ttf
+  #           weight: 800
+  # ThemeData already requests fontFamily: 'Paperozi' (lib/utilities/themes.dart);
+  # until the asset is registered here, text falls back to the platform default.
+  # The old Dongle/SingleDay/Sunflower/PoorStory fonts were removed along with
+  # the screens/text styles that used them.
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

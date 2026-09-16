@@ -5,9 +5,6 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../components/webview/webview_screen.dart';
-import '../services/api_endpoint.dart';
-
 class OfferingScreen extends StatelessWidget {
   final benevolence_account = "benevolence@bridgeway.online";
   final offering_account = "offering@bridgeway.online";
@@ -118,51 +115,6 @@ class OfferingScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Card(
-                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 1.5),
-                  borderOnForeground: true,
-                  elevation: 3,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: Icon(Icons.info,
-                            color: Colors.red),
-                        title: Text(
-                            AppLocalizations.of(context)!.offering_direction,
-                            style: kListTitleStyleBlack(context)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("${AppLocalizations.of(context)!.offering_direction_text}",
-                                style: kListTitleStyleBlack(context)),
-                            TextButton(
-                              child: Text(AppLocalizations.of(context)!.openButtonText),
-                              onPressed: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return WebViewApp(
-                                          url: ApiEndpoint
-                                              .apiMap['ONLINE_OFFERING_DIRECTION']!,
-                                          title1: AppLocalizations.of(context)!
-                                              .offering_direction,
-                                          title2: '');
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
               ],
             ),
           ),

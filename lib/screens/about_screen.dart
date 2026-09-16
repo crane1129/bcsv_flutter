@@ -4,8 +4,6 @@ import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../dialog/update_checker.dart';
-
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
   @override
@@ -62,10 +60,6 @@ class _AboutScreenState extends State<AboutScreen> {
                   'Daniel Kim (dankim0822@gmail.com)\nHaksoo Kim(crane1129@gmail.com)'),
               _infoTile('\n© ' + this_year + ' Bridgeway Baptist Church',
                   '     2490 Middlefield. Palo Alto, CA 94301'),
-              ElevatedButton(
-                onPressed: () => checkForUpdate(context),
-                child: Text("Check for Update"),
-              ),
               SizedBox(height: 40.0),
             ],
           ),

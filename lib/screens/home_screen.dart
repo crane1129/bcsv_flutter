@@ -1,24 +1,15 @@
-import 'package:bcsv_flutter_project/screens/bible_search_screen.dart';
-import 'package:bcsv_flutter_project/screens/message_list.dart';
-import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:bcsv_flutter_project/screens/announcement_screen.dart';
-import 'package:bcsv_flutter_project/screens/serving_turn_screen.dart';
-import 'package:bcsv_flutter_project/screens/daily_bible_text_screen.dart';
-import 'package:bcsv_flutter_project/screens/sunday_bible_text_screen.dart';
 import 'package:bcsv_flutter_project/nav_bar.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/components/reusable_card.dart';
 import 'package:bcsv_flutter_project/components/icon_content.dart';
 import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
+import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bcsv_flutter_project/services/api_endpoint.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:bcsv_flutter_project/globals.dart' as globals;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:upgrader/upgrader.dart';
-import 'offering_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -29,14 +20,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Widget emptyString = Text('');
-  late int messageCounter;
-
-  @override
-  void initState() {
-    //refresh the page here
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,69 +53,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: <Widget>[
                         Expanded(
                           child: ReusableCard2(
-                              onPress: () {
-                                //AnnouncementPage
-                                Navigator.push(
+                              onPress: () => _openWebView(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return AnnouncementPage();
-                                    },
-                                  ),
-                                );
-                              },
+                                  kHomepageChurchUrl,
+                                  AppLocalizations.of(context)!.church),
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.bullhorn,
+                                  cardIcon: FontAwesomeIcons.church,
                                   label: AppLocalizations.of(context)!
-                                      .announcement)),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: ReusableCard2(
-                              onPress: () {
-                                //ServingTurnPage
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ServingTurnPage();
-                                    },
-                                  ),
-                                );
-                              },
-                              color: Theme.of(context).colorScheme.surface,
-                              cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.peopleCarryBox,
-                                  label: AppLocalizations.of(context)!
-                                      .servingTurn)),
+                                      .church)),
                         ),
                         Expanded(
                           child: ReusableCard2(
-                              onPress: () {
-                                //New Message Page
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            MessageListScreen())).then(
-                                  (onValue) {
-                                    updateMessageCounter();
-                                  },
-                                );
-                              },
+                              onPress: () => _openWebView(
+                                  context,
+                                  kHomepageMinistriesUrl,
+                                  AppLocalizations.of(context)!.ministries),
                               color: Theme.of(context).colorScheme.surface,
-                              cardChild: IconMsgContent(
-                                cardIcon: FontAwesomeIcons.message,
-                                label: AppLocalizations.of(context)!.newMessage,
-                                msg_widget: displayMsgCounter(),
-                              )),
-                        )
+                              cardChild: IconContent(
+                                  cardIcon: FontAwesomeIcons.peopleGroup,
+                                  label: AppLocalizations.of(context)!
+                                      .ministries)),
+                        ),
                       ],
                     ),
                   ),
@@ -141,41 +83,26 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: <Widget>[
                         Expanded(
                           child: ReusableCard2(
-                              onPress: () {
-                                //BibleTextPage
-                                Navigator.push(
+                              onPress: () => _openWebView(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return SundayBibleTextScreen();
-                                    },
-                                  ),
-                                );
-                              },
+                                  kHomepageSermonsUrl,
+                                  AppLocalizations.of(context)!.sermons),
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.bookBible,
+                                  cardIcon: Icons.voice_chat_outlined,
                                   label:
-                                      AppLocalizations.of(context)!.bibleText)),
+                                      AppLocalizations.of(context)!.sermons)),
                         ),
                         Expanded(
                           child: ReusableCard2(
-                              onPress: () {
-                                //DailyBibleTextPage
-                                Navigator.push(
+                              onPress: () => _openWebView(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return DailyBibleTextScreen();
-                                    },
-                                  ),
-                                );
-                              },
+                                  kBridgewayHubUrl,
+                                  AppLocalizations.of(context)!.links),
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.calendarDays,
-                                  label: AppLocalizations.of(context)!
-                                      .dailyBible)),
+                                  cardIcon: Icons.link,
+                                  label: AppLocalizations.of(context)!.links)),
                         ),
                       ],
                     ),
@@ -186,40 +113,31 @@ class _MyHomePageState extends State<MyHomePage> {
                         Expanded(
                           child: ReusableCard2(
                               onPress: () {
-                                //BibleTextPage
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return OfferingScreen();
+                                      return SubmitOpinionScreen();
                                     },
                                   ),
                                 );
                               },
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.handHoldingHeart,
+                                  cardIcon: Icons.emoji_people,
                                   label:
-                                  AppLocalizations.of(context)!.offering)),
+                                      AppLocalizations.of(context)!.opinion)),
                         ),
                         Expanded(
                           child: ReusableCard2(
-                              onPress: () {
-                                //DailyBibleTextPage
-                                Navigator.push(
+                              onPress: () => _openWebView(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return BibleSearchScreen();
-                                    },
-                                  ),
-                                );
-                              },
+                                  kHomepageHomeUrl,
+                                  AppLocalizations.of(context)!.home),
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.magnifyingGlass,
-                                  label: AppLocalizations.of(context)!
-                                      .bible_search)),
+                                  cardIcon: Icons.home_outlined,
+                                  label: AppLocalizations.of(context)!.home)),
                         ),
                       ],
                     ),
@@ -230,29 +148,12 @@ class _MyHomePageState extends State<MyHomePage> {
             )));
   }
 
-  Widget displayMsgCounter() {
-    updateMessageCounter();
-
-    if (globals.messageCnt == 0) {
-      return emptyString;
-    } else {
-      return ClipOval(
-        child: Container(
-          color: Colors.red,
-          width: 20,
-          height: 20,
-          child: Center(
-            child: Text(globals.messageCnt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 12)),
-          ),
-        ),
-      );
-    }
-  }
-
-  void updateMessageCounter() {
-    setState(() {
-      globals.messageCnt = UserSharedPreferences.getMessageListCounter() ?? 0;
-    });
+  void _openWebView(BuildContext context, Uri url, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewApp(url: url, title1: title, title2: ''),
+      ),
+    );
   }
 }

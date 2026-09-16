@@ -19,52 +19,28 @@
   "@share": {
     "description": "description"
   },
-  "sundaySermons": "Sunday Sermons",
-  "@sundaySermons": {
+  "home": "Home",
+  "@home": {
     "description": "description"
   },
-  "sermonArchives": "Sermon Archives",
-  "@sermonArchives": {
+  "church": "Church",
+  "@church": {
     "description": "description"
   },
-  "youtubeLive": "Youtube Live",
-  "@youtubeLive": {
+  "ministries": "Ministries",
+  "@ministries": {
     "description": "description"
   },
-  "notification": "Notification",
-  "@notification": {
+  "sermons": "Sermons",
+  "@sermons": {
     "description": "description"
   },
-  "servingTurn": "Serving Turn",
-  "@servingTurn": {
-    "description": "description"
-  },
-  "announcement": "Announcement",
-  "@announcement": {
-    "description": "description"
-  },
-  "bibleText": "Bible Text",
-  "@bibleText": {
-    "description": "description"
-  },
-  "sermonBibleText": "Sermon Bible Text",
-  "@sermonBibleText": {
-    "description": "description"
-  },
-  "sermonReview": "Sermon Review",
-  "@sermonReview": {
-    "description": "description"
-  },
-  "dailyBible": "Daily Bible",
-  "@dailyBible": {
+  "links": "Links",
+  "@links": {
     "description": "description"
   },
   "offering": "Offering",
   "@offering": {
-    "description": "description"
-  },
-  "upcomingEvent": "Upcoming Event",
-  "@upcomingEvent": {
     "description": "description"
   },
   "about": "About",
@@ -83,18 +59,6 @@
   "@baptistChurch": {
     "description": "description"
   },
-  "reimbursement": "Reimbursement",
-  "@reimbursement": {
-    "description": "description"
-  },
-  "sundayServingTurn": "Sunday Serving Turn",
-  "@sundayServingTurn": {
-    "description": "description"
-  },
-  "noInternetConnectionPleaseCheckTheNetworkConnection": "No Internet connection. Please check the network connection.",
-  "@noInternetConnectionPleaseCheckTheNetworkConnection": {
-    "description": "description"
-  },
   "opinion": "Opinion",
   "@opinion": {
     "description": "description"
@@ -103,44 +67,12 @@
   "@bridgewayOpinion": {
     "description": "description"
   },
-  "pleaseSendUsYourOpinion": "Please send us your opinion",
-  "@pleaseSendUsYourOpinion": {
-    "description": "description"
-  },
-  "thankYou": "Thank You",
-  "@thankYou": {
-    "description": "description"
-  },
-  "yourOpinionHasSuccessfullySubmitted": "Your opinion has successfully submitted",
-  "@yourOpinionHasSuccessfullySubmitted": {
-    "description": "description"
-  },
-  "newMessage": "New Message",
-  "@newMessage": {
-    "description": "description"
-  },
   "appInformation": "app information",
   "@appInformation": {
     "description": "description"
   },
   "languageSetting": "Language Setting",
   "@languageSetting": {
-    "description": "description"
-  },
-  "churchReimbursement": "Church Reimbursement",
-  "@churchReimbursement": {
-    "description": "description"
-  },
-  "pleaseSubmitYourExpenseForChurchEvents": "Please submit your expense for church events",
-  "@pleaseSubmitYourExpenseForChurchEvents": {
-    "description": "description"
-  },
-  "yourSubmissionIsMadeAnonymously": "Your submission is made anonymously",
-  "@yourSubmissionIsMadeAnonymously": {
-    "description": "description"
-  },
-  "pleaseEnterYourOpinion": "The text is empty. Please enter your opinion.",
-  "@pleaseEnterYourOpinion": {
     "description": "description"
   },
   "language": "Language",
@@ -167,36 +99,12 @@
   "@opinionSubTitle": {
     "description": "The current language"
   },
-  "openButtonText": "Open",
-  "@openButtonText": {
-    "description": "The current language"
-  },
-  "reimbursementDesc": "Please submit your expense for church events",
-  "@reimbursementDesc": {
-    "description": "The current language"
-  },
   "missionStatement": "Mission Statement",
   "@missionStatement": {
     "description": "The current language"
   },
   "missionVerse": "John 13: 34-35",
   "@missionVerse": {
-    "description": "The current language"
-  },
-  "initMessage": "Reset Messages",
-  "@initMessage": {
-    "description": "The current language"
-  },
-  "runButton": "Execute",
-  "@runButton": {
-    "description": "The current language"
-  },
-  "noticeTitle": "Notice",
-  "@noticeTitle": {
-    "description": "The current language"
-  },
-  "restartNotice": "The app is now closing.",
-  "@restartNotice": {
     "description": "The current language"
   },
   "sundayOffering": "Sunday Offering Account",
@@ -207,76 +115,12 @@
   "@benevolenceOffering": {
     "description": "The current language"
   },
-  "prayer": "Prayer",
-  "@prayer": {
-    "description": "The current language"
-  },
-  "foodPrep": "Food Prep",
-  "@foodPrep": {
-    "description": "The current language"
-  },
-  "babysitting": "Wednesday Baby Sitting",
-  "@babysitting": {
-    "description": "The current language"
-  },
   "clear": "Clear",
   "@clear": {
     "description": "The current language"
   },
   "copy": "Copy",
   "@copy": {
-    "description": "The current language"
-  },
-  "offering_direction": "Offering Direction",
-  "@offering_direction": {
-    "description": "The current language"
-  },
-  "offering_direction_text": "See detail information",
-  "@offering_direction_text": {
-    "description": "The current language"
-  },
-  "bible_reading_plan": "Bible Reading Plan",
-  "@bible_reading_plan": {
-    "description": "The current language"
-  },
-  "bible_search": "Bible Search",
-  "@bible_search": {
-    "description": "The current language"
-  },
-  "bible_old_testament": "Old Testament",
-  "@bible_old_testament": {
-    "description": "The current language"
-  },
-  "bible_new_testament": "New Testament",
-  "@bible_new_testament": {
-    "description": "The current language"
-  },
-  "staff_only_mode": "Staff Only Menu",
-  "@staff_only_mode": {
-    "description": "The current language"
-  },
-  "unconfirmed_opinion": "Unconfirmed Requests",
-  "@unconfirmed_opinion": {
-    "description": "The current language"
-  },
-  "start_chapter": "Start Chapter",
-  "@start_chapter": {
-    "description": "The current language"
-  },
-  "start_verse": "Start Verse (optional)",
-  "@start_verse": {
-    "description": "The current language"
-  },
-  "end_chapter": "End Chapter (optional)",
-  "@end_chapter": {
-    "description": "The current language"
-  },
-  "end_verse": "End Verse (optional)",
-  "@end_verse": {
-    "description": "The current language"
-  },
-  "search": "Search",
-  "@search": {
     "description": "The current language"
   }
 }

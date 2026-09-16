@@ -6,10 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:bcsv_flutter_project/screens/home_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
-import 'package:bcsv_flutter_project/services/api_endpoint.dart';
-import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
-import 'package:bcsv_flutter_project/services/gsheet_access.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
@@ -86,17 +83,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final provider = Provider.of<LocaleProvider>(context, listen: false);
     provider.setLocale(Locale.fromSubtags(languageCode: languageOption));
     log('Language: $languageOption');
-
-    //Settings
-    UserSharedPreferences.setAnnouncementCache(false);
-    UserSharedPreferences.setBibleReviewCache(false);
-    UserSharedPreferences.setBibleTextCache(false);
-    UserSharedPreferences.setServingTurnCache(false);
-    UserSharedPreferences.setDailyBibleText1Cache(false);
-    UserSharedPreferences.setDailyBibleText2Cache(false);
-
-    //It is done before loadSettings() is called.
-    //UserSharedPreferences.setMessageListTextCache(false);
   }
 
   void checkNetworkConnection() async {
@@ -120,14 +106,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ),
       );
     } else {
-      final endpointService = ApiEndpoint();
-      if (await endpointService.bindEndpoints()) {
-        await endpointService.checkNewMessage();
-      }
-
-      GoogleMessageSheet.init();
-      // _initPackageInfo();
-
       //스크린에 위젯 바인딩이 모두 끝나고나서 세팅을 로드해야 정상으로 반영됨.
       WidgetsBinding.instance.addPostFrameCallback(
         (context) {
