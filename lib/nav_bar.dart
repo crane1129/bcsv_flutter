@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/screens/setting_screen.dart';
 import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
 import 'package:bcsv_flutter_project/screens/offering_screen.dart';
@@ -42,12 +41,12 @@ class NavBar extends StatelessWidget {
               url: kHomepageHomeUrl,
               trailing: SizedBox.shrink()),
           ListWebViewMenu(
-              myIcon: FontAwesomeIcons.church,
+              myIcon: Icons.church,
               menuName: AppLocalizations.of(context)!.church,
               url: kHomepageChurchUrl,
               trailing: SizedBox.shrink()),
           ListWebViewMenu(
-              myIcon: FontAwesomeIcons.peopleGroup,
+              myIcon: Icons.groups,
               menuName: AppLocalizations.of(context)!.ministries,
               url: kHomepageMinistriesUrl,
               trailing: SizedBox.shrink()),

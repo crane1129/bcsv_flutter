@@ -5,7 +5,6 @@ import 'package:bcsv_flutter_project/components/reusable_card.dart';
 import 'package:bcsv_flutter_project/components/icon_content.dart';
 import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -59,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   AppLocalizations.of(context)!.church),
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.church,
+                                  cardIcon: Icons.church,
                                   label: AppLocalizations.of(context)!
                                       .church)),
                         ),
@@ -71,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   AppLocalizations.of(context)!.ministries),
                               color: Theme.of(context).colorScheme.surface,
                               cardChild: IconContent(
-                                  cardIcon: FontAwesomeIcons.peopleGroup,
+                                  cardIcon: Icons.groups,
                                   label: AppLocalizations.of(context)!
                                       .ministries)),
                         ),
