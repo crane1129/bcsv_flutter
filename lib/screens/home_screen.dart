@@ -6,7 +6,7 @@ import 'package:bcsv_flutter_project/components/icon_content.dart';
 import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
 import 'package:bcsv_flutter_project/screens/submit_opinion_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:upgrader/upgrader.dart';
 

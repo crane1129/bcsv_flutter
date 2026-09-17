@@ -6,7 +6,7 @@ import 'package:bcsv_flutter_project/components/webview/webview_screen.dart';
 import 'package:bcsv_flutter_project/screens/offering_screen.dart';
 import 'package:bcsv_flutter_project/screens/about_screen.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);

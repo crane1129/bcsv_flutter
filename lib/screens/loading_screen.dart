@@ -7,7 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:bcsv_flutter_project/screens/home_screen.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';

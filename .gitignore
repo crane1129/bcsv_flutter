@@ -175,6 +175,10 @@ analysis_benchmark.json
 # packages file containing multi-root paths
 .packages.generated
 
+# Generated l10n output (flutter gen-l10n, non-synthetic package)
+lib/l10n/app_localizations.dart
+lib/l10n/app_localizations_*.dart
+
 # Flutter/Dart/Pub related
 **/doc/api/
 .flutter-plugins
