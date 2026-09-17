@@ -24,7 +24,7 @@ class _AboutScreenState extends State<AboutScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: AppBarHeaderText(
-            text1: 'About',
+            text1: AppLocalizations.of(context)!.about,
             text2: AppLocalizations.of(context)!.appInformation),
       ),
       body: SingleChildScrollView(
@@ -71,7 +71,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget _infoTile(String title, String subtitle) {
     return ListTile(
       title: Text(title, style: kBodyTextStyle(context), textAlign: TextAlign.center),
-      subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle,
+      subtitle: Text(subtitle.isEmpty ? AppLocalizations.of(context)!.notSet : subtitle,
           style: kBodyTextSmallStyle(context), textAlign: TextAlign.center,),
     );
   }

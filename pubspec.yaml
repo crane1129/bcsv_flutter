@@ -120,22 +120,24 @@ flutter:
     - assets/images/
 
 
-  # TODO: register the 'Paperozi' (Paperlogy) font family used by the
-  # homepage (see app/globals.css in bridgeway2490/homepage) once its
-  # .ttf/.otf files are available locally, e.g.:
-  #   fonts:
-  #     - family: Paperozi
-  #       fonts:
-  #         - asset: fonts/Paperozi-Regular.ttf
-  #           weight: 400
-  #         - asset: fonts/Paperozi-SemiBold.ttf
-  #           weight: 600
-  #         - asset: fonts/Paperozi-Bold.ttf
-  #           weight: 700
-  #         - asset: fonts/Paperozi-ExtraBold.ttf
-  #           weight: 800
-  # ThemeData already requests fontFamily: 'Paperozi' (lib/utilities/themes.dart);
-  # until the asset is registered here, text falls back to the platform default.
+  # 'Paperozi' (Paperlogy) font family used by the homepage design system
+  # (see app/globals.css in bridgeway2490/homepage). Converted from the same
+  # woff2 release the homepage loads via CDN (projectnoonnu/2408-3) to ttf
+  # for Flutter's font asset pipeline. NOTE: license terms for this font
+  # (distributed via the noonnu.cc Korean free-font platform) could not be
+  # verified from this environment — confirm redistribution/embedding terms
+  # before shipping to the App/Play Store.
+  fonts:
+    - family: Paperozi
+      fonts:
+        - asset: fonts/Paperozi/Paperozi-Regular.ttf
+          weight: 400
+        - asset: fonts/Paperozi/Paperozi-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Paperozi/Paperozi-Bold.ttf
+          weight: 700
+        - asset: fonts/Paperozi/Paperozi-ExtraBold.ttf
+          weight: 800
   # The old Dongle/SingleDay/Sunflower/PoorStory fonts were removed along with
   # the screens/text styles that used them.
   # An image asset can refer to one or more resolution-specific "variants", see

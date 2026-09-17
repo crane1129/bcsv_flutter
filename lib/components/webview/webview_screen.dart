@@ -50,7 +50,7 @@ class _WebViewAppState extends State<WebViewApp> {
         //   NavigationControls(controller: controller),
         // ],
       ),
-      body: WebViewStack(controller: controller),
+      body: WebViewStack(controller: controller, initialUrl: url),
     );
   }
 }

@@ -122,5 +122,21 @@
   "copy": "Copy",
   "@copy": {
     "description": "The current language"
+  },
+  "notSet": "Not set",
+  "@notSet": {
+    "description": "The current language"
+  },
+  "opinionSubmitSuccess": "Thank you! Your opinion has been submitted.",
+  "@opinionSubmitSuccess": {
+    "description": "The current language"
+  },
+  "opinionSubmitError": "An error occurred. Please try again.",
+  "@opinionSubmitError": {
+    "description": "The current language"
+  },
+  "opinionSubmitFailed": "Submission failed. Please try again later.",
+  "@opinionSubmitFailed": {
+    "description": "The current language"
   }
 }

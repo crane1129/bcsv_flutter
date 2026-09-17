@@ -9,6 +9,7 @@ import 'package:bcsv_flutter_project/utilities/constants.dart';
 import 'package:bcsv_flutter_project/utilities/shared_preference.dart';
 import 'package:bcsv_flutter_project/utilities/package_information.dart';
 import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
+import 'package:bcsv_flutter_project/l10n/l10n.dart';
 import 'package:bcsv_flutter_project/utilities/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
@@ -79,8 +80,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void loadSettings() async {
-    //언어옵션 Default: Korean
-    String languageOption = UserSharedPreferences.getLanguageOption() ?? 'en';
+    //언어옵션 Default: 기기 시스템 언어가 지원되면 그 언어, 아니면 한국어
+    final systemLanguageCode =
+        WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    final supportedLanguageCodes = L10n.all.map((locale) => locale.languageCode);
+    final defaultLanguageOption = supportedLanguageCodes.contains(systemLanguageCode)
+        ? systemLanguageCode
+        : 'ko';
+    String languageOption =
+        UserSharedPreferences.getLanguageOption() ?? defaultLanguageOption;
     final provider = Provider.of<LocaleProvider>(context, listen: false);
     provider.setLocale(Locale.fromSubtags(languageCode: languageOption));
     log('Language: $languageOption');

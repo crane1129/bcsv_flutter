@@ -10,7 +10,7 @@
     "sermons": "설교",
     "links": "링크",
     "offering": "헌금",
-    "about": "About",
+    "about": "정보",
     "exit": "종료",
     "bridgeway": "브릿지웨이",
     "baptistChurch": "침례교회",
@@ -29,5 +29,9 @@
     "sundayOffering": "주일헌금 계좌",
     "benevolenceOffering": "구제헌금 계좌",
     "clear": "지우기",
-    "copy": "복사"
+    "copy": "복사",
+    "notSet": "정보 없음",
+    "opinionSubmitSuccess": "감사합니다! 의견이 제출되었습니다.",
+    "opinionSubmitError": "오류가 발생했습니다. 다시 시도해 주세요.",
+    "opinionSubmitFailed": "제출에 실패했습니다. 잠시 후 다시 시도해 주세요."
 }

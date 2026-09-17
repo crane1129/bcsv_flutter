@@ -143,11 +143,11 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
         contactCtrl.clear();
 
         showSimpleNotification(
-          Text("Thank you! Your opinion has been submitted."),
+          Text(AppLocalizations.of(context)!.opinionSubmitSuccess),
           background: Colors.green,
         );
       } else {
-        String errorMessage = "Submission failed. Please try again later.";
+        String errorMessage = AppLocalizations.of(context)!.opinionSubmitFailed;
         try {
           final body = jsonDecode(res.body);
           if (body is Map && body['error'] is String) {
@@ -163,7 +163,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
       }
     } catch (e) {
       showSimpleNotification(
-        Text("An error occurred. Please try again."),
+        Text(AppLocalizations.of(context)!.opinionSubmitError),
         background: Colors.red,
       );
     } finally {
