@@ -102,12 +102,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final res = await http.post(
-                  Uri.https('www.bridgeway.online', '/_functions/verifyStaffPassword'),
-                  headers: {'Content-Type': 'application/json'},
-                  body: jsonEncode({'password': password, 'role': role}),
-                );
-                if (res.statusCode == 200 && res.body.contains('true')) {
+                const expectedHashes = {
+                  'opinion': '17595cbb88e5634223b377253be9039189a4d9e496c851e5041c73cc8c7cad27',
+                  'message': '08093ad1adfc5a2b2f1a12e5f552343145709bf57ad4d6c7679a5e81f666cb7c',
+                };
+                final inputHash = sha256.convert(utf8.encode(password)).toString();
+                if (inputHash == expectedHashes[role]) {
                   await onSuccess();
                   Navigator.of(context).pop();
                 } else {
