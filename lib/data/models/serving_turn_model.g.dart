@@ -6,9 +6,8 @@ part of 'serving_turn_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ServingTurnModelImpl _$$ServingTurnModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ServingTurnModelImpl(
+_ServingTurnModel _$ServingTurnModelFromJson(Map<String, dynamic> json) =>
+    _ServingTurnModel(
       date: json['date'] as String,
       prayer: json['prayer'] as String,
       joycorner: json['joycorner'] as String? ?? '',
@@ -17,8 +16,7 @@ _$ServingTurnModelImpl _$$ServingTurnModelImplFromJson(
       babysitter: json['babysitter'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$ServingTurnModelImplToJson(
-        _$ServingTurnModelImpl instance) =>
+Map<String, dynamic> _$ServingTurnModelToJson(_ServingTurnModel instance) =>
     <String, dynamic>{
       'date': instance.date,
       'prayer': instance.prayer,

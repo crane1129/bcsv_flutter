@@ -7,8 +7,8 @@ class Endpoint {
 
   factory Endpoint.fromJson(Map<String, dynamic> json) {
     return Endpoint(
-      endpoint: json['title'],
-      url: json['endpoint'],
+      endpoint: json['endpoint'],
+      url: json['url'],
     );
   }
 }

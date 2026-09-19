@@ -6,7 +6,7 @@ part 'sunday_bible_text_model.g.dart';
 
 /// Data model for Bible reference
 @freezed
-class BibleReferenceModel with _$BibleReferenceModel {
+abstract class BibleReferenceModel with _$BibleReferenceModel {
   const factory BibleReferenceModel({
     @JsonKey(name: 'Text_Class') required String textClass,
     @JsonKey(name: 'Bible_chapter') required String bibleChapter,
@@ -38,7 +38,7 @@ class BibleReferenceModel with _$BibleReferenceModel {
 
 /// Data model for review question
 @freezed
-class ReviewQuestionModel with _$ReviewQuestionModel {
+abstract class ReviewQuestionModel with _$ReviewQuestionModel {
   const factory ReviewQuestionModel({
     @JsonKey(name: 'Text_Class') required String textClass,
     @JsonKey(name: 'Bible_chapter') required String bibleChapter,
@@ -70,7 +70,7 @@ class ReviewQuestionModel with _$ReviewQuestionModel {
 
 /// Data model for Sunday Bible text
 @freezed
-class SundayBibleTextModel with _$SundayBibleTextModel {
+abstract class SundayBibleTextModel with _$SundayBibleTextModel {
   const factory SundayBibleTextModel({
     @JsonKey(name: 'Date') required String date,
     @JsonKey(name: 'Title') required String title,

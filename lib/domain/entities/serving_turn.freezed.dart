@@ -1,6 +1,6 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
+// coverage:ignore-file
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'serving_turn.dart';
@@ -9,250 +9,286 @@ part of 'serving_turn.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$ServingTurnEntity {
-  String get date => throw _privateConstructorUsedError;
-  String get prayer => throw _privateConstructorUsedError;
-  String get joycorner => throw _privateConstructorUsedError;
-  String get food => throw _privateConstructorUsedError;
-  String get prayerDate => throw _privateConstructorUsedError;
-  String get babysitter => throw _privateConstructorUsedError;
 
-  /// Create a copy of ServingTurnEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ServingTurnEntityCopyWith<ServingTurnEntity> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get date; String get prayer; String get joycorner; String get food; String get prayerDate; String get babysitter;
+/// Create a copy of ServingTurnEntity
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ServingTurnEntityCopyWith<ServingTurnEntity> get copyWith => _$ServingTurnEntityCopyWithImpl<ServingTurnEntity>(this as ServingTurnEntity, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ServingTurnEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServingTurnEntity&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.prayer, _this.prayer) || other.prayer == _this.prayer)&&(identical(other.joycorner, _this.joycorner) || other.joycorner == _this.joycorner)&&(identical(other.food, _this.food) || other.food == _this.food)&&(identical(other.prayerDate, _this.prayerDate) || other.prayerDate == _this.prayerDate)&&(identical(other.babysitter, _this.babysitter) || other.babysitter == _this.babysitter));
+}
+
+
+@override
+int get hashCode {
+  final _this = this as ServingTurnEntity;
+  return Object.hash(runtimeType,_this.date,_this.prayer,_this.joycorner,_this.food,_this.prayerDate,_this.babysitter);
+}
+
+@override
+String toString() {
+  final _this = this as ServingTurnEntity;
+  return 'ServingTurnEntity(date: ${_this.date}, prayer: ${_this.prayer}, joycorner: ${_this.joycorner}, food: ${_this.food}, prayerDate: ${_this.prayerDate}, babysitter: ${_this.babysitter})';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ServingTurnEntityCopyWith<$Res> {
-  factory $ServingTurnEntityCopyWith(
-          ServingTurnEntity value, $Res Function(ServingTurnEntity) then) =
-      _$ServingTurnEntityCopyWithImpl<$Res, ServingTurnEntity>;
-  @useResult
-  $Res call(
-      {String date,
-      String prayer,
-      String joycorner,
-      String food,
-      String prayerDate,
-      String babysitter});
-}
+abstract mixin class $ServingTurnEntityCopyWith<$Res>  {
+  factory $ServingTurnEntityCopyWith(ServingTurnEntity value, $Res Function(ServingTurnEntity) _then) = _$ServingTurnEntityCopyWithImpl;
+@useResult
+$Res call({
+ String date, String prayer, String joycorner, String food, String prayerDate, String babysitter
+});
 
+
+
+
+}
 /// @nodoc
-class _$ServingTurnEntityCopyWithImpl<$Res, $Val extends ServingTurnEntity>
+class _$ServingTurnEntityCopyWithImpl<$Res>
     implements $ServingTurnEntityCopyWith<$Res> {
-  _$ServingTurnEntityCopyWithImpl(this._value, this._then);
+  _$ServingTurnEntityCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ServingTurnEntity _self;
+  final $Res Function(ServingTurnEntity) _then;
 
-  /// Create a copy of ServingTurnEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? date = null,
-    Object? prayer = null,
-    Object? joycorner = null,
-    Object? food = null,
-    Object? prayerDate = null,
-    Object? babysitter = null,
-  }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      prayer: null == prayer
-          ? _value.prayer
-          : prayer // ignore: cast_nullable_to_non_nullable
-              as String,
-      joycorner: null == joycorner
-          ? _value.joycorner
-          : joycorner // ignore: cast_nullable_to_non_nullable
-              as String,
-      food: null == food
-          ? _value.food
-          : food // ignore: cast_nullable_to_non_nullable
-              as String,
-      prayerDate: null == prayerDate
-          ? _value.prayerDate
-          : prayerDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      babysitter: null == babysitter
-          ? _value.babysitter
-          : babysitter // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of ServingTurnEntity
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? prayer = null,Object? joycorner = null,Object? food = null,Object? prayerDate = null,Object? babysitter = null,}) {
+  return _then(ServingTurnEntity(
+date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String,prayer: null == prayer ? _self.prayer : prayer // ignore: cast_nullable_to_non_nullable
+as String,joycorner: null == joycorner ? _self.joycorner : joycorner // ignore: cast_nullable_to_non_nullable
+as String,food: null == food ? _self.food : food // ignore: cast_nullable_to_non_nullable
+as String,prayerDate: null == prayerDate ? _self.prayerDate : prayerDate // ignore: cast_nullable_to_non_nullable
+as String,babysitter: null == babysitter ? _self.babysitter : babysitter // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ServingTurnEntity].
+extension ServingTurnEntityPatterns on ServingTurnEntity {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ServingTurnEntity value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ServingTurnEntity() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ServingTurnEntity value)  $default,){
+final _that = this;
+switch (_that) {
+case _ServingTurnEntity():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ServingTurnEntity value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ServingTurnEntity() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  String prayer,  String joycorner,  String food,  String prayerDate,  String babysitter)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ServingTurnEntity() when $default != null:
+return $default(_that.date,_that.prayer,_that.joycorner,_that.food,_that.prayerDate,_that.babysitter);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  String prayer,  String joycorner,  String food,  String prayerDate,  String babysitter)  $default,) {final _that = this;
+switch (_that) {
+case _ServingTurnEntity():
+return $default(_that.date,_that.prayer,_that.joycorner,_that.food,_that.prayerDate,_that.babysitter);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  String prayer,  String joycorner,  String food,  String prayerDate,  String babysitter)?  $default,) {final _that = this;
+switch (_that) {
+case _ServingTurnEntity() when $default != null:
+return $default(_that.date,_that.prayer,_that.joycorner,_that.food,_that.prayerDate,_that.babysitter);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$ServingTurnEntityImplCopyWith<$Res>
-    implements $ServingTurnEntityCopyWith<$Res> {
-  factory _$$ServingTurnEntityImplCopyWith(_$ServingTurnEntityImpl value,
-          $Res Function(_$ServingTurnEntityImpl) then) =
-      __$$ServingTurnEntityImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String date,
-      String prayer,
-      String joycorner,
-      String food,
-      String prayerDate,
-      String babysitter});
+
+
+class _ServingTurnEntity extends ServingTurnEntity {
+  const _ServingTurnEntity({required this.date, required this.prayer, this.joycorner = '', this.food = '', this.prayerDate = '', this.babysitter = ''}): super._();
+  
+
+@override final  String date;
+@override final  String prayer;
+@override@JsonKey() final  String joycorner;
+@override@JsonKey() final  String food;
+@override@JsonKey() final  String prayerDate;
+@override@JsonKey() final  String babysitter;
+
+/// Create a copy of ServingTurnEntity
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ServingTurnEntityCopyWith<_ServingTurnEntity> get copyWith => __$ServingTurnEntityCopyWithImpl<_ServingTurnEntity>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServingTurnEntity&&(identical(other.date, date) || other.date == date)&&(identical(other.prayer, prayer) || other.prayer == prayer)&&(identical(other.joycorner, joycorner) || other.joycorner == joycorner)&&(identical(other.food, food) || other.food == food)&&(identical(other.prayerDate, prayerDate) || other.prayerDate == prayerDate)&&(identical(other.babysitter, babysitter) || other.babysitter == babysitter));
 }
 
-/// @nodoc
-class __$$ServingTurnEntityImplCopyWithImpl<$Res>
-    extends _$ServingTurnEntityCopyWithImpl<$Res, _$ServingTurnEntityImpl>
-    implements _$$ServingTurnEntityImplCopyWith<$Res> {
-  __$$ServingTurnEntityImplCopyWithImpl(_$ServingTurnEntityImpl _value,
-      $Res Function(_$ServingTurnEntityImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of ServingTurnEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? date = null,
-    Object? prayer = null,
-    Object? joycorner = null,
-    Object? food = null,
-    Object? prayerDate = null,
-    Object? babysitter = null,
-  }) {
-    return _then(_$ServingTurnEntityImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      prayer: null == prayer
-          ? _value.prayer
-          : prayer // ignore: cast_nullable_to_non_nullable
-              as String,
-      joycorner: null == joycorner
-          ? _value.joycorner
-          : joycorner // ignore: cast_nullable_to_non_nullable
-              as String,
-      food: null == food
-          ? _value.food
-          : food // ignore: cast_nullable_to_non_nullable
-              as String,
-      prayerDate: null == prayerDate
-          ? _value.prayerDate
-          : prayerDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      babysitter: null == babysitter
-          ? _value.babysitter
-          : babysitter // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+@override
+int get hashCode {
+    return Object.hash(runtimeType,date,prayer,joycorner,food,prayerDate,babysitter);
 }
 
-/// @nodoc
-
-class _$ServingTurnEntityImpl extends _ServingTurnEntity {
-  const _$ServingTurnEntityImpl(
-      {required this.date,
-      required this.prayer,
-      this.joycorner = '',
-      this.food = '',
-      this.prayerDate = '',
-      this.babysitter = ''})
-      : super._();
-
-  @override
-  final String date;
-  @override
-  final String prayer;
-  @override
-  @JsonKey()
-  final String joycorner;
-  @override
-  @JsonKey()
-  final String food;
-  @override
-  @JsonKey()
-  final String prayerDate;
-  @override
-  @JsonKey()
-  final String babysitter;
-
-  @override
-  String toString() {
+@override
+String toString() {
     return 'ServingTurnEntity(date: $date, prayer: $prayer, joycorner: $joycorner, food: $food, prayerDate: $prayerDate, babysitter: $babysitter)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ServingTurnEntityImpl &&
-            (identical(other.date, date) || other.date == date) &&
-            (identical(other.prayer, prayer) || other.prayer == prayer) &&
-            (identical(other.joycorner, joycorner) ||
-                other.joycorner == joycorner) &&
-            (identical(other.food, food) || other.food == food) &&
-            (identical(other.prayerDate, prayerDate) ||
-                other.prayerDate == prayerDate) &&
-            (identical(other.babysitter, babysitter) ||
-                other.babysitter == babysitter));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, date, prayer, joycorner, food, prayerDate, babysitter);
-
-  /// Create a copy of ServingTurnEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ServingTurnEntityImplCopyWith<_$ServingTurnEntityImpl> get copyWith =>
-      __$$ServingTurnEntityImplCopyWithImpl<_$ServingTurnEntityImpl>(
-          this, _$identity);
 }
 
-abstract class _ServingTurnEntity extends ServingTurnEntity {
-  const factory _ServingTurnEntity(
-      {required final String date,
-      required final String prayer,
-      final String joycorner,
-      final String food,
-      final String prayerDate,
-      final String babysitter}) = _$ServingTurnEntityImpl;
-  const _ServingTurnEntity._() : super._();
 
-  @override
-  String get date;
-  @override
-  String get prayer;
-  @override
-  String get joycorner;
-  @override
-  String get food;
-  @override
-  String get prayerDate;
-  @override
-  String get babysitter;
-
-  /// Create a copy of ServingTurnEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ServingTurnEntityImplCopyWith<_$ServingTurnEntityImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+abstract mixin class _$ServingTurnEntityCopyWith<$Res> implements $ServingTurnEntityCopyWith<$Res> {
+  factory _$ServingTurnEntityCopyWith(_ServingTurnEntity value, $Res Function(_ServingTurnEntity) _then) = __$ServingTurnEntityCopyWithImpl;
+@override @useResult
+$Res call({
+ String date, String prayer, String joycorner, String food, String prayerDate, String babysitter
+});
+
+
+
+
+}
+/// @nodoc
+class __$ServingTurnEntityCopyWithImpl<$Res>
+    implements _$ServingTurnEntityCopyWith<$Res> {
+  __$ServingTurnEntityCopyWithImpl(this._self, this._then);
+
+  final _ServingTurnEntity _self;
+  final $Res Function(_ServingTurnEntity) _then;
+
+/// Create a copy of ServingTurnEntity
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? prayer = null,Object? joycorner = null,Object? food = null,Object? prayerDate = null,Object? babysitter = null,}) {
+  return _then(_ServingTurnEntity(
+date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String,prayer: null == prayer ? _self.prayer : prayer // ignore: cast_nullable_to_non_nullable
+as String,joycorner: null == joycorner ? _self.joycorner : joycorner // ignore: cast_nullable_to_non_nullable
+as String,food: null == food ? _self.food : food // ignore: cast_nullable_to_non_nullable
+as String,prayerDate: null == prayerDate ? _self.prayerDate : prayerDate // ignore: cast_nullable_to_non_nullable
+as String,babysitter: null == babysitter ? _self.babysitter : babysitter // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

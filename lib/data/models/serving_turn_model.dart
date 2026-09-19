@@ -6,7 +6,7 @@ part 'serving_turn_model.g.dart';
 
 /// Data model for serving turn with JSON serialization
 @freezed
-class ServingTurnModel with _$ServingTurnModel {
+abstract class ServingTurnModel with _$ServingTurnModel {
   const factory ServingTurnModel({
     required String date,
     required String prayer,

@@ -9,7 +9,7 @@ part 'message.freezed.dart';
 /// - startDate: When the message becomes visible
 /// - endDate: When the message stops being visible (null = forever)
 @freezed
-class MessageEntity with _$MessageEntity {
+abstract class MessageEntity with _$MessageEntity {
   const factory MessageEntity({
     required String id,  // Wix _id for updates
     required DateTime createdAt,

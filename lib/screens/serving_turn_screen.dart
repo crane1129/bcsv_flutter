@@ -11,6 +11,8 @@ import 'package:bcsv_flutter_project/presentation/shared/widgets/empty_state.dar
 import 'package:bcsv_flutter_project/presentation/shared/widgets/error_state.dart';
 import 'package:bcsv_flutter_project/presentation/shared/widgets/offline_banner.dart';
 import 'package:bcsv_flutter_project/core/utils/endpoint_waiter.dart';
+import 'package:bcsv_flutter_project/services/api_endpoint.dart';
+import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'dart:developer';
 
 class ServingTurnPage extends ConsumerStatefulWidget {
@@ -25,23 +27,36 @@ class _ServingTurnPageState extends ConsumerState<ServingTurnPage> {
   void initState() {
     super.initState();
     log('🟢 [ServingTurnScreen] initState called');
-    // Load serving turns - wait for endpoints to initialize first
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      log('🟢 [ServingTurnScreen] Post-frame callback - waiting for endpoints');
-
-      // Wait for endpoints to be ready (max 3 seconds)
-      await EndpointWaiter.waitForEndpoints();
-
-      log('🟢 [ServingTurnScreen] Initiating loadServingTurns');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Load from cache immediately
       ref.read(servingTurnNotifierProvider.notifier).loadServingTurns(
-        forceRefresh: false, // Use cache first
+        forceRefresh: false,
       );
+      // Refresh from network in background
+      _refreshWhenEndpointsReady();
     });
   }
 
-  /// Refresh serving turns from network
+  Future<void> _refreshWhenEndpointsReady() async {
+    if (!BackgroundService().isInitialized && !BackgroundService().isLoading) {
+      BackgroundService().initializeInBackground();
+    }
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+    }
+    final endpointsReady = await EndpointWaiter.waitForEndpoints();
+    if (endpointsReady && mounted) {
+      ref.read(servingTurnNotifierProvider.notifier).loadServingTurns(
+        forceRefresh: true,
+      );
+    }
+  }
+
   Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for serving turns');
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+      await EndpointWaiter.waitForEndpoints(maxWait: const Duration(seconds: 5));
+    }
     await ref.read(servingTurnNotifierProvider.notifier).refresh();
   }
 

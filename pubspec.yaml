@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 3.0.0+301
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.8.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -48,11 +48,10 @@ dependencies:
 
   # Riverpod for state management
   flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
 
   # Immutable data classes
-  freezed_annotation: ^2.4.1
-  json_annotation: ^4.9.0
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
 
   # Connectivity monitoring
   connectivity_plus: ^6.1.4
@@ -78,6 +77,10 @@ dependencies:
   # Save local file
   path_provider: ^2.0.8
 
+  # Local SQLite for Bible search
+  sqflite: ^2.3.0
+  path: ^1.8.3
+
   # Check Internet connection
   internet_connection_checker: ^3.0.1
 
@@ -101,13 +104,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  integration_test:
+    sdk: flutter
+
   flutter_launcher_icons: ^0.14.3
 
-  # Code generation for Riverpod and Freezed
-  riverpod_generator: ^2.4.0
-  freezed: ^2.4.7
+  # Code generation for Freezed
+  freezed: ^4.0.0
   build_runner: ^2.4.8
-  json_serializable: ^6.7.1
+  json_serializable: ^6.14.0
   flutter_lints: ^5.0.0
 
 flutter_icons:
@@ -133,6 +138,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/bible_ko.db
 
 
   fonts:

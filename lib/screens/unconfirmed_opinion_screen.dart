@@ -83,7 +83,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
       log('📋 Fetching unconfirmed opinions...');
       
     final uri =
-        Uri.https('www.bridgeway.online', '/_functions/unconfirmedOpinions');
+        Uri.parse('https://bcsv-api.crane1129.workers.dev/api/unconfirmedOpinions');
       final response = await http.get(uri).timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
@@ -439,13 +439,25 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
     );
   }
 
+  static const String _apiBaseUrl = 'https://bcsv-api.crane1129.workers.dev';
+
+  String _buildAttachmentUrl(Map<String, dynamic> item) {
+    // D1 uses 'file_key', legacy Wix used 'attachmentUrl'
+    final fileKey = item['file_key']?.toString() ?? '';
+    final legacyUrl = item['attachmentUrl']?.toString() ?? '';
+    if (fileKey.isNotEmpty) return '$_apiBaseUrl/r2/$fileKey';
+    return legacyUrl;
+  }
+
   /// Build modern opinion card
   Widget _buildModernOpinionCard(Map<String, dynamic> item, int index) {
     final theme = Theme.of(context);
-              final rawDate = item['dateCreated'];
+              // D1 uses 'created_at', legacy Wix used 'dateCreated'
+              final rawDate = item['created_at'] ?? item['dateCreated'];
               final formattedDate = rawDate != null
                   ? DateFormat('MM/dd/yyyy hh:mm a').format(DateTime.parse(rawDate))
                   : 'Unknown date';
+              final attachmentUrl = _buildAttachmentUrl(item);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -571,7 +583,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
               ],
 
               // Attachment section
-                      if ((item['attachmentUrl'] ?? '').isNotEmpty) ...[
+                      if (attachmentUrl.isNotEmpty) ...[
                 SizedBox(height: 16),
                 Container(
                   width: double.infinity,
@@ -586,14 +598,14 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Image preview (if it's an image)
-                        if (isImageFile(item['attachmentUrl']))
+                        if (isImageFile(attachmentUrl))
                         ClipRRect(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                             child: Image.network(
-                              item['attachmentUrl'],
+                              attachmentUrl,
                               fit: BoxFit.cover,
                               height: 200,
                             width: double.infinity,
@@ -630,7 +642,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
                             color: Colors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(12),
-                              onTap: () => _downloadAttachment(item['attachmentUrl']),
+                              onTap: () => _downloadAttachment(attachmentUrl),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                                 child: Row(
@@ -875,7 +887,7 @@ class _UnconfirmedOpinionsScreenState extends State<UnconfirmedOpinionsScreen> {
     try {
       log('✅ Confirming opinion with ID: $id');
       
-    final uri = Uri.https('www.bridgeway.online', '/_functions/confirmOpinion');
+    final uri = Uri.parse('https://bcsv-api.crane1129.workers.dev/api/confirmOpinion');
     final response = await http.post(
       uri,
       headers: {'Content-Type': 'application/json'},

@@ -89,7 +89,7 @@ class _MessageManagementScreenState extends ConsumerState<MessageManagementScree
 
     try {
       // Use scheduleMessages endpoint to include future scheduled messages (for admin)
-      final uri = Uri.parse('https://www.bridgeway.online/_functions/scheduleMessages');
+      final uri = Uri.parse('https://bcsv-api.crane1129.workers.dev/api/scheduleMessages');
       log('🔄 Fetching scheduled messages (active + future) from: $uri');
 
       final response = await http
@@ -521,7 +521,7 @@ class _EditMessageSheetState extends State<_EditMessageSheet> {
     log('📝 Updating message: ${widget.message.id}');
 
     try {
-      final uri = Uri.https('www.bridgeway.online', '/_functions/messageUpdate');
+      final uri = Uri.parse('https://bcsv-api.crane1129.workers.dev/api/messageUpdate');
       final res = await http
           .post(
             uri,

@@ -6,7 +6,7 @@ part 'announcement_model.g.dart';
 
 /// Data model for announcement with JSON serialization
 @freezed
-class AnnouncementModel with _$AnnouncementModel {
+abstract class AnnouncementModel with _$AnnouncementModel {
   const factory AnnouncementModel({
     required String date,
     required String announcement,

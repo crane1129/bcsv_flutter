@@ -4,7 +4,7 @@ part 'announcement.freezed.dart';
 
 /// Domain entity for church announcements
 @freezed
-class AnnouncementEntity with _$AnnouncementEntity {
+abstract class AnnouncementEntity with _$AnnouncementEntity {
   const factory AnnouncementEntity({
     required String date,
     required String announcement,
