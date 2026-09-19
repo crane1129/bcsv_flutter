@@ -17,17 +17,46 @@ class KeyVerse {
     required this.verse,
   });
 
-  /// Create KeyVerse from JSON data
+  /// Create KeyVerse from JSON data.
+  /// When the API returns `description` (e.g. "히브리서 11:13") instead of
+  /// separate book/chapter/verse fields, parse it.
   factory KeyVerse.fromJson(Map<String, dynamic> json) {
+    String book = json['book']?.toString() ?? '';
+    int chapter = json['chapter'] ?? 0;
+    int verseFrom = json['verse_from'] ?? 0;
+    int verseEnd = json['verse_end'] ?? 0;
+
+    if (book.isEmpty && json['description'] != null) {
+      final parsed = _parseDescription(json['description'].toString());
+      book = parsed['book'] as String;
+      chapter = parsed['chapter'] as int;
+      verseFrom = parsed['verseFrom'] as int;
+      verseEnd = parsed['verseEnd'] as int;
+    }
+
     return KeyVerse(
       year: json['year'] ?? 0,
       title: json['title'] ?? '',
-      book: json['book'] ?? '',
-      chapter: json['chapter'] ?? 0,
-      verseFrom: json['verse_from'] ?? 0,
-      verseEnd: json['verse_end'] ?? 0,
+      book: book,
+      chapter: chapter,
+      verseFrom: verseFrom,
+      verseEnd: verseEnd,
       verse: json['verse'] ?? '',
     );
+  }
+
+  static Map<String, dynamic> _parseDescription(String description) {
+    final match = RegExp(r'^(.+)\s+(\d+):(\d+)(?:-(\d+))?$').firstMatch(description);
+    if (match == null) {
+      return {'book': description, 'chapter': 0, 'verseFrom': 0, 'verseEnd': 0};
+    }
+    final verseFrom = int.parse(match.group(3)!);
+    return {
+      'book': match.group(1)!.trim(),
+      'chapter': int.parse(match.group(2)!),
+      'verseFrom': verseFrom,
+      'verseEnd': match.group(4) != null ? int.parse(match.group(4)!) : verseFrom,
+    };
   }
 
   /// Convert KeyVerse to JSON data

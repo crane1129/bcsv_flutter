@@ -31,44 +31,39 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   void initState() {
     super.initState();
     log('🟢 [AnnouncementScreen] initState called');
-    // Load announcements - wait for endpoints to initialize first
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      log('🟢 [AnnouncementScreen] Post-frame callback - waiting for endpoints');
-
-      // Ensure background services are initializing
-      if (!BackgroundService().isInitialized && !BackgroundService().isLoading) {
-        log('🔄 [AnnouncementScreen] Triggering background service initialization');
-        BackgroundService().initializeInBackground();
-      }
-
-      // Also try to initialize endpoints directly if not ready
-      if (!ApiEndpoint().isInitialized) {
-        log('🔄 [AnnouncementScreen] Triggering endpoint initialization');
-        await ApiEndpoint().initializeEndpoints();
-      }
-
-      // Wait for endpoints to be ready (max 10 seconds)
-      final endpointsReady = await EndpointWaiter.waitForEndpoints();
-      log('🟢 [AnnouncementScreen] Endpoints ready: $endpointsReady');
-
-      log('🟢 [AnnouncementScreen] Initiating loadAnnouncements');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Step 1: Load from cache immediately (no blocking on endpoints)
       ref.read(announcementNotifierProvider.notifier).loadAnnouncements(
-        forceRefresh: false, // Use cache first
+        forceRefresh: false,
       );
+
+      // Step 2: Refresh from network in background once endpoints are ready
+      _refreshWhenEndpointsReady();
     });
   }
 
-  /// Refresh announcements from network
-  Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for announcements');
-
-    // Ensure endpoints are initialized before refreshing
-    if (!ApiEndpoint().isInitialized) {
-      log('🔄 [AnnouncementScreen] Initializing endpoints before refresh');
-      await ApiEndpoint().initializeEndpoints();
-      await EndpointWaiter.waitForEndpoints();
+  Future<void> _refreshWhenEndpointsReady() async {
+    if (!BackgroundService().isInitialized && !BackgroundService().isLoading) {
+      BackgroundService().initializeInBackground();
     }
 
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+    }
+
+    final endpointsReady = await EndpointWaiter.waitForEndpoints();
+    if (endpointsReady && mounted) {
+      ref.read(announcementNotifierProvider.notifier).loadAnnouncements(
+        forceRefresh: true,
+      );
+    }
+  }
+
+  Future<void> _refreshData() async {
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+      await EndpointWaiter.waitForEndpoints(maxWait: const Duration(seconds: 5));
+    }
     await ref.read(announcementNotifierProvider.notifier).refresh();
   }
 

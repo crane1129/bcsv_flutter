@@ -12,6 +12,8 @@ import 'package:bcsv_flutter_project/presentation/shared/widgets/empty_state.dar
 import 'package:bcsv_flutter_project/presentation/shared/widgets/error_state.dart';
 import 'package:bcsv_flutter_project/presentation/shared/widgets/offline_banner.dart';
 import 'package:bcsv_flutter_project/core/utils/endpoint_waiter.dart';
+import 'package:bcsv_flutter_project/services/api_endpoint.dart';
+import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'dart:developer';
 
 class SermonReviewScreen extends ConsumerStatefulWidget {
@@ -26,23 +28,36 @@ class _SermonReviewScreenState extends ConsumerState<SermonReviewScreen> {
   void initState() {
     super.initState();
     log('🟢 [SermonReviewScreen] initState called');
-    // Load sermon reviews - wait for endpoints to initialize first
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      log('🟢 [SermonReviewScreen] Post-frame callback - waiting for endpoints');
-
-      // Wait for endpoints to be ready (max 3 seconds)
-      await EndpointWaiter.waitForEndpoints();
-
-      log('🟢 [SermonReviewScreen] Initiating loadSermonReviews');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Load from cache immediately
       ref.read(sermonReviewNotifierProvider.notifier).loadSermonReviews(
-        forceRefresh: false, // Use cache first
+        forceRefresh: false,
       );
+      // Refresh from network in background
+      _refreshWhenEndpointsReady();
     });
   }
 
-  /// Refresh sermon reviews from network
+  Future<void> _refreshWhenEndpointsReady() async {
+    if (!BackgroundService().isInitialized && !BackgroundService().isLoading) {
+      BackgroundService().initializeInBackground();
+    }
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+    }
+    final endpointsReady = await EndpointWaiter.waitForEndpoints();
+    if (endpointsReady && mounted) {
+      ref.read(sermonReviewNotifierProvider.notifier).loadSermonReviews(
+        forceRefresh: true,
+      );
+    }
+  }
+
   Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for sermon reviews');
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+      await EndpointWaiter.waitForEndpoints(maxWait: const Duration(seconds: 5));
+    }
     await ref.read(sermonReviewNotifierProvider.notifier).refresh();
   }
 

@@ -54,29 +54,24 @@ class ServingTurnNotifier extends StateNotifier<ServingTurnState> {
 
   ServingTurnNotifier(this._repository) : super(const ServingTurnState());
 
-  /// Load serving turns (with caching)
+  /// Load serving turns (with caching).
+  /// Shows a loading spinner only when no data is already displayed.
   Future<void> loadServingTurns({bool forceRefresh = false}) async {
     log('🎯 [ServingTurn] loadServingTurns called (forceRefresh: $forceRefresh, currentState: ${state.status})');
 
-    if (state.isLoading) {
-      log('⚠️ [ServingTurn] Already loading, skipping request');
-      return;
+    if (state.isLoading) return;
+
+    if (!state.hasData) {
+      state = state.copyWith(status: ServingTurnStatus.loading);
     }
 
-    log('🔵 [ServingTurn] Setting state to loading');
-    state = state.copyWith(status: ServingTurnStatus.loading);
-
     try {
-      log('🌐 [ServingTurn] Fetching from repository...');
       final servingTurns = await _repository.getServingTurns(forceRefresh: forceRefresh);
       final lastUpdated = _repository.getLastUpdated();
       final hasCached = await _repository.hasCachedServingTurns();
       final currentTurn = _repository.getCurrentServingTurn(servingTurns);
 
-      log('📊 [ServingTurn] Received ${servingTurns.length} items');
-      log('📦 [ServingTurn] Has cache: $hasCached');
-      log('🕐 [ServingTurn] Last updated: ${lastUpdated?.toString() ?? "never"}');
-      log('🎯 [ServingTurn] Current turn: ${currentTurn?.date ?? "none"}');
+      log('📊 [ServingTurn] Received ${servingTurns.length} items (${!forceRefresh && hasCached ? "CACHE" : "NETWORK"})');
 
       state = state.copyWith(
         servingTurns: servingTurns,
@@ -86,22 +81,14 @@ class ServingTurnNotifier extends StateNotifier<ServingTurnState> {
         isOfflineData: !forceRefresh && hasCached,
         errorMessage: null,
       );
-
-      log('✅ [ServingTurn] State updated successfully');
-      if (servingTurns.isEmpty) {
-        log('⚠️ [ServingTurn] WARNING: No serving turns in result');
-      }
-      if (currentTurn != null) {
-        log('📅 [ServingTurn] Current turn: ${currentTurn.date} - ${currentTurn.prayer}');
-      }
-    } catch (e, stackTrace) {
+    } catch (e) {
       log('❌ [ServingTurn] Error loading: $e');
-      log('📍 [ServingTurn] Stack: ${stackTrace.toString().split('\n').take(5).join('\n')}');
-      state = state.copyWith(
-        status: ServingTurnStatus.error,
-        errorMessage: e.toString(),
-      );
-      log('🔴 [ServingTurn] State set to error');
+      if (!state.hasData) {
+        state = state.copyWith(
+          status: ServingTurnStatus.error,
+          errorMessage: e.toString(),
+        );
+      }
     }
   }
 

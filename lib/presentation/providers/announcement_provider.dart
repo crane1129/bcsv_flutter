@@ -50,7 +50,9 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
 
   AnnouncementNotifier(this._repository) : super(const AnnouncementState());
 
-  /// Load announcements (with caching)
+  /// Load announcements (with caching).
+  /// Shows a loading spinner only when no data is already displayed,
+  /// so background refreshes don't flash the UI.
   Future<void> loadAnnouncements({bool forceRefresh = false}) async {
     log('🎯 [Announcement] loadAnnouncements called (forceRefresh: $forceRefresh, currentState: ${state.status})');
 
@@ -59,11 +61,12 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
       return;
     }
 
-    log('🔵 [Announcement] Setting state to loading');
-    state = state.copyWith(status: AnnouncementStatus.loading);
+    // Only show loading spinner when the user has nothing to look at yet
+    if (!state.hasData) {
+      state = state.copyWith(status: AnnouncementStatus.loading);
+    }
 
     try {
-      log('🌐 [Announcement] Fetching from repository...');
       final announcements = await _repository.getAnnouncements(
         forceRefresh: forceRefresh,
       );
@@ -71,30 +74,24 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
       final lastUpdated = _repository.getLastUpdated();
       final wasFromCache = _repository.wasLastFetchFromCache();
 
-      log('📊 [Announcement] Received ${announcements.length} items');
-      log('📦 [Announcement] Source: ${wasFromCache ? "CACHE" : "NETWORK"}');
-      log('🕐 [Announcement] Last updated: ${lastUpdated?.toString() ?? "never"}');
+      log('📊 [Announcement] Received ${announcements.length} items (${wasFromCache ? "CACHE" : "NETWORK"})');
 
       state = state.copyWith(
-        announcements: announcements.reversed.toList(), // Reverse for newest first
+        announcements: announcements.reversed.toList(),
         status: AnnouncementStatus.loaded,
         lastUpdated: lastUpdated,
         isOfflineData: wasFromCache,
         errorMessage: null,
       );
-
-      log('✅ [Announcement] State updated successfully');
-      if (announcements.isEmpty) {
-        log('⚠️ [Announcement] WARNING: No announcements in result');
-      }
-    } catch (e, stackTrace) {
+    } catch (e) {
       log('❌ [Announcement] Error loading: $e');
-      log('📍 [Announcement] Stack: ${stackTrace.toString().split('\n').take(5).join('\n')}');
-      state = state.copyWith(
-        status: AnnouncementStatus.error,
-        errorMessage: e.toString(),
-      );
-      log('🔴 [Announcement] State set to error');
+      // Only show error state if there's no existing data to fall back on
+      if (!state.hasData) {
+        state = state.copyWith(
+          status: AnnouncementStatus.error,
+          errorMessage: e.toString(),
+        );
+      }
     }
   }
 

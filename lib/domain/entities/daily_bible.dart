@@ -4,7 +4,7 @@ part 'daily_bible.freezed.dart';
 
 /// Domain entity for daily Bible verse
 @freezed
-class DailyBibleVerseEntity with _$DailyBibleVerseEntity {
+abstract class DailyBibleVerseEntity with _$DailyBibleVerseEntity {
   const factory DailyBibleVerseEntity({
     required String verse,
     required String content,
@@ -13,7 +13,7 @@ class DailyBibleVerseEntity with _$DailyBibleVerseEntity {
 
 /// Domain entity for daily Bible reading (QT)
 @freezed
-class DailyBibleEntity with _$DailyBibleEntity {
+abstract class DailyBibleEntity with _$DailyBibleEntity {
   const factory DailyBibleEntity({
     required String date,
     required String bibleName,

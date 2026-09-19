@@ -6,7 +6,7 @@ part 'daily_bible_model.g.dart';
 
 /// Data model for daily Bible verse
 @freezed
-class DailyBibleVerseModel with _$DailyBibleVerseModel {
+abstract class DailyBibleVerseModel with _$DailyBibleVerseModel {
   const factory DailyBibleVerseModel({
     @JsonKey(name: 'Verse') required String verse,
     @JsonKey(name: 'Bible_Cn') required String content,
@@ -36,7 +36,7 @@ class DailyBibleVerseModel with _$DailyBibleVerseModel {
 
 /// Data model for daily Bible header (from DAILY_BIBLE1 endpoint)
 @freezed
-class DailyBibleHeaderModel with _$DailyBibleHeaderModel {
+abstract class DailyBibleHeaderModel with _$DailyBibleHeaderModel {
   const factory DailyBibleHeaderModel({
     @JsonKey(name: 'Bible_name') required String bibleName,
     @JsonKey(name: 'Bible_chapter') required String bibleChapter,
@@ -59,7 +59,7 @@ class DailyBibleHeaderModel with _$DailyBibleHeaderModel {
 
 /// Combined data model for daily Bible reading
 @freezed
-class DailyBibleModel with _$DailyBibleModel {
+abstract class DailyBibleModel with _$DailyBibleModel {
   const factory DailyBibleModel({
     required String date,
     required String bibleName,

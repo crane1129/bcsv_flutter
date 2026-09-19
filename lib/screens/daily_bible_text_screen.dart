@@ -12,6 +12,8 @@ import 'package:bcsv_flutter_project/presentation/shared/widgets/empty_state.dar
 import 'package:bcsv_flutter_project/presentation/shared/widgets/error_state.dart';
 import 'package:bcsv_flutter_project/presentation/shared/widgets/offline_banner.dart';
 import 'package:bcsv_flutter_project/core/utils/endpoint_waiter.dart';
+import 'package:bcsv_flutter_project/services/api_endpoint.dart';
+import 'package:bcsv_flutter_project/services/background_service.dart';
 import 'dart:developer';
 
 class DailyBibleTextScreen extends ConsumerStatefulWidget {
@@ -26,16 +28,25 @@ class _DailyBibleTextScreenState extends ConsumerState<DailyBibleTextScreen> {
   void initState() {
     super.initState();
     log('🟢 [DailyBibleScreen] initState called');
-    // Load today's daily Bible - wait for endpoints to initialize first
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      log('🟢 [DailyBibleScreen] Post-frame callback - waiting for endpoints');
-
-      // Wait for endpoints to be ready (max 3 seconds)
-      await EndpointWaiter.waitForEndpoints();
-
-      log('🟢 [DailyBibleScreen] Initiating loadToday');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Load from cache immediately
       ref.read(dailyBibleNotifierProvider.notifier).loadToday(forceRefresh: false);
+      // Refresh from network in background
+      _refreshWhenEndpointsReady();
     });
+  }
+
+  Future<void> _refreshWhenEndpointsReady() async {
+    if (!BackgroundService().isInitialized && !BackgroundService().isLoading) {
+      BackgroundService().initializeInBackground();
+    }
+    if (!ApiEndpoint().isInitialized) {
+      await ApiEndpoint().initializeEndpoints();
+    }
+    final endpointsReady = await EndpointWaiter.waitForEndpoints();
+    if (endpointsReady && mounted) {
+      ref.read(dailyBibleNotifierProvider.notifier).loadToday(forceRefresh: true);
+    }
   }
 
   @override

@@ -110,7 +110,7 @@ class _NavBarState extends ConsumerState<NavBar> {
     try {
       // If endpoints map has dedicated endpoint, prefer it; else fallback to fixed path
       final Uri uri = ApiEndpoint.apiMap['UNCONFIRMED_OPINIONS_COUNT'] ??
-          Uri.https('www.bridgeway.online', '/_functions/unconfirmedOpinions');
+          Uri.parse('https://bcsv-api.crane1129.workers.dev/api/unconfirmedOpinions');
 
       final response = await http
           .get(uri)

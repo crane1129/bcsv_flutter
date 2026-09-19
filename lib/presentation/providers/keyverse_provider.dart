@@ -53,18 +53,14 @@ class KeyVerseNotifier extends StateNotifier<KeyVerseState> {
   /// Load key verse for a specific year
   Future<void> loadKeyVerse({int? year, bool forceRefresh = false}) async {
     final targetYear = year ?? DateTime.now().year;
-    log('🎯 [KeyVerse] loadKeyVerse called (year: $targetYear, forceRefresh: $forceRefresh, currentState: ${state.status})');
 
-    if (state.isLoading) {
-      log('⚠️ [KeyVerse] Already loading, skipping request');
-      return;
+    if (state.isLoading) return;
+
+    if (!state.hasData) {
+      state = state.copyWith(status: KeyVerseStatus.loading);
     }
 
-    log('🔵 [KeyVerse] Setting state to loading');
-    state = state.copyWith(status: KeyVerseStatus.loading);
-
     try {
-      log('🌐 [KeyVerse] Fetching from repository...');
       final keyVerse = await _repository.getKeyVerse(
         year: targetYear,
         forceRefresh: forceRefresh,
@@ -73,9 +69,7 @@ class KeyVerseNotifier extends StateNotifier<KeyVerseState> {
       final lastUpdated = _repository.getLastUpdated();
       final wasFromCache = _repository.wasLastFetchFromCache();
 
-      log('📊 [KeyVerse] Received: ${keyVerse != null ? "data" : "null"}');
-      log('📦 [KeyVerse] Source: ${wasFromCache ? "CACHE" : "NETWORK"}');
-      log('🕐 [KeyVerse] Last updated: ${lastUpdated?.toString() ?? "never"}');
+      log('📊 [KeyVerse] ${keyVerse != null ? keyVerse.shortReference : "null"} (${wasFromCache ? "CACHE" : "NETWORK"})');
 
       state = state.copyWith(
         keyVerse: keyVerse,
@@ -84,21 +78,14 @@ class KeyVerseNotifier extends StateNotifier<KeyVerseState> {
         isOfflineData: wasFromCache,
         errorMessage: null,
       );
-
-      if (keyVerse != null) {
-        log('✅ [KeyVerse] Loaded: ${keyVerse.title} (${keyVerse.shortReference})');
-      } else {
-        log('⚠️ [KeyVerse] WARNING: No data found for year $targetYear');
-      }
-      log('🔵 [KeyVerse] State updated successfully');
-    } catch (e, stackTrace) {
+    } catch (e) {
       log('❌ [KeyVerse] Error loading: $e');
-      log('📍 [KeyVerse] Stack: ${stackTrace.toString().split('\n').take(5).join('\n')}');
-      state = state.copyWith(
-        status: KeyVerseStatus.error,
-        errorMessage: e.toString(),
-      );
-      log('🔴 [KeyVerse] State set to error');
+      if (!state.hasData) {
+        state = state.copyWith(
+          status: KeyVerseStatus.error,
+          errorMessage: e.toString(),
+        );
+      }
     }
   }
 

@@ -1,15 +1,12 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:bcsv_flutter_project/services/bible_database_service.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
 import 'dart:developer';
 import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 
@@ -27,52 +24,6 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
   @override
   void initState() {
     super.initState();
-    // Check network connectivity when screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkNetworkConnectivity();
-    });
-  }
-
-  /// Check network connectivity
-  Future<void> _checkNetworkConnectivity() async {
-    try {
-      log('🔍 Checking network connectivity for bible keyword search...');
-
-      final hasConnection = await InternetConnectionChecker
-          .instance.hasConnection
-          .timeout(Duration(seconds: 10));
-
-      if (!hasConnection) {
-        log('❌ No network connection detected on bible keyword search screen');
-        _navigateToDisconnectScreen();
-        return;
-      }
-
-      log('✅ Network available on bible keyword search screen');
-    } catch (e) {
-      log('❌ Network check failed on bible keyword search screen: $e');
-      _navigateToDisconnectScreen();
-    }
-  }
-
-    /// Navigate to disconnect screen when network is unavailable
-  void _navigateToDisconnectScreen() {
-    if (!mounted) return;
-    
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DisconnectScreen(
-          returnScreen: BibleKeywordSearchScreen(),
-        ),
-      ),
-    );
-  }
-
-  /// Refresh data when user pulls down
-  Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for bible keyword search');
-    await _checkNetworkConnectivity();
   }
 
   // Text input controller
@@ -1153,91 +1104,56 @@ class _BibleKeywordSearchScreenState extends State<BibleKeywordSearchScreen> {
     // Start loading
     setState(() {
       isLoading = true;
-      results.clear();
-      selectedIndexes.clear(); // Clear selections when starting new search
+      results = [];
+      selectedIndexes.clear();
     });
 
     log('🔍 Searching bible for keyword: $keyword');
 
-    final query = {
-      'keyword': keyword,
-    };
-
-    final uri =
-        Uri.https('www.bridgeway.online', '/_functions/bibleSearch', query);
-
     try {
-      final response = await http
-          .get(uri)
-          .timeout(const Duration(seconds: 30), onTimeout: () => throw TimeoutException('Request timeout'));
+      final searchResults = await BibleDatabaseService().searchByKeyword(keyword);
 
-      if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
-        setState(() {
-          results = List<Map<String, dynamic>>.from(json['result']);
-        });
+      setState(() {
+        results = List<Map<String, dynamic>>.from(searchResults);
+      });
 
-        log('✅ Bible keyword search completed: ${results.length} results found');
+      log('✅ Bible keyword search completed: ${results.length} results found');
 
-        if (mounted) {
-          showSimpleNotification(
-            Text(
-              '✅ Found ${results.length} verses containing "$keyword"',
-              style: TextStyle(color: Colors.white),
+      if (mounted) {
+        showSimpleNotification(
+          Text(
+            '✅ Found ${results.length} verses containing "$keyword"',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
             ),
-            leading: Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.check_rounded,
-                color: Colors.white,
-                size: 16,
-              ),
+            child: Icon(
+              Icons.check_rounded,
+              color: Colors.white,
+              size: 16,
             ),
-            background: Colors.green,
-            elevation: 8,
-            duration: Duration(seconds: 3),
-          );
-        }
-      } else {
-        log("❌ Bible keyword search failed: ${response.statusCode} - ${response.body}");
-        if (mounted) {
-          showSimpleNotification(
-            Text(
-              '❌ Search failed. Please try again.',
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: Icon(Icons.error_rounded, color: Colors.white),
-            background: Colors.red,
-            elevation: 8,
-          );
-        }
+          ),
+          background: Colors.green,
+          elevation: 8,
+          duration: Duration(seconds: 3),
+        );
       }
     } catch (e) {
       log("❌ Bible keyword search exception: $e");
 
       if (!mounted) return;
 
-      if (e is TimeoutException) {
-        showSimpleNotification(
-          const Text('⏱️ Request timed out. Please try again.' , style: TextStyle(color: Colors.white)),
-          leading: const Icon(Icons.timer_off_rounded, color: Colors.white),
-          background: Colors.red,
-          elevation: 8,
-        );
-      } else {
-        showSimpleNotification(
-          const Text('⚠️ Network error or server issue. Please try again.', style: TextStyle(color: Colors.white)),
-          leading: const Icon(Icons.warning_rounded, color: Colors.white),
-          background: Colors.orange,
-          elevation: 8,
-        );
-      }
+      showSimpleNotification(
+        const Text('⚠️ 검색 중 오류가 발생했습니다.', style: TextStyle(color: Colors.white)),
+        leading: const Icon(Icons.warning_rounded, color: Colors.white),
+        background: Colors.red,
+        elevation: 8,
+      );
     } finally {
-      // Stop loading in all cases
       if (mounted) {
         setState(() {
           isLoading = false;

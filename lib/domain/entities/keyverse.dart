@@ -4,7 +4,7 @@ part 'keyverse.freezed.dart';
 
 /// Domain entity for church annual key verse
 @freezed
-class KeyVerseEntity with _$KeyVerseEntity {
+abstract class KeyVerseEntity with _$KeyVerseEntity {
   const factory KeyVerseEntity({
     required int year,
     required String title,
@@ -18,11 +18,15 @@ class KeyVerseEntity with _$KeyVerseEntity {
   const KeyVerseEntity._();
 
   /// Get formatted chapter and verse range (e.g., "창세기 1:1-5")
-  String get chapterVerseRange => '$book $chapter:$verseFrom-$verseEnd';
+  String get chapterVerseRange {
+    if (verseFrom == verseEnd) return '$book $chapter:$verseFrom';
+    return '$book $chapter:$verseFrom-$verseEnd';
+  }
 
   /// Get short reference (e.g., "창 1:1-5")
   String get shortReference {
     final shortBook = _getShortBookName(book);
+    if (verseFrom == verseEnd) return '$shortBook $chapter:$verseFrom';
     return '$shortBook $chapter:$verseFrom-$verseEnd';
   }
 

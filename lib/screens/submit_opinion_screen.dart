@@ -845,7 +845,7 @@ class _SubmitOpinionScreenState extends State<SubmitOpinionScreen> {
 
     try {
       final uri =
-          Uri.https('www.bridgeway.online', '/_functions/opinionSubmit');
+          Uri.parse('https://bcsv-api.crane1129.workers.dev/api/opinionSubmit');
       final res = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},

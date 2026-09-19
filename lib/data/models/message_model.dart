@@ -16,7 +16,7 @@ part 'message_model.g.dart';
 /// - 'titleImage': Wix attachment URL (wix:image://v1/...)
 /// - 'externalLink': External link URL
 @freezed
-class MessageModel with _$MessageModel {
+abstract class MessageModel with _$MessageModel {
   const factory MessageModel({
     @JsonKey(name: '_id') required String id,
     @JsonKey(name: 'Created Date') required DateTime createdAt,
@@ -35,17 +35,15 @@ class MessageModel with _$MessageModel {
       _$MessageModelFromJson(_normalizeJson(json));
 
   /// Normalize JSON to handle dynamic types and Wix date formats
-  /// Maps Wix field names to internal field names expected by freezed
+  /// Normalize JSON from Cloudflare D1 (snake_case) or legacy Wix format
   static Map<String, dynamic> _normalizeJson(Map<String, dynamic> json) {
-    // Get titleImage from Wix - handle both string and object formats
-    final rawTitleImage = json['titleImage'];
+    // Image URL: D1 returns 'image_url', Wix returns 'titleImage'
+    final rawTitleImage = json['titleImage'] ?? json['image_url'];
     String rawImageUrl = '';
 
     if (rawTitleImage is String) {
-      // Direct string URL
       rawImageUrl = rawTitleImage;
     } else if (rawTitleImage is Map) {
-      // Wix document/attachment object format: { src: "wix:image://...", ... }
       rawImageUrl = rawTitleImage['src']?.toString() ??
                     rawTitleImage['url']?.toString() ?? '';
     }
@@ -53,19 +51,21 @@ class MessageModel with _$MessageModel {
     final httpImageUrl = _convertWixImageUrl(rawImageUrl);
 
     return {
-      // Wix document ID
-      '_id': json['_id']?.toString() ?? '',
-      // Handle both Wix API format ('_createdDate') and cache format ('Created Date')
-      'Created Date': _toIsoString(json['_createdDate'] ?? json['Created Date']),
-      // Wix uses lowercase 'title', map to 'Title' for freezed
+      // D1 uses 'id', Wix uses '_id'
+      '_id': json['_id']?.toString() ?? json['id']?.toString() ?? '',
+      // D1 uses 'created_at', Wix uses '_createdDate'
+      'Created Date': _toIsoString(json['_createdDate'] ?? json['Created Date'] ?? json['created_at']),
       'Title': json['title']?.toString() ?? '',
       'message': json['message']?.toString() ?? '',
       'category': json['category']?.toString() ?? '',
-      'startDate': _toIsoString(json['startDate']),
-      'endDate': json['endDate'] != null ? _toIsoString(json['endDate']) : null,
-      // Convert Wix image URL to HTTP URL
+      // D1 uses 'start_date', Wix uses 'startDate'
+      'startDate': _toIsoString(json['startDate'] ?? json['start_date']),
+      'endDate': (json['endDate'] ?? json['end_date']) != null
+          ? _toIsoString(json['endDate'] ?? json['end_date'])
+          : null,
       'titleImage': httpImageUrl,
-      'externalLink': json['externalLink']?.toString() ?? '',
+      // D1 uses 'external_link', Wix uses 'externalLink'
+      'externalLink': json['externalLink']?.toString() ?? json['external_link']?.toString() ?? '',
     };
   }
 
@@ -76,15 +76,20 @@ class MessageModel with _$MessageModel {
   ///
   /// Converts to:
   /// https://static.wixstatic.com/media/{file_id}~mv2.{ext}
+  static const String _apiBaseUrl = 'https://bcsv-api.crane1129.workers.dev';
+
   static String _convertWixImageUrl(String wixUrl) {
     if (wixUrl.isEmpty) return '';
 
-    // If it's already an HTTP URL, return as-is
     if (wixUrl.startsWith('http://') || wixUrl.startsWith('https://')) {
       return wixUrl;
     }
 
-    // Check if it's a Wix image URL
+    // R2 relative path from Cloudflare Worker (e.g. /r2/images/...)
+    if (wixUrl.startsWith('/r2/')) {
+      return '$_apiBaseUrl$wixUrl';
+    }
+
     if (!wixUrl.startsWith('wix:image://')) {
       return wixUrl;
     }

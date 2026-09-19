@@ -8,7 +8,7 @@ import 'dart:developer';
 class MessageRemoteDatasource {
   static const Duration _timeout = Duration(seconds: 15);
   static const String _wixEndpoint =
-      'https://www.bridgeway.online/_functions/activeMessages';
+      'https://bcsv-api.crane1129.workers.dev/api/activeMessages';
 
   /// Fetch messages from Wix API
   Future<List<MessageModel>> fetchMessages() async {

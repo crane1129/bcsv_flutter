@@ -1,16 +1,13 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
 import 'package:bcsv_flutter_project/l10n/app_localizations.dart';
 import 'package:bcsv_flutter_project/components/appbar_header_text.dart';
 import 'package:bcsv_flutter_project/utilities/constants.dart';
+import 'package:bcsv_flutter_project/services/bible_database_service.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:bcsv_flutter_project/screens/disconnect_screen.dart';
 import 'dart:developer';
 
 class BibleSearchScreen extends StatefulWidget {
@@ -30,52 +27,6 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
   @override
   void initState() {
     super.initState();
-    // Check network connectivity when screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkNetworkConnectivity();
-    });
-  }
-
-  /// Check network connectivity
-  Future<void> _checkNetworkConnectivity() async {
-    try {
-      log('🔍 Checking network connectivity for bible search...');
-
-      final hasConnection = await InternetConnectionChecker
-          .instance.hasConnection
-          .timeout(Duration(seconds: 10));
-
-      if (!hasConnection) {
-        log('❌ No network connection detected on bible search screen');
-        _navigateToDisconnectScreen();
-        return;
-      }
-
-      log('✅ Network available on bible search screen');
-    } catch (e) {
-      log('❌ Network check failed on bible search screen: $e');
-      _navigateToDisconnectScreen();
-    }
-  }
-
-    /// Navigate to disconnect screen when network is unavailable
-  void _navigateToDisconnectScreen() {
-    if (!mounted) return;
-    
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DisconnectScreen(
-          returnScreen: BibleSearchScreen(),
-        ),
-      ),
-    );
-  }
-
-  /// Refresh data when user pulls down
-  Future<void> _refreshData() async {
-    log('🔄 User initiated refresh for bible search');
-    await _checkNetworkConnectivity();
   }
 
   // Text input controllers
@@ -1376,76 +1327,48 @@ class _BibleSearchScreenState extends State<BibleSearchScreen> {
     // Start loading
     setState(() {
       isLoading = true;
-      results.clear();
-      selectedIndexes.clear(); // Clear selections when starting new search
+      results = [];
+      selectedIndexes.clear();
     });
 
     log('🔍 Searching bible: $book $startChap:$startVerse - $endChap:$endVerse');
 
-    final query = {
-      'book': book,
-      'startChap': startChap,
-      if (startVerse.isNotEmpty) 'startVerse': startVerse,
-      if (endChap.isNotEmpty) 'endChap': endChap,
-      if (endVerse.isNotEmpty) 'endVerse': endVerse,
-    };
-
-    final uri =
-        Uri.https('www.bridgeway.online', '/_functions/bibleSearch', query);
-
     try {
-      // Enforce a strict network timeout for the request
-      final response = await http
-          .get(uri)
-          .timeout(const Duration(seconds: 30), onTimeout: () => throw TimeoutException('Request timeout'));
+      final searchResults = await BibleDatabaseService().searchByReference(
+        book: book,
+        startChap: int.parse(startChap),
+        startVerse: startVerse.isNotEmpty ? startVerse : null,
+        endChap: endChap.isNotEmpty ? endChap : null,
+        endVerse: endVerse.isNotEmpty ? endVerse : null,
+      );
 
-      if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
-        setState(() {
-          results = List<Map<String, dynamic>>.from(json['result']);
-        });
+      setState(() {
+        results = List<Map<String, dynamic>>.from(searchResults);
+      });
 
-        log('✅ Bible search completed: ${results.length} results found');
+      log('✅ Bible search completed: ${results.length} results found');
 
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('✅ Found ${results.length} verses'),
-              backgroundColor: Colors.green,
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
-      } else {
-        log("❌ Bible search failed: ${response.statusCode} - ${response.body}");
-        if (mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('검색 중 오류가 발생했습니다.')),
+          SnackBar(
+            content: Text('✅ Found ${results.length} verses'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
         );
-        }
       }
     } catch (e) {
       log("❌ Bible search exception: $e");
 
       if (!mounted) return;
 
-      if (e is TimeoutException) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('요청이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('네트워크 오류 또는 서버 문제입니다.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('검색 중 오류가 발생했습니다.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
-      // Stop loading in all cases
       if (mounted) {
       setState(() {
         isLoading = false;

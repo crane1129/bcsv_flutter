@@ -6,8 +6,8 @@ part of 'message_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
-    _$MessageModelImpl(
+_MessageModel _$MessageModelFromJson(Map<String, dynamic> json) =>
+    _MessageModel(
       id: json['_id'] as String,
       createdAt: DateTime.parse(json['Created Date'] as String),
       title: json['Title'] as String,
@@ -21,7 +21,7 @@ _$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
       externalLink: json['externalLink'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) =>
+Map<String, dynamic> _$MessageModelToJson(_MessageModel instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'Created Date': instance.createdAt.toIso8601String(),

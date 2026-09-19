@@ -60,48 +60,35 @@ class SermonReviewNotifier extends StateNotifier<SermonReviewState> {
   SermonReviewNotifier({required this.repository})
       : super(const SermonReviewState());
 
-  /// Load sermon reviews
+  /// Load sermon reviews.
+  /// Shows a loading spinner only when no data is already displayed.
   Future<void> loadSermonReviews({bool forceRefresh = false}) async {
     log('🎯 [SermonReview] loadSermonReviews called (forceRefresh: $forceRefresh, currentState: ${state.status})');
 
-    if (state.isLoading) {
-      log('⚠️ [SermonReview] Already loading, skipping request');
-      return;
+    if (state.isLoading) return;
+
+    if (state.sermonReviews.isEmpty) {
+      state = state.copyWith(status: SermonReviewStatus.loading, errorMessage: null);
     }
 
-    log('🔵 [SermonReview] Setting state to loading');
-    state = state.copyWith(
-      status: SermonReviewStatus.loading,
-      errorMessage: null,
-    );
-
     try {
-      log('🌐 [SermonReview] Fetching sermon reviews...');
-      final reviews = await repository.getSermonReviews(
-        forceRefresh: forceRefresh,
-      );
+      final reviews = await repository.getSermonReviews(forceRefresh: forceRefresh);
 
       log('📊 [SermonReview] Received ${reviews.length} items');
-      log('🔍 [SermonReview] IsOffline check: forceRefresh=$forceRefresh, reviews=${reviews.length}');
 
       state = state.copyWith(
         status: SermonReviewStatus.success,
         sermonReviews: reviews,
         lastUpdated: DateTime.now(),
         isOfflineData: false,
+        errorMessage: null,
       );
-
-      log('✅ [SermonReview] State updated successfully');
-    } on AppException catch (e, stackTrace) {
-      log('❌ [SermonReview] AppException occurred: ${e.message}', error: e, stackTrace: stackTrace);
-
-      // Check if we have cached data to fall back to
+    } on AppException catch (e) {
+      log('❌ [SermonReview] AppException: ${e.message}');
       if (state.sermonReviews.isNotEmpty) {
-        log('⚠️ [SermonReview] Keeping existing data despite error');
         state = state.copyWith(
           status: SermonReviewStatus.success,
           isOfflineData: true,
-          errorMessage: e.message,
         );
       } else {
         state = state.copyWith(
@@ -109,15 +96,12 @@ class SermonReviewNotifier extends StateNotifier<SermonReviewState> {
           errorMessage: e.message,
         );
       }
-    } catch (e, stackTrace) {
-      log('❌ [SermonReview] Unexpected error: $e', error: e, stackTrace: stackTrace);
-
+    } catch (e) {
+      log('❌ [SermonReview] Unexpected error: $e');
       if (state.sermonReviews.isNotEmpty) {
-        log('⚠️ [SermonReview] Keeping existing data despite unexpected error');
         state = state.copyWith(
           status: SermonReviewStatus.success,
           isOfflineData: true,
-          errorMessage: 'Failed to refresh sermon reviews',
         );
       } else {
         state = state.copyWith(

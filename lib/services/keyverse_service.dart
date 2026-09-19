@@ -10,8 +10,8 @@ class KeyVerseService {
   factory KeyVerseService() => _instance;
   KeyVerseService._internal();
 
-  static const String _baseUrl = 'https://www.bridgeway.online';
-  static const String _endpoint = '/_functions/keyVerse';
+  static const String _baseUrl = 'https://bcsv-api.crane1129.workers.dev';
+  static const String _endpoint = '/api/keyVerse';
   static const Duration _timeout = Duration(seconds: 30);
 
   // Cache keys

@@ -85,26 +85,23 @@ class DailyBibleNotifier extends StateNotifier<DailyBibleState> {
 
   DailyBibleNotifier(this._repository) : super(DailyBibleState());
 
-  /// Load daily Bible for a specific date
+  /// Load daily Bible for a specific date.
+  /// Shows a loading spinner only when no data is already displayed.
   Future<void> loadDailyBible({
     required String date,
     bool forceRefresh = false,
   }) async {
     log('🎯 [DailyBible] loadDailyBible called (date: $date, forceRefresh: $forceRefresh, currentState: ${state.status})');
 
-    if (state.isLoading) {
-      log('⚠️ [DailyBible] Already loading, skipping request');
-      return;
+    if (state.isLoading) return;
+
+    if (!state.hasData) {
+      state = state.copyWith(status: DailyBibleStatus.loading, currentDate: date);
+    } else {
+      state = state.copyWith(currentDate: date);
     }
 
-    log('🔵 [DailyBible] Setting state to loading');
-    state = state.copyWith(
-      status: DailyBibleStatus.loading,
-      currentDate: date,
-    );
-
     try {
-      log('🌐 [DailyBible] Fetching from repository...');
       final dailyBible = await _repository.getDailyBible(
         date: date,
         forceRefresh: forceRefresh,
@@ -113,9 +110,7 @@ class DailyBibleNotifier extends StateNotifier<DailyBibleState> {
       final lastUpdated = _repository.getLastUpdated();
       final wasFromCache = _repository.wasLastFetchFromCache();
 
-      log('📊 [DailyBible] Received: ${dailyBible != null ? "data" : "null"}');
-      log('📦 [DailyBible] Source: ${wasFromCache ? "CACHE" : "NETWORK"}');
-      log('🕐 [DailyBible] Last updated: ${lastUpdated?.toString() ?? "never"}');
+      log('📊 [DailyBible] Received: ${dailyBible != null ? "data" : "null"} (${wasFromCache ? "CACHE" : "NETWORK"})');
 
       state = state.copyWith(
         dailyBible: dailyBible,
@@ -124,21 +119,14 @@ class DailyBibleNotifier extends StateNotifier<DailyBibleState> {
         isOfflineData: wasFromCache,
         errorMessage: null,
       );
-
-      if (dailyBible != null) {
-        log('✅ [DailyBible] Loaded: ${dailyBible.title} (${dailyBible.verseCount} verses)');
-      } else {
-        log('⚠️ [DailyBible] WARNING: No data found for date $date');
-      }
-      log('🔵 [DailyBible] State updated successfully');
-    } catch (e, stackTrace) {
+    } catch (e) {
       log('❌ [DailyBible] Error loading: $e');
-      log('📍 [DailyBible] Stack: ${stackTrace.toString().split('\n').take(5).join('\n')}');
-      state = state.copyWith(
-        status: DailyBibleStatus.error,
-        errorMessage: e.toString(),
-      );
-      log('🔴 [DailyBible] State set to error');
+      if (!state.hasData) {
+        state = state.copyWith(
+          status: DailyBibleStatus.error,
+          errorMessage: e.toString(),
+        );
+      }
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:bcsv_flutter_project/presentation/providers/locale_provider.dart
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
 class SettingsPage extends ConsumerStatefulWidget {

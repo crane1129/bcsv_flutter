@@ -6,8 +6,8 @@ part of 'keyverse_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$KeyVerseModelImpl _$$KeyVerseModelImplFromJson(Map<String, dynamic> json) =>
-    _$KeyVerseModelImpl(
+_KeyVerseModel _$KeyVerseModelFromJson(Map<String, dynamic> json) =>
+    _KeyVerseModel(
       year: (json['year'] as num).toInt(),
       title: json['title'] as String,
       book: json['book'] as String,
@@ -17,7 +17,7 @@ _$KeyVerseModelImpl _$$KeyVerseModelImplFromJson(Map<String, dynamic> json) =>
       verse: json['verse'] as String,
     );
 
-Map<String, dynamic> _$$KeyVerseModelImplToJson(_$KeyVerseModelImpl instance) =>
+Map<String, dynamic> _$KeyVerseModelToJson(_KeyVerseModel instance) =>
     <String, dynamic>{
       'year': instance.year,
       'title': instance.title,

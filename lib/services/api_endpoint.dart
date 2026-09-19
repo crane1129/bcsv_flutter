@@ -26,7 +26,7 @@ class ApiEndpoint {
   static bool _isUpdating = false;
   
   // Timeout configuration
-  static const Duration _defaultTimeout = Duration(seconds: 10);
+  static const Duration _defaultTimeout = Duration(seconds: 20);
 
   Future<bool> bindEndpoints() async {
     try {
@@ -66,16 +66,19 @@ class ApiEndpoint {
   /// Initialize endpoints by loading cached data first, then updating in background
   Future<bool> initializeEndpoints() async {
     if (_isInitialized) return true;
-    
+
     // Load cached endpoints immediately
     final hasCache = await _loadCachedEndpoints();
     _isInitialized = hasCache;
-    
-    // Update endpoints in background if cache is expired or doesn't exist
-    if (!hasCache || UserSharedPreferences.isEndpointsCacheExpired()) {
+
+    if (!hasCache) {
+      // No cache — must fetch now so the UI has endpoints on first launch
+      await bindEndpoints();
+    } else {
+      // Cache exists — always refresh in background so a force-close/reopen picks up changes
       _updateEndpointsInBackground();
     }
-    
+
     return _isInitialized;
   }
 
@@ -131,7 +134,7 @@ class ApiEndpoint {
   }
 
   Future<List<Map<String, dynamic>>> fetchEndpoints() async {
-    final uri = Uri.https('www.bridgeway.online', '/_functions/endpoints');
+    final uri = Uri.parse('https://bcsv-api.crane1129.workers.dev/api/endpoints');
 
     try {
       final response = await http.get(

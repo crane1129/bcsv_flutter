@@ -62,7 +62,9 @@ class MessageNotifier extends StateNotifier<MessageState> {
   Future<void> loadMessages({bool forceRefresh = false}) async {
     if (state.isLoading) return;
 
-    state = state.copyWith(status: MessageStatus.loading);
+    if (!state.hasData) {
+      state = state.copyWith(status: MessageStatus.loading);
+    }
     log('🔄 Loading messages (forceRefresh: $forceRefresh)');
 
     try {
@@ -97,10 +99,12 @@ class MessageNotifier extends StateNotifier<MessageState> {
       log('✅ Loaded ${visibleMessages.length} visible messages (${allMessages.length} total), $unreadCount unread');
     } catch (e) {
       log('❌ Error loading messages: $e');
-      state = state.copyWith(
-        status: MessageStatus.error,
-        errorMessage: e.toString(),
-      );
+      if (!state.hasData) {
+        state = state.copyWith(
+          status: MessageStatus.error,
+          errorMessage: e.toString(),
+        );
+      }
     }
   }
 

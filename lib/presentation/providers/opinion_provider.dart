@@ -19,7 +19,7 @@ class UnconfirmedOpinionNotifier extends StateNotifier<int> {
     }
     try {
       final Uri uri = ApiEndpoint.apiMap['UNCONFIRMED_OPINIONS_COUNT'] ??
-          Uri.https('www.bridgeway.online', '/_functions/unconfirmedOpinions');
+          Uri.parse('https://bcsv-api.crane1129.workers.dev/api/unconfirmedOpinions');
       final response = await http.get(uri).timeout(const Duration(seconds: 20));
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);

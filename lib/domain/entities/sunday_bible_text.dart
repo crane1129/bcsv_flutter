@@ -4,7 +4,7 @@ part 'sunday_bible_text.freezed.dart';
 
 /// Domain entity for Bible reference
 @freezed
-class BibleReferenceEntity with _$BibleReferenceEntity {
+abstract class BibleReferenceEntity with _$BibleReferenceEntity {
   const factory BibleReferenceEntity({
     required String textClass,
     required String bibleChapter,
@@ -14,7 +14,7 @@ class BibleReferenceEntity with _$BibleReferenceEntity {
 
 /// Domain entity for review question
 @freezed
-class ReviewQuestionEntity with _$ReviewQuestionEntity {
+abstract class ReviewQuestionEntity with _$ReviewQuestionEntity {
   const factory ReviewQuestionEntity({
     required String textClass,
     required String bibleChapter,
@@ -24,7 +24,7 @@ class ReviewQuestionEntity with _$ReviewQuestionEntity {
 
 /// Domain entity for Sunday Bible text (sermon text)
 @freezed
-class SundayBibleTextEntity with _$SundayBibleTextEntity {
+abstract class SundayBibleTextEntity with _$SundayBibleTextEntity {
   const factory SundayBibleTextEntity({
     required String date,
     required String title,

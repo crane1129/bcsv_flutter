@@ -4,7 +4,7 @@ part 'serving_turn.freezed.dart';
 
 /// Domain entity for church serving turn schedule
 @freezed
-class ServingTurnEntity with _$ServingTurnEntity {
+abstract class ServingTurnEntity with _$ServingTurnEntity {
   const factory ServingTurnEntity({
     required String date,
     required String prayer,

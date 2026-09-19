@@ -7,7 +7,7 @@ import 'dart:developer';
 /// Remote datasource for fetching key verse from API
 class KeyVerseRemoteDatasource {
   static const Duration _timeout = Duration(seconds: 10);
-  static const String _baseUrl = 'https://www.bridgeway.online/_functions/keyVerse';
+  static const String _baseUrl = 'https://bcsv-api.crane1129.workers.dev/api/keyVerse';
 
   /// Fetch key verse for a specific year from remote API
   Future<KeyVerseModel?> fetchKeyVerse(int year) async {

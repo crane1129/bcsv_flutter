@@ -1057,7 +1057,7 @@ class _MessageUploadScreenState extends State<MessageUploadScreen> {
 
     try {
       final uri =
-          Uri.https('www.bridgeway.online', '/_functions/messageSubmit');
+          Uri.parse('https://bcsv-api.crane1129.workers.dev/api/messageSubmit');
       final res = await http
           .post(
             uri,
